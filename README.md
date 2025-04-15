@@ -16,6 +16,19 @@ This boilerplate jumpstarts your next project with:
 - 🏎️ Fast development experience with hot reload
 - 🧪 Easy to extend and scale for production
 - 📝 Clean codebase and best practices
+- 🗂️ **Nuxt modules included:**
+  - [`@nuxt/content`](https://content.nuxt.com/) — Markdown & content management
+  - [`@nuxt/fonts`](https://fonts.nuxt.com/) — Easy font management
+  - [`@nuxt/icon`](https://icon.nuxt.com/) — Icon integration
+  - [`@nuxt/image`](https://image.nuxt.com/) — Optimized image handling
+  - [`@nuxt/eslint`](https://github.com/nuxt/eslint-module) — ESLint integration
+  - [`@nuxt/scripts`](https://github.com/nuxt/scripts) — Custom scripts
+  - [`@nuxt/test-utils`](https://github.com/nuxt/test-utils) — Testing utilities
+- 🧩 **Other integrations:**
+  - [`@unhead/vue`](https://unhead.unjs.io/) — Head management
+  - [`@tailwindcss/vite`](https://tailwindcss.com/docs/guides/vite) — Tailwind with Vite
+  - [`@nuxtjs/tailwindcss`](https://tailwindcss.nuxtjs.org/) — Tailwind Nuxt module
+  - TypeScript, ESLint, and more
 
 ## 🚦 Getting Started
 
@@ -44,6 +57,11 @@ This boilerplate jumpstarts your next project with:
 - [Nuxt Documentation](https://nuxt.com/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Shadcn UI Documentation](https://ui.shadcn.com/docs)
+- [Nuxt Content](https://content.nuxt.com/)
+- [Nuxt Fonts](https://fonts.nuxt.com/)
+- [Nuxt Icon](https://icon.nuxt.com/)
+- [Nuxt Image](https://image.nuxt.com/)
+- [Nuxt UI](https://ui.nuxt.com/)
 
 ## 🪪 License
 
