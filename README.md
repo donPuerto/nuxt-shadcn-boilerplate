@@ -19,22 +19,24 @@ This boilerplate jumpstarts your next project with:
 
 ## 🚦 Getting Started
 
+> **Recommended:** Use [pnpm](https://pnpm.io/) as your package manager.
+
 1. 📥 **Install dependencies:**
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. 🏃 **Start the development server:**
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 3. 🏗️ **Build for production:**
 
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 ## 📚 Learn More
