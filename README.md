@@ -1,75 +1,38 @@
-# Nuxt Minimal Starter
+# Nuxt 4 + Tailwind CSS 4 + Shadcn Boilerplate
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project is a boilerplate for building modern web applications using:
 
-## Setup
+- **Nuxt 4** (latest)
+- **Tailwind CSS 4** (latest)
+- **Shadcn UI** (latest)
 
-Make sure to install dependencies:
+## Features
 
-```bash
-# npm
-npm install
+- Nuxt 4 project structure
+- Tailwind CSS 4 integration
+- Shadcn UI components
+- Ready for rapid development
 
-# pnpm
-pnpm install
+## Getting Started
 
-# yarn
-yarn install
+1. Install dependencies:
 
-# bun
-bun install
-```
+   ```bash
+   npm install
+   ```
 
-## Development Server
+2. Start the development server:
 
-Start the development server on `http://localhost:3000`:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-# npm
-npm run dev
+3. Build for production:
 
-# pnpm
-pnpm dev
+   ```bash
+   npm run build
+   ```
 
-# yarn
-yarn dev
+## License
 
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+MIT
