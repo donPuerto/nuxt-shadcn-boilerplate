@@ -25,7 +25,8 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     // '@nuxtjs/tailwindcss'
     '@nuxt/content',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
+    '@nuxtjs/color-mode'
   ],
   shadcn: {
     /**
@@ -36,6 +37,6 @@ export default defineNuxtConfig({
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: './components/ui'
+    componentDir: './app/components/ui'
   }
 })
