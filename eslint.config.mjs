@@ -4,11 +4,11 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt({
   files: ['**/*.ts', '**/*.tsx', '**/*.vue', '**/*.js'],
   plugins: {   
-    vue
+    //
   },
 
   rules: {
-    ...vue.configs['vue3-recommended'].rules,
+    
     // Disables the rule requiring multi-word component names 
     'vue/multi-word-component-names': 'off',
 
@@ -20,7 +20,6 @@ export default withNuxt({
       order: ['script', 'template', 'style'],
     }],
   },
-  files: ['**/*.{js,ts}'],
   ignores: [
     '.nuxt',
     '.output',
