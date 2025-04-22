@@ -21,7 +21,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/test-utils',
     '@nuxt/image',
-    '@nuxt/scripts',
     '@nuxt/content',
     'shadcn-nuxt',
     '@nuxtjs/color-mode'
