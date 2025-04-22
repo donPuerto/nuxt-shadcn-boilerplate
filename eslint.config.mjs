@@ -4,16 +4,23 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt({
   files: ['**/*.ts', '**/*.tsx', '**/*.vue', '**/*.js'],
   plugins: {   
+    vue
   },
+
   rules: {
+    ...vue.configs['vue3-recommended'].rules,
     // Disables the rule requiring multi-word component names 
     'vue/multi-word-component-names': 'off',
 
+    // Disables the rule that requires a single root node in Vue components
+    'vue/no-multiple-template-root': 'off',
+
     // Enforces a specific order of component tags: <script>, then <template>, then <style>
-    // 'vue/component-tags-order': ['error', {
-    //   order: ['script', 'template', 'style'],
-    // }],
+    'vue/component-tags-order': ['error', {
+      order: ['script', 'template', 'style'],
+    }],
   },
+  files: ['**/*.{js,ts}'],
   ignores: [
     '.nuxt',
     '.output',

@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@nuxt/content": "3.4.0",
@@ -17,7 +19,6 @@
     "@nuxt/image": "1.10.0",
     "@nuxt/scripts": "0.11.5",
     "@nuxt/test-utils": "3.17.2",
-    "@nuxt/ui": "3.0.2",
     "@nuxtjs/color-mode": "3.5.2",
     "@tailwindcss/vite": "^4.1.4",
     "@unhead/vue": "^2.0.0-rc.8",
@@ -32,9 +33,10 @@
     "tailwindcss": "^4.1.4",
     "tw-animate-css": "^1.2.5",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue-sonner": "^1.3.2"
   },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
+  "packageManager": "pnpm@10.9.0",
   "devDependencies": {
     "@vueuse/core": "^13.1.0",
     "tailwindcss-animate": "^1.0.7",

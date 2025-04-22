@@ -20,10 +20,8 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/test-utils',
-    '@nuxt/ui',
     '@nuxt/image',
     '@nuxt/scripts',
-    // '@nuxtjs/tailwindcss'
     '@nuxt/content',
     'shadcn-nuxt',
     '@nuxtjs/color-mode'
