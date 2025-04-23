@@ -16,9 +16,9 @@ export default withNuxt({
     'vue/no-multiple-template-root': 'off',
 
     // Enforces a specific order of component tags: <script>, then <template>, then <style>
-    'vue/component-tags-order': ['error', {
-      order: ['script', 'template', 'style'],
-    }],
+    "vue/block-order": ["error", {
+    "order": [ [ "script", "template" ], "style" ]
+    }]
   },
   ignores: [
     '.nuxt',

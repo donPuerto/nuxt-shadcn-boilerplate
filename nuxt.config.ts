@@ -21,8 +21,9 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/test-utils',
     '@nuxt/image',
-    '@nuxt/content',
+    // '@nuxt/content',
     'shadcn-nuxt',
+    '@nuxt/scripts',  
     '@nuxtjs/color-mode'
   ],
   shadcn: {
