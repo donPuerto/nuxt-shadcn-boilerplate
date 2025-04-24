@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    
   },
   modules: [
     '@nuxt/devtools',
@@ -21,7 +22,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/test-utils',
     '@nuxt/image',
-    // '@nuxt/content',
+    '@nuxt/content',
     'shadcn-nuxt',
     '@nuxt/scripts',  
     '@nuxtjs/color-mode'
@@ -29,5 +30,8 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: 'Ui',
     componentDir: './app/components/ui'
+  },
+  content: {
+    experimental: { nativeSqlite: true },
   }
 })

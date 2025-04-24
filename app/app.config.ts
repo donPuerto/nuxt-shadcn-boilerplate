@@ -1,3 +1,7 @@
 export default defineAppConfig({
-  foo: 'bar'
+  app: {
+    header: {
+      title: 'shadcn-docs',
+    }
+  }
 })
