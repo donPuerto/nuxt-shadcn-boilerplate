@@ -1,17 +1,16 @@
 <template>
-  <NuxtLoadingIndicator :color="false" class="z-100 bg-primary/80" />
-  <div>
+  <div class="min-h-screen flex flex-col">
     <AppHeader />
-    <Navigation />
-   
+    <main class="flex-1">
       <slot />
-    
-    <Footer />
+    </main>
+    <footer class="py-6 border-t">
+      <div class="container flex justify-between items-center">
+        <p class="text-sm">© {{ new Date().getFullYear() }} Nuxt Shadcn Boilerplate</p>
+      </div>
+    </footer>
   </div>
 </template>
 
-<script setup lang="ts">
-import Navigation from '@/components/Navigation.vue'
-import Footer from '@/components/Footer.vue'
-</script>
+
 
