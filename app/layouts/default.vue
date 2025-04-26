@@ -1,16 +1,17 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div>
+    <!-- Make sure to use the proper component name -->
     <!-- <AppHeader /> -->
-    <main class="flex-1">
+    <main>
       <slot />
     </main>
-    <footer class="py-6 border-t">
-      <div class="container flex justify-between items-center">
-        <p class="text-sm">© {{ new Date().getFullYear() }} Nuxt Shadcn Boilerplate</p>
-      </div>
-    </footer>
+    <AppFooter />
   </div>
 </template>
+
+<script setup>
+// No need to explicitly import components with Nuxt auto-imports
+</script>
 
 
 

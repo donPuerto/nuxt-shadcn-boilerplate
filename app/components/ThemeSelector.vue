@@ -9,19 +9,22 @@
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Themes</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem v-for="theme in themes" :key="theme" @click="setTheme(theme)">
-        {{ theme }}
+      <DropdownMenuItem v-for="theme in availableThemes" :key="theme" @click="setTheme(theme)">
+        <i 
+          v-if="currentTheme === theme" 
+          class="i-heroicons-check mr-2 h-4 w-4"
+        />
+        <span :class="currentTheme === theme ? 'font-medium' : ''">
+          {{ theme.charAt(0).toUpperCase() + theme.slice(1) }}
+        </span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
 
 <script setup>
-const themes = ["light", "dark", "system", "pink", "blue", "green"];
+import { computed } from 'vue';
+import { useTheme } from '../composables/useTheme';
 
-const setTheme = (theme) => {
-  // Implement theme changing logic here
-  // This would typically interact with a theme store or composable
-  console.log(`Theme changed to ${theme}`);
-};
+const { theme: currentTheme, availableThemes, setTheme } = useTheme();
 </script>
