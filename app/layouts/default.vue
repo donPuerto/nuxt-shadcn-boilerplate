@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Make sure to use the proper component name -->
-    <!-- <AppHeader /> -->
+    <AppNavigation />
     <main>
       <slot />
     </main>

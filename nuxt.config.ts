@@ -28,10 +28,15 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode'
   ],
   shadcn: {
-    prefix: 'Ui',
+    prefix: '',
     componentDir: './app/components/ui'
   },
   content: {
     experimental: { nativeSqlite: true },
+  },
+  icon: {
+    serverBundle: {
+      collections: ['logos', 'mdi', 'ic','token'] 
+    }
   }
 })

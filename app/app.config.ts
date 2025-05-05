@@ -3,5 +3,9 @@ export default defineAppConfig({
     header: {
       title: 'shadcn-docs',
     }
+  },
+  icon: {
+    mode: 'css',
+    cssLayer: 'base'
   }
 })
