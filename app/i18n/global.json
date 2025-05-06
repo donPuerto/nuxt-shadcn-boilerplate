@@ -1,0 +1,30 @@
+{
+  "en": {
+    "global": {
+      "appName": "Nuxt Shadcn Boilerplate",
+      "appDescription": "A Nuxt 4 boilerplate with Shadcn UI and Tailwind.",
+      "appVersion": "Version: {{version}}"
+    }
+  },
+  "fr": {
+    "global": {
+      "appName": "Nuxt Shadcn Boilerplate",
+      "appDescription": "Un modèle Nuxt 4 avec Shadcn UI et Tailwind.",
+      "appVersion": "Version: {{version}}"
+    }
+  },
+  "de": {
+    "global": {
+      "appName": "Nuxt Shadcn Boilerplate",
+      "appDescription": "Eine Nuxt 4 Vorlage mit Shadcn UI und Tailwind.",
+      "appVersion": "Version: {{version}}"
+    }
+  },
+  "es": {
+    "global": {
+      "appName": "Nuxt Shadcn Boilerplate",
+      "appDescription": "Una plantilla de Nuxt 4 con Shadcn UI y Tailwind.",
+      "appVersion": "Versión: {{version}}"
+    }
+  }
+}

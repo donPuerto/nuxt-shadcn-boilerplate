@@ -24,8 +24,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/content',
     'shadcn-nuxt',
-    '@nuxt/scripts',  
-    '@nuxtjs/color-mode'
+    '@nuxt/scripts',
+    '@nuxtjs/color-mode',
+    '@nuxtjs/i18n'
   ],
   shadcn: {
     prefix: '',
@@ -36,7 +37,20 @@ export default defineNuxtConfig({
   },
   icon: {
     serverBundle: {
-      collections: ['logos', 'mdi', 'ic','token'] 
+      collections: ['logos', 'mdi', 'ic','token', 'flagpack'] 
     }
+  },
+  i18n: {
+    vueI18n: '~/i18n/i18n.config.ts',
+    strategy: 'prefix_except_default',
+    baseUrl: process.env.NUXT_APP_URL,
+    locales: [
+      { code: 'en', iso: 'en-US', name: 'English' },
+      { code: 'fr', iso: 'fr-FR', name: 'Français' },
+      { code: 'es', iso: 'es-ES', name: 'Spanish' },
+      { code: 'de', iso: 'de-DE', name: 'German' },
+    ],
+    defaultLocale: 'en',
+    
   }
 })

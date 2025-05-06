@@ -1,0 +1,33 @@
+{
+  "navigation": {
+    "home": "Startseite",
+    "components": "Komponenten",
+    "roadmap": "Fahrplan"
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten",
+    "retry": "Wiederholen",
+    "close": "Schließen"
+  },
+  "home": {
+    "title": "Willkommen bei Nuxt Shadcn Boilerplate",
+    "subtitle": "Eine moderne Nuxt 4 Starter-Vorlage",
+    "getStarted": "Loslegen"
+  },
+  "components": {
+    "title": "UI-Komponenten",
+    "description": "Entdecken Sie die verfügbaren Shadcn UI-Komponenten"
+  },
+  "roadmap": {
+    "title": "Projekt-Fahrplan",
+    "description": "Kommende Funktionen und Verbesserungen",
+    "planned": "Geplant",
+    "inProgress": "In Bearbeitung",
+    "completed": "Abgeschlossen"
+  },
+  "footer": {
+    "madeWith": "Mit ❤️ erstellt mit Nuxt 4",
+    "copyright": "© {year} Ihre Firma"
+  }
+}
