@@ -8,7 +8,7 @@
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "retry": "Réessayer",
-    "close": "Fermer"
+    "close": "Fermer"    
   },
   "home": {
     "title": "Bienvenue sur Nuxt Shadcn Boilerplate",
