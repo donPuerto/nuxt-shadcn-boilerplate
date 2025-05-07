@@ -4,6 +4,21 @@
     "components": "Components",
     "roadmap": "Roadmap"
   },
+  "themeCustomizer":{
+    "title": "Theme Customizer",
+    "description": "Customize the theme to your liking",
+    "categories": {
+      "color": "Color",
+      "radius": "Radius",
+      "theme": "Theme" 
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+  
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

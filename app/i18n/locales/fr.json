@@ -4,6 +4,20 @@
     "components": "Composants",
     "roadmap": "Feuille de route"
   },
+  "themeCustomizer": {
+    "title": "Personnalisateur de Thème",
+    "description": "Personnalisez le thème selon vos préférences",
+    "categories": {
+      "color": "Couleur",
+      "radius": "Rayon",
+      "theme": "Thème"
+    },
+    "theme": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    }
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur est survenue",

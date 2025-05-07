@@ -33,7 +33,7 @@
       <!-- Right side: Theme and Language -->
       <div class="flex items-center gap-4">
         <!-- Theme Toggle -->
-        <!-- <ThemeToggle /> -->
+        <ThemeCustomizer />
         
         <!-- Language Dropdown -->
         <LanguageSwitcher />

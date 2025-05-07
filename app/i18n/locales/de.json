@@ -4,6 +4,20 @@
     "components": "Komponenten",
     "roadmap": "Fahrplan"
   },
+  "themeCustomizer": {
+    "title": "Theme Anpasser",
+    "description": "Passen Sie das Theme nach Ihren Wünschen an",
+    "categories": {
+      "color": "Farbe",
+      "radius": "Radius",
+      "theme": "Theme"
+    },
+    "theme": {
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "System"
+    }
+  },
   "common": {
     "loading": "Wird geladen...",
     "error": "Ein Fehler ist aufgetreten",

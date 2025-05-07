@@ -4,6 +4,20 @@
     "components": "Componentes",
     "roadmap": "Hoja de ruta"
   },
+  "themeCustomizer": {
+    "title": "Personalizador de Tema",
+    "description": "Personaliza el tema a tu gusto",
+    "categories": {
+      "color": "Color",
+      "radius": "Radio",
+      "theme": "Tema"
+    },
+    "theme": {
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema"
+    }
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Se ha producido un error",
