@@ -36,7 +36,7 @@
             height: `${waveSize}px`,
             backgroundColor: waveColor,
             opacity: waveOpacity,
-            transition: `transform 1.2s ease-out, width 1.2s ease-out, height 1.2s ease-out, opacity 1.5s ease-in-out`,
+            transition: `width 0.8s cubic-bezier(0.16, 1, 0.3, 1), height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease-in-out`,
           }"
         />
       </div>
@@ -60,7 +60,15 @@ const waveX = ref(0);
 const waveY = ref(0);
 const waveSize = ref(0);
 const waveOpacity = ref(1);
-const waveColor = ref('#000000');
+const waveColor = ref('');
+
+// Function to get CSS variable value
+const getCSSVariable = (varName) => {
+  if (typeof document !== 'undefined') {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+  return '';
+};
 
 // Handle theme toggle with animation
 const handleThemeToggle = (event) => {
@@ -79,34 +87,43 @@ const handleThemeToggle = (event) => {
   const maxY = Math.max(clickY, window.innerHeight - clickY);
   const maxRadius = Math.sqrt((maxX * maxX) + (maxY * maxY)) * 1.5;
   
+  // Set the wave color based on the target theme
+  // We want the wave color to match the background color of the theme we're switching TO
+  if (colorMode.preference === 'light') {
+    // Switching to dark, so use dark background color
+    waveColor.value = getCSSVariable('--background').replace('oklch', 'oklch');
+  } else {
+    // Switching to light, so use light background color
+    waveColor.value = getCSSVariable('--background').replace('oklch', 'oklch');
+  }
+  
   // Set wave properties
   waveX.value = clickX;
   waveY.value = clickY;
   waveSize.value = 10; // Start small
   waveOpacity.value = 1;
-  waveColor.value = colorMode.preference === 'light' ? '#09090b' : '#ffffff';
   
   // Show the wave
   showWave.value = true;
   
-  // Execute animation after a brief delay
+  // Speed up the animation steps
   setTimeout(() => {
     // Expand wave
     waveSize.value = maxRadius * 2;
     
-    // After a delay, change theme
+    // Change theme sooner
     setTimeout(() => {
       colorMode.preference = colorMode.preference === 'light' ? 'dark' : 'light';
       
       // Fade out wave
       waveOpacity.value = 0;
       
-      // Clean up
+      // Clean up faster
       setTimeout(() => {
         showWave.value = false;
         animationInProgress.value = false;
-      }, 800);
-    }, 400);
-  }, 50);
+      }, 500); // Reduced from 600ms
+    }, 200); // Reduced from 300ms
+  }, 30);
 };
 </script>
