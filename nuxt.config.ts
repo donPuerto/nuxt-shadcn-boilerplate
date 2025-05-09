@@ -52,5 +52,11 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'en',
     
-  }
+  },
+  colorMode: {
+    preference: 'system', // Default preference
+    fallback: 'light',    // Fallback when system preference isn't available
+    classSuffix: '',      // Important for Tailwind dark mode
+    storageKey: 'nuxt-color-mode'
+  },
 })

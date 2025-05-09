@@ -25,6 +25,7 @@
       <div class="ml-auto flex items-center space-x-2">
         <ThemePopover />
         <LanguageSwitcher />
+        <ModeSwitcher />
       </div>
     </div>
     
