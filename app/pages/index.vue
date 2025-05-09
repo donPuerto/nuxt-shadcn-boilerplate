@@ -29,7 +29,15 @@
       <p class="text-sm">{{ $t('common.loading') }}</p>
       <p class="font-bold mt-2">{{ $t('home.getStarted') }}</p>
     </div>
+
+     <!-- Test Section for Popover -->
+    <div class="mb-8 border p-4 rounded">
+        <h2 class="text-xl mb-4">Popover Test</h2>
+        <PopoverDemo />
+    </div>
   </div>
+
+ 
 </template>
 
 <script lang="ts" setup>
