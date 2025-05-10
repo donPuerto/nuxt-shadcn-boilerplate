@@ -13,7 +13,7 @@
           class="h-[1.2rem] w-[1.2rem] transition-all" 
           :class="colorMode.preference === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
         />
-        
+            
         <!-- Dark mode icon -->
         <Icon 
           name="lucide:moon" 
@@ -62,14 +62,6 @@ const waveSize = ref(0);
 const waveOpacity = ref(1);
 const waveColor = ref('');
 
-// Function to get CSS variable value
-const getCSSVariable = (varName) => {
-  if (typeof document !== 'undefined') {
-    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-  }
-  return '';
-};
-
 // Handle theme toggle with animation
 const handleThemeToggle = (event) => {
   // Skip if animation is already in progress
@@ -87,43 +79,42 @@ const handleThemeToggle = (event) => {
   const maxY = Math.max(clickY, window.innerHeight - clickY);
   const maxRadius = Math.sqrt((maxX * maxX) + (maxY * maxY)) * 1.5;
   
-  // Set the wave color based on the target theme
-  // We want the wave color to match the background color of the theme we're switching TO
+  // Set the wave color based on the target theme - explicitly black or white
   if (colorMode.preference === 'light') {
-    // Switching to dark, so use dark background color
-    waveColor.value = getCSSVariable('--background').replace('oklch', 'oklch');
+    // Switching to dark, so use black
+    waveColor.value = '#09090b';
   } else {
-    // Switching to light, so use light background color
-    waveColor.value = getCSSVariable('--background').replace('oklch', 'oklch');
+    // Switching to light, so use white
+    waveColor.value = '#ffffff';
   }
   
   // Set wave properties
   waveX.value = clickX;
   waveY.value = clickY;
   waveSize.value = 10; // Start small
-  waveOpacity.value = 1;
+  waveOpacity.value = 0.9;
   
   // Show the wave
   showWave.value = true;
   
-  // Speed up the animation steps
+  // Animation steps
   setTimeout(() => {
     // Expand wave
     waveSize.value = maxRadius * 2;
     
-    // Change theme sooner
+    // Change theme
     setTimeout(() => {
       colorMode.preference = colorMode.preference === 'light' ? 'dark' : 'light';
       
       // Fade out wave
       waveOpacity.value = 0;
       
-      // Clean up faster
+      // Clean up
       setTimeout(() => {
         showWave.value = false;
         animationInProgress.value = false;
-      }, 500); // Reduced from 600ms
-    }, 200); // Reduced from 300ms
+      }, 500);
+    }, 200);
   }, 30);
 };
 </script>
