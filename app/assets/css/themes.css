@@ -1,83 +1,83 @@
 /* Theme: Zinc */
 .theme-zinc {
-  --primary: oklch(0.50 0.19 27.48);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.50 0.19 27.48);
+  --primary: hsl(240 5% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(240 5% 65%);
 }
 
 /* Theme: Slate */
 .theme-slate {
-  --primary: oklch(0.50 0.17 230.5);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.50 0.17 230.5);
+  --primary: hsl(215 20% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(215 20% 65%);
 }
 
 /* Theme: Stone */
 .theme-stone {
-  --primary: oklch(0.50 0.16 90.2);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.50 0.16 90.2);
+  --primary: hsl(30 6% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(30 6% 65%);
 }
 
 /* Theme: Gray */
 .theme-gray {
-  --primary: oklch(0.50 0.01 0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.50 0.01 0);
+  --primary: hsl(220 9% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(220 9% 65%);
 }
 
 /* Theme: Neutral */
 .theme-neutral {
-  --primary: oklch(0.50 0.005 0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.50 0.005 0);
+  --primary: hsl(0 0% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(0 0% 65%);
 }
 
 /* Theme: Red */
 .theme-red {
-  --primary: oklch(0.61 0.25 29.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.61 0.25 29.0);
+  --primary: hsl(0 85% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(0 85% 60%);
 }
 
 /* Theme: Rose */
 .theme-rose {
-  --primary: oklch(0.65 0.22 11.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.65 0.22 11.0);
+  --primary: hsl(350 90% 70%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(350 90% 70%);
 }
 
 /* Theme: Orange */
 .theme-orange {
-  --primary: oklch(0.65 0.24 48.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.65 0.24 48.0);
+  --primary: hsl(30 100% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(30 100% 65%);
 }
 
 /* Theme: Green */
 .theme-green {
-  --primary: oklch(0.60 0.22 140.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.60 0.22 140.0);
+  --primary: hsl(142 70% 45%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(142 70% 45%);
 }
 
 /* Theme: Blue */
 .theme-blue {
-  --primary: oklch(0.55 0.24 245.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.55 0.24 245.0);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(217 91% 60%);
 }
 
 /* Theme: Yellow */
 .theme-yellow {
-  --primary: oklch(0.80 0.20 90.0);
-  --primary-foreground: oklch(0.00 0 0); /* Using black text for better contrast with yellow */
-  --ring: oklch(0.80 0.20 90.0);
+  --primary: hsl(47 100% 65%);
+  --primary-foreground: hsl(0 0% 0%);
+  --ring: hsl(47 100% 65%);
 }
 
 /* Theme: Violet */
 .theme-violet {
-  --primary: oklch(0.55 0.26 300.0);
-  --primary-foreground: oklch(1.00 0 0);
-  --ring: oklch(0.55 0.26 300.0);
+  --primary: hsl(250 90% 65%);
+  --primary-foreground: hsl(0 0% 100%);
+  --ring: hsl(250 90% 65%);
 }

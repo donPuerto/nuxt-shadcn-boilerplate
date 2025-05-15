@@ -2,23 +2,10 @@
 import { themes } from '@/lib/registry/themes'
 
 const { theme, radius, setTheme, setRadius } = useCustomize()
-
-type Color =
-  | 'zinc'
-  | 'slate'
-  | 'stone'
-  | 'gray'
-  | 'neutral'
-  | 'red'
-  | 'rose'
-  | 'orange'
-  | 'green'
-  | 'blue'
-  | 'yellow'
-  | 'violet'
-
-// Create an array of color values
-const allColors: Color[] = [
+const appConfig = useAppConfig()
+  
+// Get colors from app config
+const allColors = appConfig.theme?.availableColors || [
   'zinc',
   'rose',
   'blue',
@@ -34,27 +21,6 @@ const allColors: Color[] = [
 ]
 
 const RADII = [0, 0.25, 0.5, 0.75, 1]
-
-// Whenever the theme value changes, update the document class list
-watch(theme, () => {
-  setClassTheme()
-})
-
-// Whenever the radius value changes, update the document style
-watch(radius, () => {
-  setStyleRadius()
-})
-
-function setClassTheme() {
-  document.body.classList.remove(
-    ...allColors.map(color => `theme-${color}`),
-  )
-  document.body.classList.add(`theme-${theme.value}`)
-}
-
-function setStyleRadius() {
-  document.body.style.setProperty('--radius', `${radius.value}rem`)
-}
 
 // Use hardcoded color map for demonstration
 const colorMap = {
@@ -72,7 +38,7 @@ const colorMap = {
   violet: 'hsl(250 90% 65%)'
 }
 
-function backgroundColor(color: Color) {
+function backgroundColor(color: string) {
   // First try using the hardcoded color map for reliability
   if (colorMap[color]) {
     return colorMap[color]
@@ -101,7 +67,7 @@ function backgroundColor(color: Color) {
 }
 
 // Add a function to determine text color based on background
-function getTextColor(color: Color) {
+function getTextColor(color: string) {
   // For certain colors that are light, return dark text
   if (['yellow', 'green', 'orange'].includes(color)) {
     return 'black'
@@ -111,12 +77,6 @@ function getTextColor(color: Color) {
 }
 
 const colorMode = useColorMode()
-
-// Initialize theme when component is mounted
-onMounted(() => {
-  setClassTheme()
-  setStyleRadius()
-})
 </script>
 
 <template>

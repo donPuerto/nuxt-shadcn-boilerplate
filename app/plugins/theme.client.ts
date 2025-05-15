@@ -1,16 +1,55 @@
-export default defineNuxtPlugin(() => {
-  if (import.meta.client) {
-    const savedTheme = localStorage.getItem('theme');
-    const root = document.documentElement;
+export default defineNuxtPlugin({
+  name: 'theme-initializer',
+  enforce: 'pre', // Run before other plugins
+  setup() {
+    // Only run on client-side
+    if (!import.meta.client) return
     
-    if (savedTheme && ["light", "dark", "pink", "blue", "green"].includes(savedTheme)) {
-      root.classList.add(savedTheme);
-    } else if (savedTheme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
+    const appConfig = useAppConfig()
+    const { theme, radius } = useCustomize()
+    
+    // Get available colors from config
+    const allColors = appConfig.theme?.availableColors || [
+      'zinc', 'slate', 'stone', 'gray', 'neutral',
+      'red', 'rose', 'orange', 'green', 'blue',
+      'yellow', 'violet'
+    ]
+    
+    // Apply theme class to body
+    function setClassTheme() {
+      document.body.classList.remove(
+        ...allColors.map(color => `theme-${color}`)
+      )
+      document.body.classList.add(`theme-${theme.value}`)
+    }
+    
+    // Apply radius to CSS variable
+    function setStyleRadius() {
+      document.body.style.setProperty('--radius', `${radius.value}rem`)
+    }
+    
+    // Apply settings on initial load
+    setClassTheme()
+    setStyleRadius()
+    
+    // Watch for theme changes
+    watch(theme, setClassTheme, { immediate: true })
+    
+    // Watch for radius changes
+    watch(radius, setStyleRadius, { immediate: true })
+    
+    // Sync color mode with dark/light theme
+    const colorMode = useColorMode()
+    if (!colorMode.preference || colorMode.preference === 'system') {
+      // Keep system preference
     } else {
-      // Default
-      root.classList.add('light');
+      // Honor existing preference
+    }
+    
+    return {
+      provide: {
+        themeInitialized: true
+      }
     }
   }
-});
+})
