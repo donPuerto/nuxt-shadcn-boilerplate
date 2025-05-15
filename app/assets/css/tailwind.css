@@ -1,11 +1,8 @@
 @import "tailwindcss";
-
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
 
 @import "./themes.css";
-
 @import "./fonts.css";
 
 
@@ -184,7 +181,7 @@
   }
 }
 
-html {
+/* html {
   color-scheme: light dark;
 }
 html.dark {
@@ -192,4 +189,4 @@ html.dark {
 }
 html.light {
   color-scheme: light;
-}
+} */

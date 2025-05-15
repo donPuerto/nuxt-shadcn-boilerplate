@@ -1,27 +1,47 @@
-import { isClient, watchImmediate } from '@vueuse/core'
+import type { Theme } from '@/lib/registry/themes'
+import { themes } from '@/lib/registry/themes'
 
-const COOKIE_NAME = 'active_theme'
-const DEFAULT_THEME = 'default'
+interface Config {
+  theme?: Theme['name']
+  radius: number
+}
 
-export function useThemeConfig() {
-  const activeTheme = useCookie<string>(COOKIE_NAME, { default: () => DEFAULT_THEME, path: '/', maxAge: 31536000, sameSite: 'lax' })
+export function useCustomize() {
+  const { value: color } = useColorMode()
+  const isDark = color === 'dark'
+  const config = useCookie<Config>('config', {
+    default: () => ({
+      theme: 'zinc',
+      radius: 0.5,
+    }),
+  })
 
-  watchImmediate(activeTheme, () => {
-    if (!isClient)
-      return
+  const themeClass = computed(() => `theme-${config.value.theme}`)
 
-    Array.from(document.body.classList)
-      .filter(className => className.startsWith('theme-'))
-      .forEach((className) => {
-        document.body.classList.remove(className)
-      })
-    document.body.classList.add(`theme-${activeTheme.value}`)
-    if (activeTheme.value.endsWith('-scaled')) {
-      document.body.classList.add('theme-scaled')
-    }
+  const theme = computed(() => config.value.theme)
+  const radius = computed(() => config.value.radius)
+
+  function setTheme(themeName: Theme['name']) {
+    config.value.theme = themeName
+  }
+
+  function setRadius(newRadius: number) {
+    config.value.radius = newRadius
+  }
+
+  const themePrimary = computed(() => {
+    const t = themes.find(t => t.name === theme.value)
+    return `hsl(${
+      t?.cssVars[isDark ? 'dark' : 'light'].primary
+    })`
   })
 
   return {
-    activeTheme,
+    themeClass,
+    theme,
+    setTheme,
+    radius,
+    setRadius,
+    themePrimary,
   }
 }

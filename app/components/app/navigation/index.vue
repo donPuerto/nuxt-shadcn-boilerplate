@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 
+
 // Navigation items configuration
 const navigationItems = [
   { path: '/', i18nKey: 'navigation.home' },
