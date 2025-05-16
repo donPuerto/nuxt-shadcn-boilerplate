@@ -4,7 +4,7 @@
       <DropdownMenu v-model:open="isOpen">
         <DropdownMenuTrigger as-child>
           <Button 
-            :variant="isOpen ? 'secondary' : 'ghost'"
+            variant="ghost"
             size="icon"
             class="h-9 w-9 p-0"
             :disabled="isLoading"

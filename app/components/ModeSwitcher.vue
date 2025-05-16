@@ -20,9 +20,16 @@
           class="h-[1.2rem] w-[1.2rem] transition-all" 
           :class="colorMode.preference === 'dark' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
         />
+        
+        <!-- System mode icon -->
+        <Icon 
+          name="lucide:monitor" 
+          class="h-[1.2rem] w-[1.2rem] transition-all" 
+          :class="colorMode.preference === 'system' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
+        />
       </Button>
       
-      <!-- Wave effect -->
+      <!-- Wave effect (now shared via composable) -->
       <div
         v-if="showWave" 
         class="fixed inset-0 pointer-events-none z-50 overflow-hidden"
@@ -52,69 +59,39 @@
 
 <script setup>
 const colorMode = useColorMode();
-const animationInProgress = ref(false);
 
-// Wave animation state
-const showWave = ref(false);
-const waveX = ref(0);
-const waveY = ref(0);
-const waveSize = ref(0);
-const waveOpacity = ref(1);
-const waveColor = ref('');
+// Use the wave animation composable
+const { 
+  animationInProgress,
+  showWave,
+  waveX,
+  waveY,
+  waveSize,
+  waveOpacity,
+  waveColor,
+  triggerWave
+} = useWaveAnimation();
 
 // Handle theme toggle with animation
 const handleThemeToggle = (event) => {
-  // Skip if animation is already in progress
-  if (animationInProgress.value) return;
+  // Determine next mode in cycle: light → dark → system → light
+  let nextMode;
+  let waveColorValue;
   
-  // Set animation flag
-  animationInProgress.value = true;
-  
-  // Get click position
-  const clickX = event.clientX;
-  const clickY = event.clientY;
-  
-  // Calculate max distance to farthest corner
-  const maxX = Math.max(clickX, window.innerWidth - clickX);
-  const maxY = Math.max(clickY, window.innerHeight - clickY);
-  const maxRadius = Math.sqrt((maxX * maxX) + (maxY * maxY)) * 1.5;
-  
-  // Set the wave color based on the target theme - explicitly black or white
   if (colorMode.preference === 'light') {
-    // Switching to dark, so use black
-    waveColor.value = '#09090b';
+    nextMode = 'dark';
+    waveColorValue = '#09090b'; // Going to dark
+  } else if (colorMode.preference === 'dark') {
+    nextMode = 'system';
+    waveColorValue = '#ffffff'; // Going to system (assume light for animation)
   } else {
-    // Switching to light, so use white
-    waveColor.value = '#ffffff';
+    nextMode = 'light';
+    waveColorValue = '#ffffff'; // Going to light
   }
   
-  // Set wave properties
-  waveX.value = clickX;
-  waveY.value = clickY;
-  waveSize.value = 10; // Start small
-  waveOpacity.value = 0.9;
-  
-  // Show the wave
-  showWave.value = true;
-  
-  // Animation steps
-  setTimeout(() => {
-    // Expand wave
-    waveSize.value = maxRadius * 2;
-    
-    // Change theme
-    setTimeout(() => {
-      colorMode.preference = colorMode.preference === 'light' ? 'dark' : 'light';
-      
-      // Fade out wave
-      waveOpacity.value = 0;
-      
-      // Clean up
-      setTimeout(() => {
-        showWave.value = false;
-        animationInProgress.value = false;
-      }, 500);
-    }, 200);
-  }, 30);
+  // Trigger the wave animation
+  triggerWave(event, waveColorValue, () => {
+    colorMode.preference = nextMode;
+  });
 };
 </script>

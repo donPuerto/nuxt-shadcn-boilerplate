@@ -3,7 +3,10 @@
     <Popover>
       <PopoverTrigger as-child>
         <Button variant="ghost" size="icon">
-          <Icon name="lucide:paintbrush" size="16" />
+          <Icon 
+            name="lucide:paintbrush" 
+            class="h-[1.2rem] w-[1.2rem] transition-all" 
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent
