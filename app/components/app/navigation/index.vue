@@ -1,13 +1,13 @@
 <template>
-  <header class="bg-background sticky inset-x-0 top-0 isolate z-10 flex shrink-0 items-center gap-2 border-b">
-    <div class="container flex h-14 items-center">
+  <header class="sticky top-0 z-40 w-full border-b bg-background">
+    <div class="container mx-auto flex h-16 items-center justify-between px-4">
       <!-- Left side: Logo and Title -->
-      <div class="flex items-center">
+      <div class="flex items-center gap-6">
         <AppNavigationLogo />
       </div>
 
       <!-- Center: Main Navigation -->
-      <nav class="hidden md:flex flex-1 items-center justify-center">
+      <nav class="hidden gap-6 md:flex">
         <ul class="flex space-x-6">
           <li v-for="item in navigationItems" :key="item.path">
             <NuxtLink 
@@ -22,7 +22,7 @@
       </nav>
 
       <!-- Theme and Language -->
-      <div class="ml-auto flex items-center space-x-2">
+      <div class="flex items-center gap-2">
         <ThemePopover />
         <LanguageSwitcher />
         <ModeSwitcher />

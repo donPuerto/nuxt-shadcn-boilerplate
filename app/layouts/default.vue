@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-background">
-    <!-- Make sure to use the proper component name -->
+  <div class="flex min-h-screen flex-col">
+    
     <AppNavigation />
-    <main class="flex-1">
+    <main class="container mx-auto flex-1 px-4 py-8">
       <slot />
     </main>
     <AppFooter />
