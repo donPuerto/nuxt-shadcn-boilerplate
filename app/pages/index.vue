@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <section class="space-y-8">
     <h1 class="text-2xl font-bold mb-6">{{ $t('home.title') }}</h1>
     <p class="mb-6">{{ $t('home.subtitle') }}</p>
 
@@ -35,7 +35,7 @@
         <h2 class="text-xl mb-4">Popover Test</h2>
         <PopoverDemo />
     </div>
-  </div>
+  </section>
 
  
 </template>

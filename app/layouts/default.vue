@@ -1,8 +1,8 @@
 <template>
   <div class="flex min-h-screen flex-col">
-    
+    <!-- Navigation is a separate component -->
     <AppNavigation />
-    <main class="container mx-auto flex-1 px-4 py-8">
+    <main class="container mx-auto px-4 py-8 flex-1">
       <slot />
     </main>
     <AppFooter />

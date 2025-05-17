@@ -1,6 +1,6 @@
 <template>
   <footer class="border-t border-border bg-background">
-    <div class="container py-10 md:py-12">
+    <div class="container mx-auto px-4 py-4">
  
       
       <div class="mt-8 border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
