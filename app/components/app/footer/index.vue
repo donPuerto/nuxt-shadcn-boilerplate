@@ -1,31 +1,106 @@
 <template>
-  <footer class="border-t border-border bg-background">
-    <div class="container mx-auto px-4 py-4">
- 
-      
-      <div class="mt-8 border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+  <footer class="border-t bg-background">
+    <div class="mx-auto max-w-7xl px-4 py-12">
+      <!-- Footer Top Section with Logo and Links -->
+      <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+        <!-- Logo and Description -->
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-2">
+            <!-- <img src="/logo.svg" alt="Logo" class="h-8 w-8" > -->
+            <span class="text-xl font-bold">Nuxt Shadcn</span>
+          </div>
+          <p class="mt-4 text-sm text-muted-foreground">
+            A modern boilerplate combining the power of Nuxt.js and Shadcn UI components with 
+            Tailwind CSS for building beautiful, accessible, and responsive web applications.
+          </p>
+          <div class="mt-6 flex items-center gap-4">
+            <a 
+              href="https://twitter.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              aria-label="Twitter"
+            >
+              <i class="i-lucide-twitter h-5 w-5"/>
+            </a>
+            <a 
+              href="https://github.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              aria-label="GitHub"
+            >
+              <i class="i-lucide-github h-5 w-5"/>
+            </a>
+            <a 
+              href="https://discord.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              aria-label="Discord"
+            >
+              <i class="i-lucide-message-circle h-5 w-5"/>
+            </a>
+          </div>
+        </div>
+
+        <!-- Resources Links -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Resources</h3>
+          <ul class="space-y-2">
+            <li><NuxtLink to="/components" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Components</NuxtLink></li>
+            <li><NuxtLink to="/roadmap" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Roadmap</NuxtLink></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Documentation</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Tutorials</a></li>
+          </ul>
+        </div>
+
+        <!-- Community Links -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Community</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">GitHub</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Discord</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Twitter</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Contributors</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Links -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Legal</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy Policy</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Terms of Service</a></li>
+            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">License</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <Separator class="my-8" />
+
+      <!-- Footer Bottom Section with Copyright -->
+      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <p class="text-sm text-muted-foreground">
           &copy; {{ new Date().getFullYear() }} Nuxt Shadcn Boilerplate. All rights reserved.
         </p>
         <div class="flex items-center gap-4">
-          <a href="https://github.com/shadcn-vue/ui" target="_blank" rel="noreferrer" class="text-muted-foreground hover:text-foreground">
-            <Icon name="lucide:github" class="h-5 w-5" />
-            <span class="sr-only">GitHub</span>
-          </a>
-          <a href="https://twitter.com/shadcn" target="_blank" rel="noreferrer" class="text-muted-foreground hover:text-foreground">
-            <Icon name="lucide:twitter" class="h-5 w-5" />
-            <span class="sr-only">Twitter</span>
-          </a>
-          <a href="https://discord.gg/shadcn-ui" target="_blank" rel="noreferrer" class="text-muted-foreground hover:text-foreground">
-            <Icon name="lucide:message-square" class="h-5 w-5" />
-            <span class="sr-only">Discord</span>
-          </a>
+          <Button variant="ghost" size="sm">
+            <i class="i-lucide-globe mr-2 h-4 w-4"/>
+            <span class="hidden sm:inline">{{ $t('common.changeLanguage') }}</span>
+            <span class="sm:hidden">{{ locale.toUpperCase() }}</span>
+          </Button>
+          <Button variant="ghost" size="sm">
+            <i class="i-lucide-moon mr-2 h-4 w-4"/>
+            <span class="hidden sm:inline">{{ $t('common.toggleTheme') }}</span>
+          </Button>
         </div>
       </div>
     </div>
   </footer>
 </template>
 
-<script setup lang="ts">
-// No imports needed for this component
+<script lang="ts" setup>
+
+const { locale } = useI18n()
 </script>
