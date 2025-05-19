@@ -57,10 +57,10 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
     <div class="p-4 space-y-4">
       <h2 class="text-xl font-bold">Confetti Test</h2>
       <div class="space-x-4">
+        <Button variant="secondary" size="sm" @click="showDefaultConfetti">Default Confetti</Button>
+        <Button variant="primary" size="sm" @click="showEmojiConfetti">Random Emoji</Button>
+        <Button variant="outline" size="sm" @click="showColoredConfetti">Tech Colors</Button>
         
-    <button @click="showDefaultConfetti">Default Confetti</button>
-    <button @click="showEmojiConfetti">Emoji Confetti</button>
-    <button @click="showColoredConfetti">Colored Confetti</button>
       </div>
     </div>
 
@@ -241,49 +241,65 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Separator } from '@/components/ui/separator'
 
 const { locale } = useI18n()
+const { randomEmoji, techConfetti } = useConfetti();
 
-const { $confetti } = useNuxtApp();
+
+
+// Show emoji confetti when the page loads
+onMounted(() => {
+  randomEmoji();
+})
+
+// Listen for route changes and show emoji confetti
+const router = useRouter()
+onBeforeMount(() => {
+  router.beforeEach((to, from) => {
+    // Only trigger if actually changing routes (not just query params)
+    if (to.path !== from.path) {
+      // Small delay to ensure it happens after route change
+      setTimeout(() => {
+        randomEmoji();
+      }, 100)
+    }
+    return true
+  })
+})
 
 
 function showDefaultConfetti() {
+  const { $confetti } = useNuxtApp();
   $confetti.trigger(); // No options for default confetti
 }
 
 function showEmojiConfetti() {
-  $confetti.trigger({
-    emojis: ['⭐', '💖', '👍', '🔥', '💯'],
-    emojiSize: 120,
-    confettiNumber: 50
+  // Use composable with specific sets
+  randomEmoji({ 
+    sets: ['vue', 'tech'], 
+    size: 40, 
+    count: 40 
   });
 }
 
 function showColoredConfetti() {
-  $confetti.trigger({
-    confettiColors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'],
-    confettiRadius: 10,
-    confettiNumber: 150
-  });
+  // Use composable for tech colors
+  techConfetti();
 }
-
-
-
-
 
 /**
  * Switch to the selected language
  */
 const switchLanguage = (lang: string) => {
   locale.value = lang
+
+  // Show random celebration emojis when changing language
+  randomEmoji({ 
+    sets: ['celebration'],
+    size: 30,
+    count: 20
+  });
 }
 </script>
 
 <style scoped>
-.animate-fade-in {
-  animation: fadeIn 1s ease-out;
-}
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 </style>
