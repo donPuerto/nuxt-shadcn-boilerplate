@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtPlugin((nuxtApp) => {
   // Only run on client side
   if (import.meta.client) {
@@ -8,10 +9,12 @@ export default defineNuxtPlugin((nuxtApp) => {
         new (): {
           addConfetti: (options?: { 
             emojis?: string[];
+            emojiSize?: number;
             confettiColors?: string[];
             confettiRadius?: number;
             confettiNumber?: number;
-          }) => void
+          }) => Promise<void>;
+          clearCanvas: () => void;
         } 
       }
     }
@@ -23,41 +26,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
     
     // Track if confetti is loaded
-    let confettiInstance = null
-    const isLoaded = false;
-
-    // Confetti configuration options
-    type ConfettiType = 'default' | 'emoji' | 'colored';
-
-    // Function to trigger confetti with specific type
-    const triggerConfetti = (type: ConfettiType = 'default') => {
-      if (!isLoaded || !confettiInstance) {
-        console.log('Confetti not ready, will try later');
-        return;
-      }
-      
-      try {
-        if (type === 'emoji') {
-          console.log('Triggering emoji confetti');
-          confettiInstance.addConfetti({ 
-            emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸'],
-            confettiNumber: 30
-          });
-        } else if (type === 'colored') {
-          console.log('Triggering colored confetti');
-          confettiInstance.addConfetti({
-            confettiColors: ['#ff0000', '#00ff00', '#0000ff'],
-            confettiRadius: 8,
-            confettiNumber: 150
-          });
-        } else {
-          console.log('Triggering default confetti');
-          confettiInstance.addConfetti();
-        }
-      } catch (error) {
-        console.error('Confetti error:', error);
-      }
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let confettiInstance: any = null;
+    let isLoaded = false;
 
     // Load JS Confetti
     const { onLoaded } = useScriptNpm<JSConfettiApi>({
@@ -73,40 +44,48 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     // Create confetti instance when script is loaded
     onLoaded(({ JSConfetti }) => {
-      // Create the instance directly as shown in docs
-      confettiInstance = new JSConfetti();
-      console.log('JSConfetti loaded successfully');
-      
-      // You can choose to show initial confetti here if desired
-      // triggerConfetti('default');
-    })
+      try {
+        // Create JSConfetti with default canvas
+        confettiInstance = new JSConfetti();
+        isLoaded = true;
+      } catch (error) {
+        console.error('Error initializing confetti:', error);
+      }
+    });
     
-       
-    
-    // We'll use a ref to track if navigation confetti has been triggered
-      let hasTriggeredInitialConfetti = false;
+    // Define options type for confetti
+    type ConfettiOptions = {
+      emojis?: string[];
+      emojiSize?: number;
+      confettiColors?: string[];
+      confettiRadius?: number;
+      confettiNumber?: number;
+    };
+
+    // Function to trigger confetti with custom options
+    const triggerConfetti = (options?: ConfettiOptions) => {
+      if (!isLoaded || !confettiInstance) {
+        return;
+      }
       
-      // This is the only navigation hook - no duplicates
-      nuxtApp.hook('page:finish', () => {
-        // Only try to trigger confetti if it's loaded
-        if (isLoaded && confettiInstance) {
-          if (!hasTriggeredInitialConfetti) {
-            // First navigation, use default confetti
-            triggerConfetti('default');
-            hasTriggeredInitialConfetti = true;
-          } 
-          // You could uncomment this if you want confetti on every navigation
-          // else {
-          //   triggerConfetti('default');
-          // }
-        }
-      });
+      try {
+        confettiInstance.addConfetti(options);
+      } catch (error) {
+        console.error('Confetti error:', error);
+      }
+    };
 
     // Provide confetti functionality to components
     return {
       provide: {
         confetti: {
-          trigger: triggerConfetti
+          trigger: triggerConfetti,
+          instance: confettiInstance,
+          clear: () => {
+            if (isLoaded && confettiInstance) {
+              confettiInstance.clearCanvas();
+            }
+          }
         }
       }
     }

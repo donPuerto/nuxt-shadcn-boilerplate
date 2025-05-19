@@ -54,15 +54,15 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
       </div>
     </section>
 
-    <div class="p-8">
-    <h1 class="text-2xl font-bold mb-4">JS Confetti Test</h1>
-    <Button 
-      class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" 
-      @click="triggerConfetti"
-    >
-      Trigger Confetti 🎉
-    </Button>
-   </div>
+    <div class="p-4 space-y-4">
+      <h2 class="text-xl font-bold">Confetti Test</h2>
+      <div class="space-x-4">
+        
+    <button @click="showDefaultConfetti">Default Confetti</button>
+    <button @click="showEmojiConfetti">Emoji Confetti</button>
+    <button @click="showColoredConfetti">Colored Confetti</button>
+      </div>
+    </div>
 
 
     <!-- Features Section -->
@@ -242,44 +242,30 @@ import { Separator } from '@/components/ui/separator'
 
 const { locale } = useI18n()
 
-const confettiReady = ref(false)
-let jsConfetti = null
+const { $confetti } = useNuxtApp();
 
 
-// Load the script manually
-onMounted(() => {
-  // Check if we're in the browser
-  if (import.meta.client) {
-    // Create script element
-    const script = document.createElement('script')
-    script.src = 'https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js'
-    script.async = true
-    
-    // When script loads, initialize confetti
-    script.onload = () => {
-      jsConfetti = new window.JSConfetti()
-      confettiReady.value = true
-      
-      // Show confetti on initial load
-      triggerConfetti()
-    }
-    
-    // Add script to document
-    document.head.appendChild(script)
-  }
-})
-
-const triggerConfetti = () => {
-  if (confettiReady.value && jsConfetti) {
-    jsConfetti.addConfetti()
-  }
+function showDefaultConfetti() {
+  $confetti.trigger(); // No options for default confetti
 }
 
-// Show confetti on page navigation
-const router = useRouter()
-router.afterEach(() => {
-  triggerConfetti()
-})
+function showEmojiConfetti() {
+  $confetti.trigger({
+    emojis: ['⭐', '💖', '👍', '🔥', '💯'],
+    emojiSize: 120,
+    confettiNumber: 50
+  });
+}
+
+function showColoredConfetti() {
+  $confetti.trigger({
+    confettiColors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'],
+    confettiRadius: 10,
+    confettiNumber: 150
+  });
+}
+
+
 
 
 
