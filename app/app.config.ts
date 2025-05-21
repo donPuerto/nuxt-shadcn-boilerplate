@@ -7,6 +7,9 @@ export default defineAppConfig({
   ui: {
     // Theme settings
   },
+  // Default particles preset
+  defaultVantaEffect: 'waves',
+  // Default Theme Customization
   theme: {
     default: 'zinc',
     defaultRadius: 0.5,

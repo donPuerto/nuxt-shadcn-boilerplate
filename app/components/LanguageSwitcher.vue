@@ -105,8 +105,10 @@ async function switchLanguage(lang: string) {
     if (import.meta.client) {
       localStorage.setItem('preferredLanguage', lang)
     }
+  
   } catch (error) {
     // Handle error silently
+    console.error('Error switching language:', error)
   } finally {
     // Add a small delay before turning off loading state
     setTimeout(() => {
@@ -132,6 +134,7 @@ onMounted(async () => {
       }
     } catch (error) {
       // Handle error silently
+      console.log('Error loading language:', error)
     } finally {
       // Turn off initial loading state after a slight delay
       setTimeout(() => {

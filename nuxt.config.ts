@@ -59,4 +59,8 @@ export default defineNuxtConfig({
     classSuffix: '',      // Important for Tailwind dark mode
     storageKey: 'nuxt-color-mode'
   },
+  // Disable SSR components for the particles component
+  experimental: {
+    componentIslands: true
+  },
 })

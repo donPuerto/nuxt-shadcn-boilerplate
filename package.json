@@ -46,6 +46,8 @@
     "@iconify-json/token": "^1.2.16",
     "@vueuse/core": "^13.1.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.8.3"
+    "three": "^0.176.0",
+    "typescript": "^5.8.3",
+    "vanta": "^0.5.24"
   }
 }

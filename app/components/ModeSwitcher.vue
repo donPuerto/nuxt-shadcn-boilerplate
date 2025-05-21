@@ -11,21 +11,14 @@
         <Icon 
           name="lucide:sun" 
           class="h-[1.2rem] w-[1.2rem] transition-all" 
-          :class="colorMode.preference === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
+          :class="showLightIcon ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
         />
             
         <!-- Dark mode icon -->
         <Icon 
           name="lucide:moon" 
           class="h-[1.2rem] w-[1.2rem] transition-all" 
-          :class="colorMode.preference === 'dark' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
-        />
-        
-        <!-- System mode icon -->
-        <Icon 
-          name="lucide:monitor" 
-          class="h-[1.2rem] w-[1.2rem] transition-all" 
-          :class="colorMode.preference === 'system' ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
+          :class="showDarkIcon ? 'rotate-0 scale-100' : 'rotate-90 scale-0 absolute'" 
         />
       </Button>
       
@@ -72,9 +65,23 @@ const {
   triggerWave
 } = useWaveAnimation();
 
+// Computed properties to determine which icon to show
+const systemTheme = computed(() => {
+  if (import.meta.client) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return 'light'; // Default to light for SSR
+});
+
+const effectiveTheme = computed(() => {
+  return colorMode.preference === 'system' ? systemTheme.value : colorMode.preference;
+});
+
+const showLightIcon = computed(() => effectiveTheme.value === 'light');
+const showDarkIcon = computed(() => effectiveTheme.value === 'dark');
+
 // Handle theme toggle with animation
 const handleThemeToggle = (event) => {
-  // Determine next mode in cycle: light → dark → system → light
   let nextMode;
   let waveColorValue;
   
@@ -82,11 +89,17 @@ const handleThemeToggle = (event) => {
     nextMode = 'dark';
     waveColorValue = '#09090b'; // Going to dark
   } else if (colorMode.preference === 'dark') {
-    nextMode = 'system';
-    waveColorValue = '#ffffff'; // Going to system (assume light for animation)
-  } else {
     nextMode = 'light';
     waveColorValue = '#ffffff'; // Going to light
+  } else {
+    // If system, toggle based on current system theme
+    if (systemTheme.value === 'dark') {
+      nextMode = 'light';
+      waveColorValue = '#ffffff';
+    } else {
+      nextMode = 'dark';
+      waveColorValue = '#09090b';
+    }
   }
   
   // Trigger the wave animation
@@ -94,4 +107,20 @@ const handleThemeToggle = (event) => {
     colorMode.preference = nextMode;
   });
 };
+
+// Watch for system preference changes
+onMounted(() => {
+  if (import.meta.client) {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Force update when system theme changes
+    mediaQuery.addEventListener('change', () => {
+      // This will re-evaluate our computed properties
+      if (colorMode.preference === 'system') {
+        // Force a component update
+        nextTick();
+      }
+    });
+  }
+});
 </script>
