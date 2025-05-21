@@ -1,8 +1,14 @@
 import { ref, reactive } from 'vue'
 
+// Create a global singleton instance to prevent duplicate state on HMR
+let globalState = null
+
 export const useThreeBackground = () => {
-  // Background theme
-  const theme = ref('stars') // 'stars', 'nebula', 'space'
+  // Return the existing instance if it exists
+  if (globalState) return globalState
+
+  // Track active preset
+  const activePreset = ref('default')
   
   // Background settings
   const settings = reactive({
@@ -46,25 +52,46 @@ export const useThreeBackground = () => {
   const applyPreset = (presetName) => {
     const preset = presets[presetName]
     if (preset) {
+      console.log(`Applying preset ${presetName}...`)
+      
+      // First, change the preset name
+      activePreset.value = presetName
+      
+      // Then update all settings to trigger reactivity
       settings.stars.count = preset.count
       settings.stars.speed = preset.speed
       settings.stars.size = preset.size
-      settings.stars.colors = [...preset.colors]
+      
+      // Clear the colors array
+      settings.stars.colors.length = 0
+      
+      // Add the new colors
+      preset.colors.forEach(color => settings.stars.colors.push(color))
+      
+      console.log(`Applied preset: ${presetName}`, {
+        count: settings.stars.count,
+        speed: settings.stars.speed,
+        size: settings.stars.size,
+        colors: [...settings.stars.colors]
+      })
     }
   }
   
-  // Toggle between themes
-  const setTheme = (newTheme) => {
-    if (['stars', 'nebula', 'space'].includes(newTheme)) {
-      theme.value = newTheme
-    }
-  }
-  
-  return {
-    theme,
+  const state = {
+    activePreset,
     settings,
-    setTheme,
-    applyPreset,
-    presets
+    presets,
+    applyPreset
   }
+  
+  // Store the state globally
+  globalState = state
+  
+  // Only initialize on client-side to avoid SSR issues
+  if (typeof window !== 'undefined') {
+    // Initialize with default preset
+    applyPreset('default')
+  }
+  
+  return state
 }

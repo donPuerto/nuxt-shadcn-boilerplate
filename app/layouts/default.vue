@@ -17,16 +17,22 @@
               <button 
                 v-for="(preset, name) in threeBackground.presets" 
                 :key="name"
-                class="px-2 py-1 text-xs rounded bg-gray-200 dark:bg-gray-700"
-                @click="threeBackground.applyPreset(name)"
+                class="px-2 py-1 text-xs rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                :class="[
+                  threeBackground.activePreset.value === name 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700'
+                ]"
+                @click="applyThemePreset(name)"
               >
                 {{ name }}
               </button>
             </div>
           </div>
-
+          
+          <!-- Star Count Slider -->
           <div class="mb-2">
-            <label class="block text-sm font-medium mb-1">Star Count</label>
+            <label class="block text-sm font-medium mb-1">Star Count: {{ threeBackground.settings.stars.count }}</label>
             <input 
               v-model.number="threeBackground.settings.stars.count" 
               type="range" 
@@ -36,25 +42,29 @@
               class="w-full"
             >
           </div>
+          
+          <!-- Star Size Slider -->
           <div class="mb-2">
-            <label class="block text-sm font-medium mb-1">Speed</label>
+            <label class="block text-sm font-medium mb-1">Star Size: {{ threeBackground.settings.stars.size }}</label>
+            <input 
+              v-model.number="threeBackground.settings.stars.size" 
+              type="range" 
+              min="0.5" 
+              max="5" 
+              step="0.5"
+              class="w-full"
+            >
+          </div>
+          
+          <!-- Speed Slider -->
+          <div class="mb-2">
+            <label class="block text-sm font-medium mb-1">Speed: {{ threeBackground.settings.stars.speed }}</label>
             <input 
               v-model.number="threeBackground.settings.stars.speed" 
               type="range" 
               min="0.1" 
               max="3" 
               step="0.1"
-              class="w-full"
-            >
-          </div>
-          <div class="mb-2">
-            <label class="block text-sm font-medium mb-1">Star Size</label>
-            <input 
-              v-model.number="threeBackground.settings.stars.size" 
-              type="range" 
-              min="1" 
-              max="5" 
-              step="0.5"
               class="w-full"
             >
           </div>
@@ -68,6 +78,7 @@
       <main class="container mx-auto px-4 py-8 flex-1">
         <slot />
       </main>
+      
       <AppFooter />
     </div>
   </div>
@@ -79,4 +90,14 @@ import { useThreeBackground } from '~/composables/useThreeBackground'
 
 // Get background settings
 const threeBackground = useThreeBackground()
+
+// Function to apply a theme preset with additional logging
+function applyThemePreset(presetName) {
+  console.log('Button clicked for preset:', presetName)
+  console.log('Current preset before change:', threeBackground.activePreset.value)
+  
+  threeBackground.applyPreset(presetName)
+  
+  console.log('Preset after change:', threeBackground.activePreset.value)
+}
 </script>

@@ -4,13 +4,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import * as THREE from 'three'
 import { useThreeBackground } from '~/composables/useThreeBackground'
 
 const threeContainer = ref(null)
 let renderer, scene, camera, stars
 let animationFrame = null
+let handleResize = null
 
 // Get background settings from composable
 const threeBackground = useThreeBackground()
@@ -18,6 +19,25 @@ const threeBackground = useThreeBackground()
 // Convert hex color strings to THREE.Color objects
 function hexToThreeColor(hexColors) {
   return hexColors.map(hex => new THREE.Color(hex))
+}
+
+// Force recreation of stars with new settings
+function recreateStars() {
+  console.log('Recreating stars with settings:', {
+    count: threeBackground.settings.stars.count,
+    size: threeBackground.settings.stars.size,
+    colors: threeBackground.settings.stars.colors
+  })
+  
+  // Remove current stars if they exist
+  if (stars) {
+    scene.remove(stars)
+    stars.geometry.dispose()
+    stars.material.dispose()
+  }
+  
+  // Create new stars
+  stars = createStarfield()
 }
 
 // Create and update the starfield based on current settings
@@ -35,6 +55,7 @@ function createStarfield() {
   
   // Convert hex colors to THREE colors
   const colorOptions = hexToThreeColor(starSettings.colors)
+  console.log('Using colors:', starSettings.colors, 'converted to:', colorOptions)
   
   for (let i = 0; i < particleCount * 3; i += 3) {
     // Positions - spread stars throughout the scene
@@ -43,7 +64,8 @@ function createStarfield() {
     positions[i + 2] = (Math.random() - 0.5) * 2000
     
     // Random color from our options
-    const color = colorOptions[Math.floor(Math.random() * colorOptions.length)]
+    const colorIndex = Math.floor(Math.random() * colorOptions.length)
+    const color = colorOptions[colorIndex]
     colors[i] = color.r
     colors[i + 1] = color.g
     colors[i + 2] = color.b
@@ -66,15 +88,6 @@ function createStarfield() {
   return newStars
 }
 
-// Handle window resize
-function handleResize() {
-  if (!camera || !renderer) return
-  
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-}
-
 // Initialize THREE.js scene
 function initThreeScene() {
   if (!threeContainer.value) return
@@ -89,7 +102,7 @@ function initThreeScene() {
     
     // Create renderer with optimizations
     renderer = new THREE.WebGLRenderer({ 
-      antialias: false, // Disable antialiasing for performance
+      antialias: false, 
       alpha: true,
       powerPreference: 'high-performance'
     })
@@ -105,6 +118,14 @@ function initThreeScene() {
     stars = createStarfield()
     
     // Setup resize handler with debounce
+    handleResize = () => {
+      if (!camera || !renderer) return
+      
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+    
     let resizeTimeout
     const debouncedResize = () => {
       clearTimeout(resizeTimeout)
@@ -121,7 +142,7 @@ function initThreeScene() {
   }
 }
 
-// Animation loop with throttling
+// Animation loop
 function animate() {
   if (!scene || !camera || !renderer || !stars) return
   
@@ -158,38 +179,52 @@ function updateVisualization() {
   updateTimeout = setTimeout(() => {
     if (!scene) return
     
+    console.log('Executing deferred visualization update')
+    
     // Cancel the animation frame first
     if (animationFrame) {
       cancelAnimationFrame(animationFrame)
     }
     
-    // Remove current stars
-    if (stars) {
-      scene.remove(stars)
-      stars.geometry.dispose()
-      stars.material.dispose()
-    }
-    
-    // Create new stars with updated settings
-    stars = createStarfield()
+    // Recreate stars with new settings
+    recreateStars()
     
     // Restart animation
     animationFrame = requestAnimationFrame(animate)
   }, 300) // Wait 300ms before updating
 }
 
-// Watch for changes in settings with debouncing
-const debouncedWatch = watch(() => {
-  // Create a snapshot of the current settings
-  return {
-    count: threeBackground.settings.stars.count,
-    speed: threeBackground.settings.stars.speed,
-    size: threeBackground.settings.stars.size,
-    colors: [...threeBackground.settings.stars.colors]
+// Watch for preset changes directly
+watch(() => threeBackground.activePreset.value, (newPreset, oldPreset) => {
+  if (newPreset !== oldPreset) {
+    console.log(`Preset changed from '${oldPreset}' to '${newPreset}'`)
+    nextTick(() => {
+      updateVisualization()
+    })
   }
-}, () => {
+}, { immediate: true })
+
+// Watch for individual property changes
+watch(() => threeBackground.settings.stars.count, (newCount) => {
+  console.log('Star count changed:', newCount)
   updateVisualization()
-}, { deep: true, immediate: false })
+})
+
+watch(() => threeBackground.settings.stars.size, (newSize) => {
+  console.log('Star size changed:', newSize)
+  updateVisualization()
+})
+
+// Watch for color changes using a function to create a new array reference
+watch(() => [...threeBackground.settings.stars.colors], (newColors) => {
+  console.log('Colors changed:', newColors)
+  updateVisualization()
+}, { deep: true })
+
+// Speed doesn't require recreation of stars
+watch(() => threeBackground.settings.stars.speed, (newSpeed) => {
+  console.log('Speed updated:', newSpeed)
+})
 
 onMounted(() => {
   if (typeof window !== 'undefined') {
@@ -198,6 +233,11 @@ onMounted(() => {
     // Initialize with a small delay to avoid initial freezing
     setTimeout(() => {
       initThreeScene()
+      
+      // Force apply preset after initialization
+      const currentPreset = threeBackground.activePreset.value
+      console.log('Applying initial preset:', currentPreset)
+      threeBackground.applyPreset(currentPreset)
     }, 100)
   }
 })
@@ -206,30 +246,37 @@ onUnmounted(() => {
   // Cancel animation frame
   if (animationFrame) {
     cancelAnimationFrame(animationFrame)
+    animationFrame = null
   }
   
   // Clear any pending timeouts
   if (updateTimeout) {
     clearTimeout(updateTimeout)
+    updateTimeout = null
   }
   
   // Remove event listeners
-  window.removeEventListener('resize', handleResize)
+  if (handleResize) {
+    window.removeEventListener('resize', handleResize)
+  }
   
   // Clean up resources
-  if (renderer && renderer.domElement) {
-    renderer.domElement.remove()
+  if (renderer) {
+    if (renderer.domElement) {
+      renderer.domElement.remove()
+    }
     renderer.dispose()
+    renderer = null
   }
   
   if (stars) {
+    if (scene) scene.remove(stars)
     stars.geometry.dispose()
     stars.material.dispose()
+    stars = null
   }
   
   scene = null
   camera = null
-  renderer = null
-  stars = null
 })
 </script>
