@@ -14,6 +14,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import * as THREE from 'three'
 import { useThreeBackground } from '~/composables/useThreeBackground'
+import { debounce } from 'lodash-es'
 
 // Get settings from the composable
 const threeBackground = useThreeBackground()
@@ -28,8 +29,6 @@ let animationFrame
 
 // Function to create the visualization
 function createVisualization() {
-  console.log('Creating ThreeBackground visualization')
-  
   // Clean up existing scene if any
   if (scene) {
     cleanupScene()
@@ -58,7 +57,6 @@ function createVisualization() {
   // Find the container element
   const container = document.getElementById('three-background')
   if (!container) {
-    console.error('Three.js container element not found!')
     return false
   }
   
@@ -79,25 +77,11 @@ function createVisualization() {
   // Start animation
   animate()
   
-  // Log successful creation
-  console.log('ThreeBackground visualization created successfully')
-  console.log('Current settings:', {
-    count: threeBackground.settings.stars.count,
-    size: threeBackground.settings.stars.size,
-    speed: threeBackground.settings.stars.speed
-  })
-  
   return true
 }
 
 // Function to create stars based on settings
 function createStars() {
-  console.log('Creating stars with settings:', {
-    count: threeBackground.settings.stars.count,
-    size: threeBackground.settings.stars.size,
-    colors: threeBackground.settings.stars.colors
-  })
-  
   const { count, size, colors } = threeBackground.settings.stars
   
   // Clear existing stars
@@ -147,7 +131,10 @@ function createStars() {
   
   // If there are multiple colors, create additional star systems
   if (colors && colors.length > 1) {
-    for (let i = 1; i < colors.length; i++) {
+    // Limit to 3 additional star systems maximum for performance
+    const maxAdditionalSystems = Math.min(colors.length - 1, 3)
+    
+    for (let i = 1; i <= maxAdditionalSystems; i++) {
       // Create additional smaller star systems with different colors
       const subGeometry = new THREE.BufferGeometry()
       const subVertices = []
@@ -155,7 +142,10 @@ function createStars() {
       // Fewer stars in the additional systems
       const subCount = Math.floor(count / (colors.length * 2))
       
-      for (let j = 0; j < subCount; j++) {
+      // Limit the number of stars for performance
+      const maxStars = Math.min(subCount, 2000)
+      
+      for (let j = 0; j < maxStars; j++) {
         const x = Math.random() * bounds - bounds/2
         const y = Math.random() * bounds - bounds/2
         const z = Math.random() * bounds - bounds/2
@@ -178,8 +168,6 @@ function createStars() {
       stars.push(subSystem)
     }
   }
-  
-  console.log(`Created ${stars.length} star systems with ${count} total stars`)
 }
 
 // Animation function
@@ -212,8 +200,6 @@ function handleResize() {
 
 // Clean up the scene
 function cleanupScene() {
-  console.log('Cleaning up ThreeBackground scene')
-  
   if (animationFrame) {
     cancelAnimationFrame(animationFrame)
     animationFrame = null
@@ -232,7 +218,11 @@ function cleanupScene() {
     renderer.dispose()
     const container = document.getElementById('three-background')
     if (container && renderer.domElement) {
-      container.removeChild(renderer.domElement)
+      try {
+        container.removeChild(renderer.domElement)
+      } catch (e) {
+        // Ignore removal errors
+      }
     }
   }
   
@@ -241,49 +231,62 @@ function cleanupScene() {
   renderer = null
 }
 
-// Update the visualization with current settings
-function updateVisualization() {
-  console.log('Updating ThreeBackground visualization with settings:', {
-    count: threeBackground.settings.stars.count,
-    size: threeBackground.settings.stars.size,
-    speed: threeBackground.settings.stars.speed
-  })
+// Update just the star size without recreating
+function updateStarSize(size) {
+  if (!stars || stars.length === 0) return
   
+  stars.forEach((star, i) => {
+    if (star && star.material) {
+      star.material.size = i === 0 ? size : size * 1.2
+    }
+  })
+}
+
+// Update the visualization with current settings
+// Debounce this function to prevent too many updates
+const updateVisualizationDebounced = debounce((type) => {
+  // If no scene exists, create everything from scratch
   if (!scene) {
-    console.log('Scene does not exist, creating new visualization')
     createVisualization()
     return
   }
   
-  // Recreate the stars with new settings
-  createStars()
-}
+  // For size updates, just change the material property
+  if (type === 'size') {
+    updateStarSize(threeBackground.settings.stars.size)
+  } else {
+    // For count or preset changes, recreate the stars
+    createStars()
+  }
+}, 100)
 
-// Watch for individual star settings changes to ensure real-time updates
-watch(() => threeBackground.settings.stars.count, (newValue) => {
-  console.log('Star count changed to:', newValue)
-  updateVisualization()
-})
+// Watch for individual star settings changes
+watch(() => threeBackground.settings.stars.count, () => {
+  updateVisualizationDebounced('count')
+}, { flush: 'post' })
 
-watch(() => threeBackground.settings.stars.size, (newValue) => {
-  console.log('Star size changed to:', newValue)
-  updateVisualization()
-})
+watch(() => threeBackground.settings.stars.size, () => {
+  updateVisualizationDebounced('size')
+}, { flush: 'post' })
 
-// No need to watch speed as it's used directly in animate function
+// Add a watch for colors changes
+watch(() => threeBackground.settings.stars.colors, () => {
+  updateVisualizationDebounced('colors');
+}, { deep: true, flush: 'post' });
 
 // Also watch the updateTrigger for forced updates
 watch(() => threeBackground.updateTrigger, () => {
-  console.log('Force update triggered from updateTrigger')
-  updateVisualization()
+  setTimeout(() => {
+    updateVisualizationDebounced('forced')
+  }, 50)
 })
 
 // Initialize on mount
 onMounted(() => {
-  console.log('ThreeBackground component mounted')
-  
-  // Create the visualization
-  createVisualization()
+  // Add a small delay to ensure DOM is ready
+  setTimeout(() => {
+    createVisualization()
+  }, 10)
   
   // Add resize listener
   window.addEventListener('resize', handleResize)

@@ -1,4 +1,4 @@
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive } from 'vue'
 import { useAppConfig } from '#imports'
 
 // Create a global singleton instance to prevent duplicate state on HMR
@@ -31,7 +31,7 @@ export const useThreeBackground = () => {
         return JSON.parse(saved)
       }
     } catch (e) {
-      console.error('Error reading from localStorage in useThreeBackground:', e)
+      // Silent error handling
     }
     
     return null
@@ -55,67 +55,73 @@ export const useThreeBackground = () => {
   // Update trigger for forcing visualization updates
   const updateTrigger = ref(0)
   
-  // Get the default preset data
-  const initialPreset = presets[initialPresetName] || presets[defaultPresetName]
+  // Get the default preset data or fallback to defaults
+  const initialPreset = presets[initialPresetName] || { 
+    count: 7000,
+    size: 2,
+    speed: 5,
+    colors: defaultColors
+  }
   
   // Initialize settings from stored values or preset defaults
   const settings = reactive({
     stars: {
       // Use stored values if available, otherwise use the active preset values
-      count: storedSettings?.settings?.count ?? initialPreset?.count ?? 7000,
-      speed: storedSettings?.settings?.speed ?? initialPreset?.speed ?? 5,
-      size: storedSettings?.settings?.size ?? initialPreset?.size ?? 2,
-      colors: [...(initialPreset?.colors || defaultColors)]
+      count: storedSettings?.settings?.count ?? initialPreset.count ?? 7000,
+      speed: storedSettings?.settings?.speed ?? initialPreset.speed ?? 5,
+      size: storedSettings?.settings?.size ?? initialPreset.size ?? 2,
+      colors: [...(initialPreset.colors || defaultColors)]
     }
-  })
-  
-  console.log('ThreeBackground initialized with settings:', {
-    activePreset: activePreset.value,
-    count: settings.stars.count,
-    size: settings.stars.size,
-    speed: settings.stars.speed,
-    colors: settings.stars.colors
   })
   
   // Apply a preset theme
-  const applyPreset = (presetName) => {
-    const preset = presets[presetName]
-    if (preset) {
-      console.log(`Applying preset ${presetName}...`)
-      
-      // Update active preset
-      activePreset.value = presetName
-      
-      // Update all settings
-      settings.stars.count = preset.count
-      settings.stars.speed = preset.speed
-      settings.stars.size = preset.size
-      
-      // Handle colors
-      if (Array.isArray(preset.colors) && preset.colors.length > 0) {
-        settings.stars.colors.length = 0
-        preset.colors.forEach(color => settings.stars.colors.push(color))
-      } else {
-        settings.stars.colors.length = 0
-        defaultColors.forEach(color => settings.stars.colors.push(color))
-      }
-      
-      // Force update the visualization
-      forceUpdate()
-      
-      console.log(`Applied preset: ${presetName}`, {
-        count: settings.stars.count,
-        speed: settings.stars.speed, 
-        size: settings.stars.size,
-        colors: settings.stars.colors
-      })
+  // Update the applyPreset function:
+const applyPreset = (presetName) => {
+  // Check that preset exists
+  if (!presets[presetName]) {
+    return;
+  }
+  
+  const preset = presets[presetName];
+  
+  // Update active preset
+  activePreset.value = presetName;
+  
+  // Update all settings with fallbacks for missing values
+  settings.stars.count = preset.count ?? 7000;
+  settings.stars.speed = preset.speed ?? 5;
+  settings.stars.size = preset.size ?? 2;
+  
+  // Handle colors - this is critical for the visualization update
+  if (Array.isArray(preset.colors) && preset.colors.length > 0) {
+    // First wipe out all colors
+    settings.stars.colors.length = 0;
+    
+    // Then add new colors from preset
+    for (const color of preset.colors) {
+      settings.stars.colors.push(color);
+    }
+  } else {
+    // If no colors provided, use default colors
+    settings.stars.colors.length = 0;
+    for (const color of defaultColors) {
+      settings.stars.colors.push(color);
     }
   }
+  
+  // Force multiple updates to ensure changes take effect
+  forceUpdate();
+  
+  // Sometimes a second update after a brief delay helps ensure changes take effect
+  setTimeout(() => {
+    forceUpdate();
+  }, 20);
+};
   
   // Force update visualization
   const forceUpdate = () => {
     updateTrigger.value++
-    console.log("Force update triggered:", updateTrigger.value)
+    console.log('Force update triggered:', updateTrigger.value)
   }
   
   // Create and store our state

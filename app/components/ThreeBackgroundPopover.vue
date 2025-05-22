@@ -46,7 +46,11 @@
             <span
               :class="`inline-block w-3 h-3 rounded-full mr-2`"
               :style="{
-                background: `linear-gradient(45deg, ${preset.colors[0]} 0%, ${preset.colors[1] || preset.colors[0]} 100%)`
+                background: preset.colors && preset.colors.length > 1 
+                  ? `linear-gradient(45deg, ${preset.colors[0]} 0%, ${preset.colors[1]} 100%)`
+                  : preset.colors && preset.colors.length === 1
+                    ? preset.colors[0]
+                    : '#3f51b5'
               }"
             />
             {{ name }}
@@ -106,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted, nextTick } from 'vue'
 import { useThreeBackground } from '~/composables/useThreeBackground'
 import { useAppConfig } from '#imports'
 
@@ -149,8 +153,6 @@ function loadFromLocalStorage() {
   
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
-    console.log('Loading from localStorage:', saved)
-    
     if (saved) {
       const data = JSON.parse(saved)
       
@@ -174,17 +176,10 @@ function loadFromLocalStorage() {
         }
       }
       
-      console.log('Loaded settings from localStorage:', {
-        activePreset: activePreset.value,
-        count: form.count[0],
-        size: form.size[0],
-        speed: form.speed[0]
-      })
-      
       return true
     }
   } catch (e) {
-    console.error('Error loading from localStorage:', e)
+    // Silent error handling
   }
   
   return false
@@ -205,9 +200,8 @@ function saveToLocalStorage() {
     }
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-    console.log('Saved to localStorage:', data)
   } catch (e) {
-    console.error('Error saving to localStorage:', e)
+    // Silent error handling
   }
 }
 
@@ -253,113 +247,141 @@ function updateSpeed(value) {
 
 // Apply a specific preset
 function applyPreset(presetName) {
-  if (!presets[presetName]) return
+  // Check if preset exists
+  if (!presets || !presets[presetName]) {
+    return;
+  }
   
-  const preset = presets[presetName]
+  const preset = presets[presetName];
   
   // Update form values
-  form.count = [preset.count]
-  form.size = [preset.size]
-  form.speed = [preset.speed]
+  form.count = [preset.count || 7000];
+  form.size = [preset.size || 2];
+  form.speed = [preset.speed || 5];
   
   // Update active preset
-  activePreset.value = presetName
+  activePreset.value = presetName;
   
-  // Apply to ThreeBackground
-  threeBackground.applyPreset(presetName)
+  // IMPORTANT: Call both methods to ensure changes take effect
+  // First have ThreeBackground apply the preset directly
+  threeBackground.applyPreset(presetName);
   
-  // Save to localStorage
-  saveToLocalStorage()
+  // Then also ensure our own settings are applied
+  nextTick(() => {
+    applyCurrentSettingsImmediate();
+    
+    // Save to localStorage
+    saveToLocalStorage();
+  });
 }
 
 // Reset to default preset
 function resetToDefault() {
-  applyPreset(threeBackgroundConfig.defaultPreset || 'default')
+  applyPreset(threeBackgroundConfig.defaultPreset || 'default');
 }
 
 // Apply current form settings to ThreeBackground
 function applyCurrentSettings() {
   // Update values in ThreeBackground
-  threeBackground.settings.stars.count = form.count[0]
-  threeBackground.settings.stars.size = form.size[0]
-  threeBackground.settings.stars.speed = form.speed[0]
+  threeBackground.settings.stars.count = form.count[0];
+  threeBackground.settings.stars.size = form.size[0];
+  threeBackground.settings.stars.speed = form.speed[0];
   
   // Update colors from preset
-  const preset = presets[activePreset.value]
+  const preset = presets[activePreset.value];
   if (preset && preset.colors && Array.isArray(threeBackground.settings.stars.colors)) {
     // Clear existing colors
-    threeBackground.settings.stars.colors.length = 0
+    threeBackground.settings.stars.colors.length = 0;
     
     // Add new colors
     preset.colors.forEach(color => {
-      threeBackground.settings.stars.colors.push(color)
-    })
+      threeBackground.settings.stars.colors.push(color);
+    });
   }
   
   // Ensure the active preset is set
-  threeBackground.activePreset.value = activePreset.value
+  threeBackground.activePreset.value = activePreset.value;
   
-  console.log('Applied settings to ThreeBackground:', {
-    count: threeBackground.settings.stars.count,
-    size: threeBackground.settings.stars.size,
-    speed: threeBackground.settings.stars.speed,
-    activePreset: activePreset.value
-  })
+  // Force an update
+  threeBackground.forceUpdate();
+}
+
+// Enhanced version that ensures changes take effect immediately
+function applyCurrentSettingsImmediate() {
+  // Start with standard application
+  applyCurrentSettings();
+  
+  // Then force multiple updates to ensure changes take effect
+  setTimeout(() => {
+    threeBackground.forceUpdate();
+  }, 50);
+  
+  // Sometimes a second update after a brief delay helps ensure changes take effect
+  setTimeout(() => {
+    threeBackground.forceUpdate();
+  }, 100);
 }
 
 // Watch for ThreeBackground changes to keep form in sync
 watch(() => threeBackground.settings?.stars?.count, (newVal) => {
   if (newVal !== undefined && form.count[0] !== newVal) {
-    form.count = [newVal]
+    form.count = [newVal];
   }
-})
+});
 
 watch(() => threeBackground.settings?.stars?.size, (newVal) => {
   if (newVal !== undefined && form.size[0] !== newVal) {
-    form.size = [newVal]
+    form.size = [newVal];
   }
-})
+});
 
 watch(() => threeBackground.settings?.stars?.speed, (newVal) => {
   if (newVal !== undefined && form.speed[0] !== newVal) {
-    form.speed = [newVal]
+    form.speed = [newVal];
   }
-})
+});
 
 // Watch for active preset changes
 watch(() => threeBackground.activePreset?.value, (newVal) => {
   if (newVal && newVal !== activePreset.value) {
-    activePreset.value = newVal
+    activePreset.value = newVal;
     
     // Update form values from preset
-    const preset = presets[newVal]
+    const preset = presets[newVal];
     if (preset) {
-      form.count = [preset.count]
-      form.size = [preset.size]
-      form.speed = [preset.speed]
+      form.count = [preset.count || 7000];
+      form.size = [preset.size || 2];
+      form.speed = [preset.speed || 5];
+      
+      // Also apply settings when preset changes externally
+      nextTick(() => {
+        applyCurrentSettingsImmediate();
+      });
     }
   }
-})
+});
 
 // Initialize on mount
 onMounted(() => {
-  console.log('ThreeBackgroundPopover mounted')
-  
   // First try to load from localStorage
-  const loaded = loadFromLocalStorage()
+  const loaded = loadFromLocalStorage();
   
   if (!loaded) {
     // If nothing in localStorage, use app config default preset
-    console.log('No localStorage data found, initializing from default preset')
-    const defaultPreset = presets[threeBackgroundConfig.defaultPreset || 'default']
+    const defaultPresetName = threeBackgroundConfig.defaultPreset || 'default';
+    const defaultPreset = presets[defaultPresetName];
     
-    form.count = [defaultPreset.count]
-    form.size = [defaultPreset.size]
-    form.speed = [defaultPreset.speed]
-    activePreset.value = threeBackgroundConfig.defaultPreset || 'default'
+    if (defaultPreset) {
+      form.count = [defaultPreset.count || 7000];
+      form.size = [defaultPreset.size || 2];
+      form.speed = [defaultPreset.speed || 5];
+      activePreset.value = defaultPresetName;
+    }
   }
   
-  // Apply settings to ThreeBackground - ensures visualization is shown
-  applyCurrentSettings()
-})
+  // Apply settings to ThreeBackground with a small delay to ensure everything is initialized
+  setTimeout(() => {
+    applyCurrentSettingsImmediate();
+  }, 10);
+});
 </script>
