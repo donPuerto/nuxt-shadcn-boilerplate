@@ -1,6 +1,6 @@
 <!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\ThreeBackground.client.vue -->
 <template>
-  <div ref="threeContainer" class="absolute inset-0 z-0 w-full min-h-screen"/>
+  <div ref="threeContainer" class="fixed inset-0 w-full h-screen z-0" />
 </template>
 
 <script setup>
@@ -11,23 +11,58 @@ import { useThreeBackground } from '~/composables/useThreeBackground'
 const threeContainer = ref(null)
 let renderer, scene, camera, stars
 let animationFrame = null
-let handleResize = null
 
 // Get background settings from composable
 const threeBackground = useThreeBackground()
 
 // Convert hex color strings to THREE.Color objects
 function hexToThreeColor(hexColors) {
-  return hexColors.map(hex => new THREE.Color(hex))
+  // Check if we have valid colors
+  if (!Array.isArray(hexColors) || hexColors.length === 0) {
+    console.warn('No valid colors provided, using fallback colors')
+    return [
+      new THREE.Color('#3f51b5'),
+      new THREE.Color('#5e35b1'),
+      new THREE.Color('#1a237e'),
+      new THREE.Color('#0d47a1')
+    ]
+  }
+  
+  // Try to convert each color, and filter out any invalid ones
+  const validColors = hexColors
+    .map(hex => {
+      try {
+        if (typeof hex !== 'string' || !hex.startsWith('#')) {
+          console.warn('Invalid color format:', hex)
+          return null
+        }
+        return new THREE.Color(hex)
+      } catch (e) {
+        console.error('Error creating THREE.Color from', hex, e)
+        return null
+      }
+    })
+    .filter(color => color !== null)
+    
+  // If no valid colors, return defaults
+  if (validColors.length === 0) {
+    console.warn('No valid colors after filtering, using fallbacks')
+    return [
+      new THREE.Color('#3f51b5'),
+      new THREE.Color('#5e35b1')
+    ]
+  }
+  
+  return validColors
 }
 
 // Force recreation of stars with new settings
 function recreateStars() {
-  // console.log('Recreating stars with settings:', {
-  //   count: threeBackground.settings.stars.count,
-  //   size: threeBackground.settings.stars.size,
-  //   colors: threeBackground.settings.stars.colors
-  // })
+  console.log('Recreating stars with settings:', {
+    count: threeBackground.settings.stars.count,
+    size: threeBackground.settings.stars.size,
+    colors: threeBackground.settings.stars.colors
+  })
   
   // Remove current stars if they exist
   if (stars) {
@@ -44,18 +79,28 @@ function recreateStars() {
 function createStarfield() {
   if (!scene) return null
 
-  // Performance safeguard - limit star count
+  // Safety check - make sure we have valid settings
   const starSettings = threeBackground.settings.stars
-  const particleCount = Math.min(starSettings.count, 15000) // Limit to 15,000 maximum
+  if (!starSettings) {
+    console.error('No star settings found')
+    return null
+  }
+
+  // Performance safeguard - limit star count
+  const particleCount = Math.min(starSettings.count || 5000, 15000) // Limit to 15,000 maximum
   
   // Create geometry
   const particles = new THREE.BufferGeometry()
   const positions = new Float32Array(particleCount * 3)
   const colors = new Float32Array(particleCount * 3)
   
-  // Convert hex colors to THREE colors
+  // Convert hex colors to THREE colors - with error handling
   const colorOptions = hexToThreeColor(starSettings.colors)
-  // console.log('Using colors:', starSettings.colors, 'converted to:', colorOptions)
+  
+  // Final safety check - make sure we have at least one color
+  if (colorOptions.length === 0) {
+    colorOptions.push(new THREE.Color('#FFFFFF'))
+  }
   
   for (let i = 0; i < particleCount * 3; i += 3) {
     // Positions - spread stars throughout the scene
@@ -64,8 +109,7 @@ function createStarfield() {
     positions[i + 2] = (Math.random() - 0.5) * 2000
     
     // Random color from our options
-    const colorIndex = Math.floor(Math.random() * colorOptions.length)
-    const color = colorOptions[colorIndex]
+    const color = colorOptions[Math.floor(Math.random() * colorOptions.length)]
     colors[i] = color.r
     colors[i + 1] = color.g
     colors[i + 2] = color.b
@@ -75,7 +119,7 @@ function createStarfield() {
   particles.setAttribute('color', new THREE.BufferAttribute(colors, 3))
   
   const material = new THREE.PointsMaterial({
-    size: starSettings.size,
+    size: starSettings.size || 2,
     vertexColors: true,
     transparent: true,
     opacity: 0.8,
@@ -88,11 +132,25 @@ function createStarfield() {
   return newStars
 }
 
+// Handle window resize
+function handleResize() {
+  if (!camera || !renderer) return
+  
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+}
+
 // Initialize THREE.js scene
 function initThreeScene() {
-  if (!threeContainer.value) return
+  if (!threeContainer.value) {
+    console.error('THREE container element not found')
+    return
+  }
   
   try {
+    console.log('Initializing THREE.js scene')
+    
     // Create scene
     scene = new THREE.Scene()
     
@@ -112,20 +170,11 @@ function initThreeScene() {
     const pixelRatio = Math.min(window.devicePixelRatio, 2)
     renderer.setPixelRatio(pixelRatio)
     
+    // Append renderer to container
     threeContainer.value.appendChild(renderer.domElement)
-    
-    // Create stars
-    stars = createStarfield()
+    console.log('Renderer added to DOM')
     
     // Setup resize handler with debounce
-    handleResize = () => {
-      if (!camera || !renderer) return
-      
-      camera.aspect = window.innerWidth / window.innerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-    }
-    
     let resizeTimeout
     const debouncedResize = () => {
       clearTimeout(resizeTimeout)
@@ -133,10 +182,15 @@ function initThreeScene() {
     }
     window.addEventListener('resize', debouncedResize)
     
+    // Create stars
+    console.log('Creating stars')
+    stars = createStarfield()
+    
     // Start animation
+    console.log('Starting animation')
     animate()
     
-    // console.log('THREE.js scene initialized')
+    console.log('THREE.js scene initialization complete')
   } catch (error) {
     console.error('Error initializing THREE.js scene:', error)
   }
@@ -144,7 +198,15 @@ function initThreeScene() {
 
 // Animation loop
 function animate() {
-  if (!scene || !camera || !renderer || !stars) return
+  if (!scene || !camera || !renderer || !stars) {
+    console.log('Missing required THREE.js components:', {
+      scene: !!scene,
+      camera: !!camera, 
+      renderer: !!renderer,
+      stars: !!stars
+    })
+    return
+  }
   
   // Get current speed
   const speed = threeBackground.settings.stars.speed
@@ -179,7 +241,7 @@ function updateVisualization() {
   updateTimeout = setTimeout(() => {
     if (!scene) return
     
-    // console.log('Executing deferred visualization update')
+    console.log('Updating visualization with new settings')
     
     // Cancel the animation frame first
     if (animationFrame) {
@@ -194,10 +256,10 @@ function updateVisualization() {
   }, 300) // Wait 300ms before updating
 }
 
-// Watch for preset changes directly
+// Watch for preset changes
 watch(() => threeBackground.activePreset.value, (newPreset, oldPreset) => {
   if (newPreset !== oldPreset) {
-    // console.log(`Preset changed from '${oldPreset}' to '${newPreset}'`)
+    console.log(`Preset changed from '${oldPreset}' to '${newPreset}'`)
     nextTick(() => {
       updateVisualization()
     })
@@ -205,40 +267,37 @@ watch(() => threeBackground.activePreset.value, (newPreset, oldPreset) => {
 }, { immediate: true })
 
 // Watch for individual property changes
-watch(() => threeBackground.settings.stars.count, (newCount) => {
-  // console.log('Star count changed:', newCount)
+watch(() => threeBackground.settings.stars.count, () => {
   updateVisualization()
 })
 
-watch(() => threeBackground.settings.stars.size, (newSize) => {
-  // console.log('Star size changed:', newSize)
+watch(() => threeBackground.settings.stars.size, () => {
   updateVisualization()
 })
 
 // Watch for color changes using a function to create a new array reference
-watch(() => [...threeBackground.settings.stars.colors], (newColors) => {
-  // console.log('Colors changed:', newColors)
+watch(() => [...threeBackground.settings.stars.colors], () => {
   updateVisualization()
 }, { deep: true })
 
-// // Speed doesn't require recreation of stars
-// watch(() => threeBackground.settings.stars.speed, (newSpeed) => {
-//   console.log('Speed updated:', newSpeed)
-// })
+watch(() => threeBackground.updateTrigger, () => {
+  console.log('Force update triggered, refreshing visualization')
+  updateVisualization()
+})
 
 onMounted(() => {
-  if (typeof window !== 'undefined') {
+  console.log('ThreeBackground component mounted')
+  
+  // Initialize with a small delay to avoid initial freezing
+  setTimeout(() => {
+    console.log('Container exists:', !!threeContainer.value)
+    initThreeScene()
     
-    // Initialize with a small delay to avoid initial freezing
-    setTimeout(() => {
-      initThreeScene()
-      
-      // Force apply preset after initialization
-      const currentPreset = threeBackground.activePreset.value
-      // console.log('Applying initial preset:', currentPreset)
-      threeBackground.applyPreset(currentPreset)
-    }, 100)
-  }
+    // Force apply the initial preset
+    const currentPreset = threeBackground.activePreset.value
+    console.log('Applying initial preset:', currentPreset)
+    threeBackground.applyPreset(currentPreset)
+  }, 200)
 })
 
 onUnmounted(() => {
@@ -255,9 +314,7 @@ onUnmounted(() => {
   }
   
   // Remove event listeners
-  if (handleResize) {
-    window.removeEventListener('resize', handleResize)
-  }
+  window.removeEventListener('resize', handleResize)
   
   // Clean up resources
   if (renderer) {
@@ -279,3 +336,12 @@ onUnmounted(() => {
   camera = null
 })
 </script>
+
+<style scoped>
+/* Ensure the canvas fills the container */
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+</style>

@@ -24,6 +24,8 @@
 
       <!-- Theme and Language -->
       <div class="flex items-center gap-2">
+        <!-- Add ThreeBackground popover here -->
+        <ThreeBackgroundPopover />
         <ThemePopover />
         <LanguageSwitcher />
         <ModeSwitcher />
@@ -41,25 +43,3 @@ const navigationItems = [
   { path: '/roadmap', i18nKey: 'navigation.roadmap' }
 ]
 </script>
-
-<style scoped>
-/* Optional: Add hover effects for navigation items */
-.nav-item {
-  position: relative;
-}
-
-.nav-item::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: currentColor;
-  transition: width 0.3s ease;
-}
-
-.nav-item:hover::after {
-  width: 100%;
-}
-</style>

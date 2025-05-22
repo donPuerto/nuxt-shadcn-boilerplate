@@ -1,4 +1,5 @@
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
+import { useAppConfig } from '#imports'
 
 // Create a global singleton instance to prevent duplicate state on HMR
 let globalState = null
@@ -6,92 +7,92 @@ let globalState = null
 export const useThreeBackground = () => {
   // Return the existing instance if it exists
   if (globalState) return globalState
-
-  // Track active preset
-  const activePreset = ref('default')
   
-  // Background settings
+  // Get app config values
+  const appConfig = useAppConfig()
+  const configSettings = appConfig.threeBackground
+  
+  // Initialize with default settings from app.config.ts
+  const presets = reactive({...configSettings.presets})
+  
+  // Get the default preset name
+  const defaultPresetName = configSettings.defaultPreset || 'default'
+  
+  // Track active preset, starting with default from app.config
+  const activePreset = ref(defaultPresetName)
+  
+  // Default colors if none exist in the preset
+  const defaultColors = ['#3f51b5', '#5e35b1', '#1a237e', '#0d47a1']
+  
+  // Update trigger for forcing visualization updates
+  const updateTrigger = ref(0)
+  
+  // Get the default preset data
+  const defaultPreset = presets[defaultPresetName]
+  
+  // Background settings initialized from app.config default preset
   const settings = reactive({
     stars: {
-      count: 7000,
-      speed: 1,
-      size: 2,
-      colors: ['#3f51b5', '#5e35b1', '#1a237e', '#0d47a1']
+      count: defaultPreset?.count ?? 7000,
+      speed: defaultPreset?.speed ?? 5,
+      size: defaultPreset?.size ?? 2,
+      colors: [...(defaultPreset?.colors || defaultColors)]
     }
   })
-  
-  // Preset themes
-  const presets = {
-    default: {
-      count: 7000,
-      speed: 1,
-      size: 2,
-      colors: ['#3f51b5', '#5e35b1', '#1a237e', '#0d47a1'] // Blues
-    },
-    sunset: {
-      count: 5000,
-      speed: 0.8,
-      size: 2.5,
-      colors: ['#ff9e80', '#ff6e40', '#ff3d00', '#dd2c00'] // Oranges
-    },
-    emerald: {
-      count: 6000,
-      speed: 0.9,
-      size: 2,
-      colors: ['#00c853', '#00e676', '#69f0ae', '#004d40'] // Greens
-    },
-    galaxy: {
-      count: 10000,
-      speed: 1.5,
-      size: 1.5,
-      colors: ['#aa00ff', '#d500f9', '#e040fb', '#304ffe'] // Purple/Blue
-    }
-  }
   
   // Apply a preset theme
   const applyPreset = (presetName) => {
     const preset = presets[presetName]
     if (preset) {
-      // console.log(`Applying preset ${presetName}...`)
+      console.log(`Applying preset ${presetName}...`)
       
-      // First, change the preset name
+      // Update active preset
       activePreset.value = presetName
       
-      // Then update all settings to trigger reactivity
+      // Update all settings
       settings.stars.count = preset.count
       settings.stars.speed = preset.speed
       settings.stars.size = preset.size
       
-      // Clear the colors array
-      settings.stars.colors.length = 0
+      // Handle colors
+      if (Array.isArray(preset.colors) && preset.colors.length > 0) {
+        settings.stars.colors.length = 0
+        preset.colors.forEach(color => settings.stars.colors.push(color))
+      } else {
+        settings.stars.colors.length = 0
+        defaultColors.forEach(color => settings.stars.colors.push(color))
+      }
       
-      // Add the new colors
-      preset.colors.forEach(color => settings.stars.colors.push(color))
+      console.log(`Applied preset: ${presetName}`, {
+        count: settings.stars.count,
+        speed: settings.stars.speed, 
+        size: settings.stars.size,
+        colors: settings.stars.colors
+      })
       
-      // console.log(`Applied preset: ${presetName}`, {
-      //   count: settings.stars.count,
-      //   speed: settings.stars.speed,
-      //   size: settings.stars.size,
-      //   colors: [...settings.stars.colors]
-      // })
+      // Force update the visualization
+      forceUpdate()
     }
   }
   
+  // Force update visualization
+  const forceUpdate = () => {
+    updateTrigger.value++
+    console.log("Force update triggered:", updateTrigger.value)
+  }
+  
+  // Create and store our state
   const state = {
     activePreset,
     settings,
     presets,
-    applyPreset
+    applyPreset,
+    forceUpdate,
+    updateTrigger
   }
   
-  // Store the state globally
+  // Store the state globally to avoid recreation on HMR
   globalState = state
-  
-  // Only initialize on client-side to avoid SSR issues
-  if (typeof window !== 'undefined') {
-    // Initialize with default preset
-    applyPreset('default')
-  }
   
   return state
 }
