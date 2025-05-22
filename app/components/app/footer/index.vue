@@ -1,5 +1,6 @@
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\app\footer\index.vue -->
 <template>
-  <footer class="border-t bg-background">
+  <footer class="border-t border-transparent backdrop-blur-sm">
     <div class="mx-auto max-w-7xl px-4 py-12">
       <!-- Footer Top Section with Logo and Links -->
       <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
@@ -18,7 +19,7 @@
               href="https://twitter.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
               aria-label="Twitter"
             >
               <i class="i-lucide-twitter h-5 w-5"/>
@@ -27,7 +28,7 @@
               href="https://github.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
               aria-label="GitHub"
             >
               <i class="i-lucide-github h-5 w-5"/>
@@ -36,7 +37,7 @@
               href="https://discord.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              class="rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
               aria-label="Discord"
             >
               <i class="i-lucide-message-circle h-5 w-5"/>
@@ -77,7 +78,7 @@
         </div>
       </div>
 
-      <Separator class="my-8" />
+      <Separator class="my-8 opacity-30" />
 
       <!-- Footer Bottom Section with Copyright -->
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -85,12 +86,12 @@
           &copy; {{ new Date().getFullYear() }} Nuxt Shadcn Boilerplate. All rights reserved.
         </p>
         <div class="flex items-center gap-4">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" class="bg-transparent hover:bg-muted/50">
             <i class="i-lucide-globe mr-2 h-4 w-4"/>
             <span class="hidden sm:inline">{{ $t('common.changeLanguage') }}</span>
             <span class="sm:hidden">{{ locale.toUpperCase() }}</span>
           </Button>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" class="bg-transparent hover:bg-muted/50">
             <i class="i-lucide-moon mr-2 h-4 w-4"/>
             <span class="hidden sm:inline">{{ $t('common.toggleTheme') }}</span>
           </Button>
@@ -101,6 +102,31 @@
 </template>
 
 <script lang="ts" setup>
-
 const { locale } = useI18n()
 </script>
+
+<style scoped>
+footer {
+  position: relative;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+/* Optional: Add a subtle gradient overlay for better text readability */
+footer:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Dark mode version */
+:global(.dark) footer:before {
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05));
+}
+</style>

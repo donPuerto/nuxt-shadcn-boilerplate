@@ -23,11 +23,11 @@ function hexToThreeColor(hexColors) {
 
 // Force recreation of stars with new settings
 function recreateStars() {
-  console.log('Recreating stars with settings:', {
-    count: threeBackground.settings.stars.count,
-    size: threeBackground.settings.stars.size,
-    colors: threeBackground.settings.stars.colors
-  })
+  // console.log('Recreating stars with settings:', {
+  //   count: threeBackground.settings.stars.count,
+  //   size: threeBackground.settings.stars.size,
+  //   colors: threeBackground.settings.stars.colors
+  // })
   
   // Remove current stars if they exist
   if (stars) {
@@ -55,7 +55,7 @@ function createStarfield() {
   
   // Convert hex colors to THREE colors
   const colorOptions = hexToThreeColor(starSettings.colors)
-  console.log('Using colors:', starSettings.colors, 'converted to:', colorOptions)
+  // console.log('Using colors:', starSettings.colors, 'converted to:', colorOptions)
   
   for (let i = 0; i < particleCount * 3; i += 3) {
     // Positions - spread stars throughout the scene
@@ -136,7 +136,7 @@ function initThreeScene() {
     // Start animation
     animate()
     
-    console.log('THREE.js scene initialized')
+    // console.log('THREE.js scene initialized')
   } catch (error) {
     console.error('Error initializing THREE.js scene:', error)
   }
@@ -179,7 +179,7 @@ function updateVisualization() {
   updateTimeout = setTimeout(() => {
     if (!scene) return
     
-    console.log('Executing deferred visualization update')
+    // console.log('Executing deferred visualization update')
     
     // Cancel the animation frame first
     if (animationFrame) {
@@ -197,7 +197,7 @@ function updateVisualization() {
 // Watch for preset changes directly
 watch(() => threeBackground.activePreset.value, (newPreset, oldPreset) => {
   if (newPreset !== oldPreset) {
-    console.log(`Preset changed from '${oldPreset}' to '${newPreset}'`)
+    // console.log(`Preset changed from '${oldPreset}' to '${newPreset}'`)
     nextTick(() => {
       updateVisualization()
     })
@@ -206,29 +206,28 @@ watch(() => threeBackground.activePreset.value, (newPreset, oldPreset) => {
 
 // Watch for individual property changes
 watch(() => threeBackground.settings.stars.count, (newCount) => {
-  console.log('Star count changed:', newCount)
+  // console.log('Star count changed:', newCount)
   updateVisualization()
 })
 
 watch(() => threeBackground.settings.stars.size, (newSize) => {
-  console.log('Star size changed:', newSize)
+  // console.log('Star size changed:', newSize)
   updateVisualization()
 })
 
 // Watch for color changes using a function to create a new array reference
 watch(() => [...threeBackground.settings.stars.colors], (newColors) => {
-  console.log('Colors changed:', newColors)
+  // console.log('Colors changed:', newColors)
   updateVisualization()
 }, { deep: true })
 
-// Speed doesn't require recreation of stars
-watch(() => threeBackground.settings.stars.speed, (newSpeed) => {
-  console.log('Speed updated:', newSpeed)
-})
+// // Speed doesn't require recreation of stars
+// watch(() => threeBackground.settings.stars.speed, (newSpeed) => {
+//   console.log('Speed updated:', newSpeed)
+// })
 
 onMounted(() => {
   if (typeof window !== 'undefined') {
-    console.log('ThreeBackground component mounted')
     
     // Initialize with a small delay to avoid initial freezing
     setTimeout(() => {
@@ -236,7 +235,7 @@ onMounted(() => {
       
       // Force apply preset after initialization
       const currentPreset = threeBackground.activePreset.value
-      console.log('Applying initial preset:', currentPreset)
+      // console.log('Applying initial preset:', currentPreset)
       threeBackground.applyPreset(currentPreset)
     }, 100)
   }

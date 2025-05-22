@@ -1,5 +1,6 @@
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\app\navigation\index.vue -->
 <template>
-  <header class="sticky top-0 z-40 w-full border-b bg-background">
+  <header class="sticky top-0 z-40 w-full border-b border-transparent backdrop-blur-sm">
     <div class="container mx-auto flex h-16 items-center justify-between px-4">
       <!-- Left side: Logo and Title -->
       <div class="flex items-center gap-6">
@@ -33,17 +34,12 @@
 </template>
 
 <script setup lang="ts">
-
-
 // Navigation items configuration
 const navigationItems = [
   { path: '/', i18nKey: 'navigation.home' },
   { path: '/components', i18nKey: 'navigation.components' },
   { path: '/roadmap', i18nKey: 'navigation.roadmap' }
 ]
-
-
-
 </script>
 
 <style scoped>

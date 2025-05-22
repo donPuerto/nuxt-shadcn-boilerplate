@@ -52,7 +52,7 @@ export const useThreeBackground = () => {
   const applyPreset = (presetName) => {
     const preset = presets[presetName]
     if (preset) {
-      console.log(`Applying preset ${presetName}...`)
+      // console.log(`Applying preset ${presetName}...`)
       
       // First, change the preset name
       activePreset.value = presetName
@@ -68,12 +68,12 @@ export const useThreeBackground = () => {
       // Add the new colors
       preset.colors.forEach(color => settings.stars.colors.push(color))
       
-      console.log(`Applied preset: ${presetName}`, {
-        count: settings.stars.count,
-        speed: settings.stars.speed,
-        size: settings.stars.size,
-        colors: [...settings.stars.colors]
-      })
+      // console.log(`Applied preset: ${presetName}`, {
+      //   count: settings.stars.count,
+      //   speed: settings.stars.speed,
+      //   size: settings.stars.size,
+      //   colors: [...settings.stars.colors]
+      // })
     }
   }
   

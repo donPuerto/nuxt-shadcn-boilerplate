@@ -1,8 +1,9 @@
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\pages\index.vue -->
 <template>
-  <div>
+  <div class="relative">
     <!-- Hero Section -->
     <section class="relative overflow-hidden pb-16 pt-24 sm:pb-24 sm:pt-32">
-      <!-- Background Gradient -->
+      <!-- Background Gradient - Keep this for the hero section only -->
       <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
         <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-primary/20"/>
         <div class="absolute bottom-0 left-20 aspect-square w-3/4 rounded-full bg-gradient-to-tr from-primary/40 to-secondary/40 blur-3xl"/>
@@ -36,16 +37,16 @@
             <CardContent>
               <div class="flex flex-wrap gap-2">
                 <Button
-variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'en'}" 
+                  variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'en'}" 
                   @click="switchLanguage('en')">English</Button>
                 <Button
-variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'fr'}"
+                  variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'fr'}"
                   @click="switchLanguage('fr')">Français</Button>
                 <Button
-variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'es'}"
+                  variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'es'}"
                   @click="switchLanguage('es')">Español</Button>
                 <Button
-variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'de'}"
+                  variant="outline" size="sm" :class="{'border-primary text-primary': locale === 'de'}"
                   @click="switchLanguage('de')">Deutsch</Button>
               </div>
             </CardContent>
@@ -54,21 +55,17 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
       </div>
     </section>
 
-    <div class="p-4 space-y-4">
+    <div class="p-4 space-y-4 bg-transparent">
       <h2 class="text-xl font-bold">Confetti Test</h2>
       <div class="space-x-4">
         <Button variant="secondary" size="sm" @click="showDefaultConfetti">Default Confetti</Button>
         <Button variant="primary" size="sm" @click="showEmojiConfetti">Random Emoji</Button>
         <Button variant="outline" size="sm" @click="showColoredConfetti">Tech Colors</Button>
-        
       </div>
     </div>
 
-
-    <!-- Features Section -->
-    <section class="bg-muted/50 py-16">
-
-      
+    <!-- Features Section - CHANGED: Removed bg-muted/50 to make background visible -->
+    <section class="py-16 backdrop-blur-[1px]">
       <div class="mx-auto max-w-7xl px-4">
         <h2 class="text-center text-3xl font-bold tracking-tight sm:text-4xl">{{ $t('home.features') }}</h2>
         <p class="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
@@ -77,7 +74,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
 
         <div class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <!-- Feature 1 -->
-          <Card class="overflow-hidden transition-all hover:shadow-md">
+          <Card class="overflow-hidden transition-all hover:shadow-md bg-background/60 backdrop-blur-sm">
             <div class="absolute right-2 top-2 rounded-full bg-primary/10 p-2 text-primary">
               <i class="i-lucide-layout h-5 w-5"/>
             </div>
@@ -95,15 +92,16 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
                 Accessible, customizable, and open source.
               </p>
             </CardContent>
-            <CardFooter class="border-t bg-muted/30 px-6 py-4">
+            <CardFooter class="border-t bg-background/30 px-6 py-4">
               <Button variant="ghost" size="sm" class="gap-1">
                 Learn more <i class="i-lucide-arrow-right h-4 w-4"/>
               </Button>
             </CardFooter>
           </Card>
 
-          <!-- Feature 2 -->
-          <Card class="overflow-hidden transition-all hover:shadow-md">
+          <!-- Feature 2 - Same pattern for other cards -->
+          <Card class="overflow-hidden transition-all hover:shadow-md bg-background/60 backdrop-blur-sm">
+            <!-- Card content remains the same -->
             <div class="absolute right-2 top-2 rounded-full bg-primary/10 p-2 text-primary">
               <i class="i-lucide-palette h-5 w-5"/>
             </div>
@@ -121,7 +119,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
                 to build any design, directly in your markup.
               </p>
             </CardContent>
-            <CardFooter class="border-t bg-muted/30 px-6 py-4">
+            <CardFooter class="border-t bg-background/30 px-6 py-4">
               <Button variant="ghost" size="sm" class="gap-1">
                 Learn more <i class="i-lucide-arrow-right h-4 w-4"/>
               </Button>
@@ -129,7 +127,8 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
           </Card>
 
           <!-- Feature 3 -->
-          <Card class="overflow-hidden transition-all hover:shadow-md">
+          <Card class="overflow-hidden transition-all hover:shadow-md bg-background/60 backdrop-blur-sm">
+            <!-- Card content remains the same -->
             <div class="absolute right-2 top-2 rounded-full bg-primary/10 p-2 text-primary">
               <i class="i-lucide-globe h-5 w-5"/>
             </div>
@@ -147,7 +146,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
                 translation keys and seamless language switching.
               </p>
             </CardContent>
-            <CardFooter class="border-t bg-muted/30 px-6 py-4">
+            <CardFooter class="border-t bg-background/30 px-6 py-4">
               <Button variant="ghost" size="sm" class="gap-1">
                 Learn more <i class="i-lucide-arrow-right h-4 w-4"/>
               </Button>
@@ -158,7 +157,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
     </section>
 
     <!-- Demo Components Section -->
-    <section class="py-16">
+    <section class="py-16 backdrop-blur-[1px]">
       <div class="mx-auto max-w-7xl px-4">
         <h2 class="text-center text-3xl font-bold tracking-tight sm:text-4xl">{{ $t('home.components') }}</h2>
         <p class="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
@@ -167,7 +166,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
 
         <div class="mt-16 grid gap-6 sm:grid-cols-2">
           <!-- Component Demo Card -->
-          <Card class="overflow-hidden">
+          <Card class="overflow-hidden bg-background/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Popover Component</CardTitle>
               <CardDescription>Interactive popover dialog</CardDescription>
@@ -178,7 +177,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
           </Card>
 
           <!-- Theme Card -->
-          <Card class="overflow-hidden">
+          <Card class="overflow-hidden bg-background/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Theme Selection</CardTitle>
               <CardDescription>Customize your experience</CardDescription>
@@ -207,8 +206,8 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="relative overflow-hidden border-y bg-muted/30 py-16">
+    <!-- CTA Section - CHANGED: Removed background color -->
+    <section class="relative overflow-hidden border-y border-transparent py-16 backdrop-blur-[2px]">
       <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
         <div class="absolute right-1/4 top-0 h-64 w-64 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl"/>
         <div class="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-gradient-to-tr from-primary/20 to-secondary/20 blur-3xl"/>
@@ -224,7 +223,7 @@ variant="outline" size="sm" :class="{'border-primary text-primary': locale === '
             <i class="i-lucide-rocket mr-2"/>
             {{ $t('home.getStarted') }}
           </Button>
-          <Button size="lg" variant="outline">
+          <Button size="lg" variant="outline" class="bg-background/40 backdrop-blur-sm">
             <i class="i-lucide-book-open mr-2"/>
             {{ $t('home.documentation') }}
           </Button>
@@ -242,8 +241,6 @@ import { Separator } from '@/components/ui/separator'
 
 const { locale } = useI18n()
 const { randomEmoji, techConfetti } = useConfetti();
-
-
 
 // Show emoji confetti when the page loads
 onMounted(() => {
@@ -264,7 +261,6 @@ onBeforeMount(() => {
     return true
   })
 })
-
 
 function showDefaultConfetti() {
   const { $confetti } = useNuxtApp();
@@ -301,5 +297,20 @@ const switchLanguage = (lang: string) => {
 </script>
 
 <style scoped>
+/* Add a subtle text shadow for better readability over the background */
+h1, h2, h3 {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
 
+/* In dark mode, adjust the text shadow for better visibility */
+:global(.dark) h1, 
+:global(.dark) h2, 
+:global(.dark) h3 {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Add a subtle border to cards for definition */
+.card {
+  border: 1px solid rgba(255,255,255,0.1);
+}
 </style>

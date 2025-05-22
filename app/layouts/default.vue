@@ -3,12 +3,12 @@
   <div class="flex min-h-screen flex-col relative">
     <!-- THREE.js background - only render on client side -->
     <ClientOnly>
-      <ThreeBackground />
+      <ThreeBackground class="fixed inset-0 z-0" />
     </ClientOnly>
     
     <!-- Background Controls -->
     <ClientOnly>
-      <div class="fixed top-20 right-4 z-20">
+      <div class="fixed top-20 right-4 z-50">
         <div class="bg-white/80 dark:bg-gray-800/80 p-3 rounded-lg shadow-lg">
           <!-- Preset Themes Selector -->
           <div class="mb-3">
@@ -93,11 +93,11 @@ const threeBackground = useThreeBackground()
 
 // Function to apply a theme preset with additional logging
 function applyThemePreset(presetName) {
-  console.log('Button clicked for preset:', presetName)
-  console.log('Current preset before change:', threeBackground.activePreset.value)
+  // console.log('Button clicked for preset:', presetName)
+  // console.log('Current preset before change:', threeBackground.activePreset.value)
   
   threeBackground.applyPreset(presetName)
   
-  console.log('Preset after change:', threeBackground.activePreset.value)
+  // console.log('Preset after change:', threeBackground.activePreset.value)
 }
 </script>
