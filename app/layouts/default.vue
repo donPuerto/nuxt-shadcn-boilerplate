@@ -24,3 +24,20 @@
 // Import the ThreeBackground component
 import ThreeBackground from '~/components/ThreeBackground.client.vue'
 </script>
+
+<style>
+/* Ensure the ThreeBackground has proper z-index and positioning */
+#three-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Ensure the content has a transparent background */
+.bg-transparent {
+  background-color: transparent;
+}
+</style>
