@@ -11,71 +11,46 @@
             <span class="text-xl font-bold">Nuxt Shadcn</span>
           </div>
           <p class="mt-4 text-sm text-muted-foreground">
-            A modern boilerplate combining the power of Nuxt.js and Shadcn UI components with 
-            Tailwind CSS for building beautiful, accessible, and responsive web applications.
+            {{ $t('footer.description') }}
           </p>
           <div class="mt-6 flex items-center gap-4">
-            <a 
-              href="https://twitter.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
-              aria-label="Twitter"
-            >
-              <i class="i-lucide-twitter h-5 w-5"/>
-            </a>
-            <a 
-              href="https://github.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
-              aria-label="GitHub"
-            >
-              <i class="i-lucide-github h-5 w-5"/>
-            </a>
-            <a 
-              href="https://discord.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
-              aria-label="Discord"
-            >
-              <i class="i-lucide-message-circle h-5 w-5"/>
-            </a>
+            <!-- Social Media Icons -->
+            <template v-for="social in socialLinks" :key="social.name">
+              <a 
+                :href="social.url" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="rounded-full bg-muted/50 p-2 text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+                :aria-label="social.name"
+              >
+                <i :class="`i-lucide-${social.icon} h-5 w-5`"/>
+              </a>
+            </template>
           </div>
         </div>
 
-        <!-- Resources Links -->
-        <div>
-          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Resources</h3>
-          <ul class="space-y-2">
-            <li><NuxtLink to="/components" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Components</NuxtLink></li>
-            <li><NuxtLink to="/roadmap" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Roadmap</NuxtLink></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Documentation</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Tutorials</a></li>
-          </ul>
-        </div>
-
-        <!-- Community Links -->
-        <div>
-          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Community</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">GitHub</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Discord</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Twitter</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Contributors</a></li>
-          </ul>
-        </div>
-
-        <!-- Legal Links -->
-        <div>
-          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">Legal</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy Policy</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Terms of Service</a></li>
-            <li><a href="#" class="text-sm text-muted-foreground transition-colors hover:text-foreground">License</a></li>
-          </ul>
-        </div>
+        <!-- Footer Link Sections (looped) -->
+        <template v-for="section in footerSections" :key="section.title">
+          <div>
+            <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider">{{ $t(`footer.sections.${section.key}.title`) }}</h3>
+            <ul class="space-y-2">
+              <template v-for="link in section.links" :key="link.key">
+                <li>
+                  <component 
+                    :is="link.isInternal ? 'NuxtLink' : 'a'" 
+                    :to="link.isInternal ? link.url : undefined" 
+                    :href="link.isInternal ? undefined : link.url" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {{ $t(`footer.sections.${section.key}.links.${link.key}`) }}
+                  </component>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </template>
       </div>
 
       <Separator class="my-8 opacity-30" />
@@ -83,18 +58,11 @@
       <!-- Footer Bottom Section with Copyright -->
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <p class="text-sm text-muted-foreground">
-          &copy; {{ new Date().getFullYear() }} Nuxt Shadcn Boilerplate. All rights reserved.
+          &copy; {{ new Date().getFullYear() }} {{ $t('footer.copyright') }}
         </p>
         <div class="flex items-center gap-4">
-          <Button variant="ghost" size="sm" class="bg-transparent hover:bg-muted/50">
-            <i class="i-lucide-globe mr-2 h-4 w-4"/>
-            <span class="hidden sm:inline">{{ $t('common.changeLanguage') }}</span>
-            <span class="sm:hidden">{{ locale.toUpperCase() }}</span>
-          </Button>
-          <Button variant="ghost" size="sm" class="bg-transparent hover:bg-muted/50">
-            <i class="i-lucide-moon mr-2 h-4 w-4"/>
-            <span class="hidden sm:inline">{{ $t('common.toggleTheme') }}</span>
-          </Button>
+          <LanguageSwitcher />
+          <ModeSwitcher />
         </div>
       </div>
     </div>
@@ -103,6 +71,58 @@
 
 <script lang="ts" setup>
 const { locale } = useI18n()
+
+// Social media links
+const socialLinks = [
+  {
+    name: 'Twitter',
+    url: 'https://x.com/@donpuerto_',
+    icon: 'twitter'
+  },
+  {
+    name: 'GitHub',
+    url: 'https://github.com/donPuerto',
+    icon: 'github'
+  },
+  {
+    name: 'Discord',
+    url: 'https://discord.gg/8SesF9ZP',
+    icon: 'message-circle'
+  }
+]
+
+// Footer sections with links
+const footerSections = [
+  {
+    key: 'resources',
+    title: 'Resources',
+    links: [
+      { key: 'components', url: '/components', isInternal: true },
+      { key: 'roadmap', url: '/roadmap', isInternal: true },
+      { key: 'documentation', url: '#', isInternal: false },
+      { key: 'tutorials', url: '#', isInternal: false }
+    ]
+  },
+  {
+    key: 'community',
+    title: 'Community',
+    links: [
+      { key: 'github', url: 'https://github.com/donPuerto', isInternal: false },
+      { key: 'discord', url: 'https://discord.gg/8SesF9ZP', isInternal: false },
+      { key: 'twitter', url: 'https://x.com/@donpuerto_', isInternal: false },
+      { key: 'contributors', url: '#', isInternal: false }
+    ]
+  },
+  {
+    key: 'legal',
+    title: 'Legal',
+    links: [
+      { key: 'privacy', url: '#', isInternal: false },
+      { key: 'terms', url: '#', isInternal: false },
+      { key: 'license', url: '#', isInternal: false }
+    ]
+  }
+]
 </script>
 
 <style scoped>

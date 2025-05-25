@@ -4,6 +4,41 @@ export default defineAppConfig({
       title: 'shadcn-docs',
     }
   },
+  heroButtons: [
+    {
+      key: 'GitHub',
+      url: 'https://github.com/donPuerto/nuxt-shadcn-boilerplate.git',
+      icon: 'GithubIcon'
+    }   
+    // Add more buttons as needed
+  ],
+  features: [
+    {
+      key: 'shadcn',
+      icon: 'layout',
+      url: 'https://ui.shadcn.com/'
+    },
+    {
+      key: 'vue',
+      icon: 'code',
+      url: 'https://vuejs.org/'
+    },
+    {
+      key: 'nuxt',
+      icon: 'layers',
+      url: 'https://nuxt.com/'
+    },
+    {
+      key: 'tailwind',
+      icon: 'palette',
+      url: 'https://tailwindcss.com/'
+    },
+    {
+      key: 'i18n',
+      icon: 'globe',
+      url: 'https://i18n.nuxtjs.org/'
+    }
+  ],
   ui: {
     // Theme settings
   },

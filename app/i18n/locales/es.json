@@ -2,15 +2,15 @@
   "navigation": {
     "home": "Inicio",
     "components": "Componentes",
-    "roadmap": "Hoja de ruta"
+    "roadmap": "Hoja de Ruta"
   },
-  "themeCustomizer": {
+  "themeCustomizer":{
     "title": "Personalizador de Tema",
     "description": "Personaliza el tema a tu gusto",
     "categories": {
       "color": "Color",
       "radius": "Radio",
-      "theme": "Tema"
+      "theme": "Tema" 
     },
     "theme": {
       "light": "Claro",
@@ -19,29 +19,97 @@
     }
   },
   "common": {
+    "changeLanguage": "Cambiar idioma",
+    "toggleTheme": "Cambiar tema",
     "loading": "Cargando...",
     "error": "Se ha producido un error",
     "retry": "Reintentar",
     "close": "Cerrar"
   },
   "home": {
-    "title": "Bienvenido a Nuxt Shadcn Boilerplate",
-    "subtitle": "Una plantilla moderna para Nuxt 4",
-    "getStarted": "Comenzar"
+    "title": "Nuxt Shadcn Boilerplate",
+    "subtitle": "Una plantilla de inicio moderna, rápida y personalizable para aplicaciones Nuxt 4 con componentes Shadcn UI.",
+    "getStarted": "Comenzar",
+    "buttons": {
+      "github": "GitHub"
+    },
+    "features": "Características",
+    "featuresDescription": "Todo lo que necesitas para construir hermosas aplicaciones web",
+    "learnMore": "Saber más",
+    "featureCards": {
+      "shadcn": {
+        "title": "Componentes Shadcn UI",
+        "description": "Componentes UI hermosos y accesibles",
+        "content": "Componentes listos para usar que puedes copiar y pegar en tus aplicaciones. Accesibles, personalizables y de código abierto."
+      },
+      "vue": {
+        "title": "Vue.js",
+        "description": "Framework JavaScript progresivo",
+        "content": "Un framework accesible, eficiente y versátil para construir interfaces de usuario web."
+      },
+      "nuxt": {
+        "title": "Framework Nuxt",
+        "description": "El Framework Vue Intuitivo",
+        "content": "Construye tu próxima aplicación Vue.js con confianza usando Nuxt. Un framework de código abierto que hace que el desarrollo web sea simple y potente."
+      },
+      "tailwind": {
+        "title": "Tailwind CSS",
+        "description": "Framework CSS de utilidades",
+        "content": "Un framework CSS de utilidades con clases que pueden componerse para construir cualquier diseño, directamente en tu marcado."
+      },
+      "i18n": {
+        "title": "Soporte i18n",
+        "description": "Internacionalización incorporada",
+        "content": "Soporte para múltiples idiomas listo para usar con claves de traducción simples y cambio de idioma sin problemas."
+      }
+    },
+    "components": "Componentes",
+    "componentsDescription": "Explora algunos de los componentes UI incluidos en esta plantilla",
+    "ready": "¿Listo para Comenzar?",
+    "readyDescription": "Comienza a construir tu próximo proyecto con este boilerplate hoy",
+    "documentation": "Documentación"
   },
   "components": {
     "title": "Componentes UI",
-    "description": "Explora los componentes disponibles de Shadcn UI"
+    "description": "Explora los componentes Shadcn UI disponibles"
   },
   "roadmap": {
-    "title": "Hoja de ruta del proyecto",
-    "description": "Próximas características y mejoras",
+    "title": "Hoja de Ruta del Proyecto",
+    "description": "Características y mejoras próximas",
     "planned": "Planificado",
-    "inProgress": "En progreso",
+    "inProgress": "En Progreso",
     "completed": "Completado"
   },
   "footer": {
-    "madeWith": "Hecho con ❤️ usando Nuxt 4",
-    "copyright": "© {year} Tu Empresa"
+    "description": "Un modelo moderno que combina el poder de Nuxt.js y los componentes de Shadcn UI con Tailwind CSS para crear aplicaciones web hermosas, accesibles y responsivas.",
+    "copyright": "Nuxt Shadcn Boilerplate. Todos los derechos reservados.",
+    "sections": {
+      "resources": {
+        "title": "Recursos",
+        "links": {
+          "components": "Componentes",
+          "roadmap": "Hoja de ruta",
+          "documentation": "Documentación",
+          "tutorials": "Tutoriales"
+        }
+      },
+      "community": {
+        "title": "Comunidad",
+        "links": {
+          "github": "GitHub",
+          "discord": "Discord",
+          "twitter": "Twitter",
+          "contributors": "Colaboradores"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "privacy": "Política de privacidad",
+          "terms": "Términos de servicio",
+          "license": "Licencia"
+        }
+      }
+    }
   }
 }

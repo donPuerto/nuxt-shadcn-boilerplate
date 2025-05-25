@@ -4,13 +4,13 @@
     "components": "Komponenten",
     "roadmap": "Fahrplan"
   },
-  "themeCustomizer": {
-    "title": "Theme Anpasser",
+  "themeCustomizer":{
+    "title": "Theme-Anpasser",
     "description": "Passen Sie das Theme nach Ihren Wünschen an",
     "categories": {
       "color": "Farbe",
       "radius": "Radius",
-      "theme": "Theme"
+      "theme": "Theme" 
     },
     "theme": {
       "light": "Hell",
@@ -19,15 +19,55 @@
     }
   },
   "common": {
+    "changeLanguage": "Sprache ändern",
+    "toggleTheme": "Theme wechseln",
     "loading": "Wird geladen...",
     "error": "Ein Fehler ist aufgetreten",
     "retry": "Wiederholen",
     "close": "Schließen"
   },
   "home": {
-    "title": "Willkommen bei Nuxt Shadcn Boilerplate",
-    "subtitle": "Eine moderne Nuxt 4 Starter-Vorlage",
-    "getStarted": "Loslegen"
+    "title": "Nuxt Shadcn Boilerplate",
+    "subtitle": "Eine moderne, schnelle und anpassbare Startvorlage für Nuxt 4-Anwendungen mit Shadcn UI-Komponenten.",
+    "getStarted": "Loslegen",
+    "buttons": {
+      "github": "GitHub"
+    },
+    "features": "Funktionen",
+    "featuresDescription": "Alles, was Sie zum Erstellen schöner Webanwendungen benötigen",
+    "learnMore": "Mehr erfahren",
+    "featureCards": {
+      "shadcn": {
+        "title": "Shadcn UI-Komponenten",
+        "description": "Schöne, zugängliche UI-Komponenten",
+        "content": "Gebrauchsfertige Komponenten, die Sie in Ihre Apps kopieren und einfügen können. Zugänglich, anpassbar und Open Source."
+      },
+      "vue": {
+        "title": "Vue.js",
+        "description": "Progressives JavaScript-Framework",
+        "content": "Ein zugängliches, leistungsstarkes und vielseitiges Framework zum Erstellen von Web-Benutzeroberflächen."
+      },
+      "nuxt": {
+        "title": "Nuxt Framework",
+        "description": "Das intuitive Vue-Framework",
+        "content": "Erstellen Sie Ihre nächste Vue.js-Anwendung mit Vertrauen mit Nuxt. Ein Open-Source-Framework, das die Webentwicklung einfach und leistungsstark macht."
+      },
+      "tailwind": {
+        "title": "Tailwind CSS",
+        "description": "Utility-First CSS-Framework",
+        "content": "Ein Utility-First CSS-Framework mit Klassen, die kombiniert werden können, um jedes Design direkt in Ihrem Markup zu erstellen."
+      },
+      "i18n": {
+        "title": "i18n-Unterstützung",
+        "description": "Integrierte Internationalisierung",
+        "content": "Unterstützung für mehrere Sprachen out of the box mit einfachen Übersetzungsschlüsseln und nahtlosem Sprachwechsel."
+      }
+    },
+    "components": "Komponenten",
+    "componentsDescription": "Entdecken Sie einige der UI-Komponenten, die in dieser Vorlage enthalten sind",
+    "ready": "Bereit zum Loslegen?",
+    "readyDescription": "Beginnen Sie noch heute mit der Entwicklung Ihres nächsten Projekts mit diesem Boilerplate",
+    "documentation": "Dokumentation"
   },
   "components": {
     "title": "UI-Komponenten",
@@ -37,11 +77,39 @@
     "title": "Projekt-Fahrplan",
     "description": "Kommende Funktionen und Verbesserungen",
     "planned": "Geplant",
-    "inProgress": "In Bearbeitung",
+    "inProgress": "In Arbeit",
     "completed": "Abgeschlossen"
   },
   "footer": {
-    "madeWith": "Mit ❤️ erstellt mit Nuxt 4",
-    "copyright": "© {year} Ihre Firma"
+    "description": "Eine moderne Vorlage, die die Leistung von Nuxt.js und Shadcn UI-Komponenten mit Tailwind CSS kombiniert, um schöne, zugängliche und responsive Webanwendungen zu erstellen.",
+    "copyright": "Nuxt Shadcn Boilerplate. Alle Rechte vorbehalten.",
+    "sections": {
+      "resources": {
+        "title": "Ressourcen",
+        "links": {
+          "components": "Komponenten",
+          "roadmap": "Fahrplan",
+          "documentation": "Dokumentation",
+          "tutorials": "Tutorials"
+        }
+      },
+      "community": {
+        "title": "Gemeinschaft",
+        "links": {
+          "github": "GitHub",
+          "discord": "Discord",
+          "twitter": "Twitter",
+          "contributors": "Mitwirkende"
+        }
+      },
+      "legal": {
+        "title": "Rechtliches",
+        "links": {
+          "privacy": "Datenschutzrichtlinie",
+          "terms": "Nutzungsbedingungen",
+          "license": "Lizenz"
+        }
+      }
+    }
   }
 }

@@ -121,7 +121,7 @@ const applyPreset = (presetName) => {
   // Force update visualization
   const forceUpdate = () => {
     updateTrigger.value++
-    console.log('Force update triggered:', updateTrigger.value)
+    
   }
   
   // Create and store our state

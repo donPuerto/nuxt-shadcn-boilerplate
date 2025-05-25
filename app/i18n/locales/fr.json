@@ -2,15 +2,15 @@
   "navigation": {
     "home": "Accueil",
     "components": "Composants",
-    "roadmap": "Feuille de route"
+    "roadmap": "Feuille de Route"
   },
-  "themeCustomizer": {
-    "title": "Personnalisateur de Thème",
+  "themeCustomizer":{
+    "title": "Personnalisation du Thème",
     "description": "Personnalisez le thème selon vos préférences",
     "categories": {
       "color": "Couleur",
       "radius": "Rayon",
-      "theme": "Thème"
+      "theme": "Thème" 
     },
     "theme": {
       "light": "Clair",
@@ -19,29 +19,97 @@
     }
   },
   "common": {
+    "changeLanguage": "Changer de langue",
+    "toggleTheme": "Changer de thème",
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "retry": "Réessayer",
-    "close": "Fermer"    
+    "close": "Fermer"
   },
   "home": {
-    "title": "Bienvenue sur Nuxt Shadcn Boilerplate",
-    "subtitle": "Un modèle de démarrage moderne pour Nuxt 4",
-    "getStarted": "Commencer"
+    "title": "Nuxt Shadcn Boilerplate",
+    "subtitle": "Un modèle de démarrage moderne, rapide et personnalisable pour les applications Nuxt 4 avec les composants Shadcn UI.",
+    "getStarted": "Commencer",
+    "buttons": {
+      "github": "GitHub"
+    },
+    "features": "Fonctionnalités",
+    "featuresDescription": "Tout ce dont vous avez besoin pour créer de belles applications web",
+    "learnMore": "En savoir plus",
+    "featureCards": {
+      "shadcn": {
+        "title": "Composants Shadcn UI",
+        "description": "Composants UI beaux et accessibles",
+        "content": "Des composants prêts à l'emploi que vous pouvez copier et coller dans vos applications. Accessibles, personnalisables et open source."
+      },
+      "vue": {
+        "title": "Vue.js",
+        "description": "Framework JavaScript progressif",
+        "content": "Un framework approchable, performant et polyvalent pour la création d'interfaces utilisateur web."
+      },
+      "nuxt": {
+        "title": "Framework Nuxt",
+        "description": "Le Framework Vue Intuitif",
+        "content": "Construisez votre prochaine application Vue.js en toute confiance avec Nuxt. Un framework open source qui rend le développement web simple et puissant."
+      },
+      "tailwind": {
+        "title": "Tailwind CSS",
+        "description": "Framework CSS utilitaire",
+        "content": "Un framework CSS utilitaire avec des classes qui peuvent être composées pour construire n'importe quel design, directement dans votre balisage."
+      },
+      "i18n": {
+        "title": "Support i18n",
+        "description": "Internationalisation intégrée",
+        "content": "Prise en charge de plusieurs langues prête à l'emploi avec des clés de traduction simples et un changement de langue transparent."
+      }
+    },
+    "components": "Composants",
+    "componentsDescription": "Explorez certains des composants UI inclus dans ce modèle",
+    "ready": "Prêt à Commencer?",
+    "readyDescription": "Commencez à construire votre prochain projet avec ce boilerplate aujourd'hui",
+    "documentation": "Documentation"
   },
   "components": {
     "title": "Composants UI",
     "description": "Explorez les composants Shadcn UI disponibles"
   },
   "roadmap": {
-    "title": "Feuille de route du projet",
+    "title": "Feuille de Route du Projet",
     "description": "Fonctionnalités et améliorations à venir",
     "planned": "Planifié",
-    "inProgress": "En cours",
+    "inProgress": "En Cours",
     "completed": "Terminé"
   },
-  "footer": {
-    "madeWith": "Fait avec ❤️ en utilisant Nuxt 4",
-    "copyright": "© {year} Votre Entreprise"
+   "footer": {
+    "description": "Un modèle moderne combinant la puissance de Nuxt.js et des composants Shadcn UI avec Tailwind CSS pour créer des applications web belles, accessibles et responsive.",
+    "copyright": "Nuxt Shadcn Boilerplate. Tous droits réservés.",
+    "sections": {
+      "resources": {
+        "title": "Ressources",
+        "links": {
+          "components": "Composants",
+          "roadmap": "Feuille de route",
+          "documentation": "Documentation",
+          "tutorials": "Tutoriels"
+        }
+      },
+      "community": {
+        "title": "Communauté",
+        "links": {
+          "github": "GitHub",
+          "discord": "Discord",
+          "twitter": "Twitter",
+          "contributors": "Contributeurs"
+        }
+      },
+      "legal": {
+        "title": "Mentions légales",
+        "links": {
+          "privacy": "Politique de confidentialité",
+          "terms": "Conditions d'utilisation",
+          "license": "Licence"
+        }
+      }
+    }
   }
 }

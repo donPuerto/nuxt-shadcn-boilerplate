@@ -18,17 +18,56 @@
       "system": "System"
     }
   },
-  
   "common": {
+    "changeLanguage": "Change Language",
+    "toggleTheme": "Toggle Theme",
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Retry",
     "close": "Close"
   },
   "home": {
-    "title": "Welcome to Nuxt Shadcn Boilerplate",
-    "subtitle": "A modern Nuxt 4 starter template",
-    "getStarted": "Get Started"
+    "title": "Nuxt Shadcn Boilerplate",
+    "subtitle": "A modern, fast, and customizable starter template for Nuxt 4 applications with Shadcn UI components.",
+    "getStarted": "Get Started",
+    "buttons": {
+      "github": "GitHub"
+    },
+    "features": "Features",
+    "featuresDescription": "Everything you need to build beautiful web applications",
+    "learnMore": "Learn more",
+    "featureCards": {
+      "shadcn": {
+        "title": "Shadcn UI Components",
+        "description": "Beautiful, accessible UI components",
+        "content": "Ready-to-use components that you can copy and paste into your apps. Accessible, customizable, and open source."
+      },
+      "vue": {
+        "title": "Vue.js",
+        "description": "Progressive JavaScript framework",
+        "content": "An approachable, performant and versatile framework for building web user interfaces."
+      },
+      "nuxt": {
+        "title": "Nuxt Framework",
+        "description": "The Intuitive Vue Framework",
+        "content": "Build your next Vue.js application with confidence using Nuxt. An open source framework making web development simple and powerful."
+      },
+      "tailwind": {
+        "title": "Tailwind CSS",
+        "description": "Utility-first CSS framework",
+        "content": "A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup."
+      },
+      "i18n": {
+        "title": "i18n Support",
+        "description": "Built-in internationalization",
+        "content": "Support for multiple languages out of the box with simple translation keys and seamless language switching."
+      }
+    },
+    "components": "Components",
+    "componentsDescription": "Explore some of the UI components included in this template",
+    "ready": "Ready to Get Started?",
+    "readyDescription": "Start building your next project with this boilerplate today",
+    "documentation": "Documentation"
   },
   "components": {
     "title": "UI Components",
@@ -42,7 +81,35 @@
     "completed": "Completed"
   },
   "footer": {
-    "madeWith": "Made with ❤️ using Nuxt 4",
-    "copyright": "© {year} Your Company"
+    "description": "A modern boilerplate combining the power of Nuxt.js and Shadcn UI components with Tailwind CSS for building beautiful, accessible, and responsive web applications.",
+    "copyright": "Nuxt Shadcn Boilerplate. All rights reserved.",
+    "sections": {
+      "resources": {
+        "title": "Resources",
+        "links": {
+          "components": "Components",
+          "roadmap": "Roadmap",
+          "documentation": "Documentation",
+          "tutorials": "Tutorials"
+        }
+      },
+      "community": {
+        "title": "Community",
+        "links": {
+          "github": "GitHub",
+          "discord": "Discord",
+          "twitter": "Twitter",
+          "contributors": "Contributors"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "privacy": "Privacy Policy",
+          "terms": "Terms of Service",
+          "license": "License"
+        }
+      }
+    }
   }
 }
