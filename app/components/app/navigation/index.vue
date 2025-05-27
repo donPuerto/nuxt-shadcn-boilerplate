@@ -39,7 +39,7 @@
 // Navigation items configuration
 const navigationItems = [
   { path: '/', i18nKey: 'navigation.home' },
-  { path: '/components', i18nKey: 'navigation.components' },
+  { path: '/dashboard', i18nKey: 'navigation.components' },
   { path: '/roadmap', i18nKey: 'navigation.roadmap' }
 ]
 </script>

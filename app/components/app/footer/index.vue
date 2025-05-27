@@ -7,7 +7,7 @@
         <!-- Logo and Description -->
         <div class="lg:col-span-2">
           <div class="flex items-center gap-2">
-            <!-- <img src="/logo.svg" alt="Logo" class="h-8 w-8" > -->
+            <AppNavigationLogo />
             <span class="text-xl font-bold">Nuxt Shadcn</span>
           </div>
           <p class="mt-4 text-sm text-muted-foreground">

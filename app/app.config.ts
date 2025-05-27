@@ -14,11 +14,6 @@ export default defineAppConfig({
   ],
   features: [
     {
-      key: 'shadcn',
-      icon: 'layout',
-      url: 'https://ui.shadcn.com/'
-    },
-    {
       key: 'vue',
       icon: 'code',
       url: 'https://vuejs.org/'
@@ -28,6 +23,11 @@ export default defineAppConfig({
       icon: 'layers',
       url: 'https://nuxt.com/'
     },
+    {
+      key: 'shadcn',
+      icon: 'layout',
+      url: 'https://ui.shadcn.com/'
+    },    
     {
       key: 'tailwind',
       icon: 'palette',

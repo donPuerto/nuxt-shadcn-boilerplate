@@ -51,11 +51,11 @@
     <section class="py-16 backdrop-blur-[1px]">
       <div class="mx-auto max-w-7xl px-4">
         <h2 class="text-center text-3xl font-bold tracking-tight sm:text-4xl">{{ $t('home.features') }}</h2>
-        <p class="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+        <p class="mx-auto mt-2 max-w-2xl text-center text-muted-foreground">
           {{ $t('home.featuresDescription') }}
         </p>
 
-        <div class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <!-- Loop through features from app.config -->
           <template v-for="feature in appConfig.features" :key="feature.key">
             <Card class="overflow-hidden transition-all hover:shadow-md bg-background/60 backdrop-blur-sm">
