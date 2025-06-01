@@ -25,6 +25,17 @@
         <Bell class="h-5 w-5" />
         <span class="sr-only">Notifications</span>
       </Button>
+
+      <!-- Right Sidebar Toggle Button -->
+      <Button 
+        variant="outline" 
+        size="icon"
+        :class="{ 'bg-muted': rightSidebarVisible }"
+        @click="$emit('toggle-right-sidebar')"
+      >
+        <PanelRight class="h-5 w-5" />
+        <span class="sr-only">Toggle right panel</span>
+      </Button>
       
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
