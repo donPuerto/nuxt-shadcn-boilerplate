@@ -1,121 +1,181 @@
 <!-- components/dashboard/sidebar/default.vue -->
 <template>
-  <aside
-:class="[
-    'w-64 border-r bg-background transition-all',
-    'fixed inset-y-0 left-0 z-50 md:static',
-    isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-  ]">
-    <div class="flex flex-col h-full">
-      <!-- Mobile Close Button -->
-      <div class="flex justify-between items-center p-4 md:hidden">
-        <div class="flex items-center gap-2">
-          <AppNavigationLogo />
-          <span class="font-bold text-xl">Menu</span>
-        </div>
-        <Button variant="ghost" size="icon" @click="closeMobileSidebar">
-          <i class="i-lucide-x h-5 w-5" />
-        </Button>
-      </div>
-      
-      <!-- Sidebar Content -->
-      <div class="p-4 flex-1 overflow-auto">
-        <nav class="space-y-6">
-          <!-- Main Navigation -->
-          <div>
-            <div class="text-xs font-semibold text-muted-foreground mb-2">DASHBOARD</div>
-            <div class="space-y-1">
-              <Button
-v-for="item in mainNavItems" :key="item.label" 
-                      variant="ghost" 
-                      class="w-full justify-start" 
-                      :class="{ 'bg-muted': isActive(item.to) }"
-                      as-child>
-                <NuxtLink :to="item.to" class="flex items-center gap-3">
-                  <i :class="`${item.icon} h-5 w-5`" />
-                  <span>{{ item.label }}</span>
-                </NuxtLink>
-              </Button>
-            </div>
-          </div>
-          
-          <Separator />
-          
-          <!-- Account Section -->
-          <div>
-            <div class="text-xs font-semibold text-muted-foreground mb-2">ACCOUNT</div>
-            <div class="space-y-1">
-              <Button
-v-for="item in accountNavItems" :key="item.label" 
-                      variant="ghost" 
-                      class="w-full justify-start" 
-                      :class="{ 'bg-muted': isActive(item.to) }"
-                      as-child>
-                <NuxtLink :to="item.to" class="flex items-center gap-3">
-                  <i :class="`${item.icon} h-5 w-5`" />
-                  <span>{{ item.label }}</span>
-                </NuxtLink>
-              </Button>
-            </div>
-          </div>
-        </nav>
-      </div>
-      
-      <!-- User Info at Bottom -->
-      <div class="border-t p-4">
-        <div class="flex items-center gap-3">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>UN</AvatarFallback>
-          </Avatar>
-          <div>
-            <p class="text-sm font-medium">User Name</p>
-            <p class="text-xs text-muted-foreground">user@example.com</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </aside>
-  
-  <!-- Mobile Sidebar Backdrop -->
-  <div 
-    v-if="isMobileOpen" 
-    class="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
-    @click="closeMobileSidebar"
-  />
+  <Sidebar 
+    v-bind="props" 
+    :style="{ '--sidebar-width': '280px' }"
+  >
+    <SidebarHeader>
+      <DashboardNavigationTeamSwitcher :teams="data.teams" />
+    </SidebarHeader>
+    <SidebarContent>
+      <DashboardNavigationMain :items="data.navMain" />
+      <DashboardNavigationProjects :projects="data.projects" />
+    </SidebarContent>
+    <SidebarFooter>
+      <DashboardNavigationUser :user="data.user" />
+    </SidebarFooter>
+    <SidebarRail />
+  </Sidebar>
 </template>
 
-<script setup>
-const route = useRoute();
-const isMobileOpen = ref(false);
+<script setup lang="ts">
+import {
+  AudioWaveform,
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  GalleryVerticalEnd,
+  Map,
+  PieChart,
+  Settings2,
+  SquareTerminal,
+} from 'lucide-vue-next';
+import type { SidebarProps } from '@/components/ui/sidebar';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from '@/components/ui/sidebar';
 
-// Main navigation items
-const mainNavItems = [
-  { label: 'Overview', to: '/dashboard', icon: 'i-lucide-layout-dashboard' },
-  { label: 'Analytics', to: '/dashboard/analytics', icon: 'i-lucide-bar-chart-2' },
-  { label: 'Projects', to: '/dashboard/projects', icon: 'i-lucide-folder' },
-  { label: 'Tasks', to: '/dashboard/tasks', icon: 'i-lucide-check-square' },
-];
+import DashboardNavigationUser from '@/components/dashboard/navigation/user.vue';
+import DashboardNavigationMain from '@/components/dashboard/navigation/main.vue';
+import DashboardNavigationTeamSwitcher from '@/components/dashboard/navigation/team-switcher.vue';
+import DashboardNavigationProjects from '@/components/dashboard/navigation/projects.vue';
 
-// Account related navigation items
-const accountNavItems = [
-  { label: 'Profile', to: '/dashboard/profile', icon: 'i-lucide-user' },
-  { label: 'Settings', to: '/dashboard/settings', icon: 'i-lucide-settings' },
-  { label: 'Help', to: '/dashboard/help', icon: 'i-lucide-help-circle' },
-];
+const props = withDefaults(defineProps<SidebarProps>(), {
+  collapsible: 'icon',
+});
 
-function isActive(path) {
-  return route.path === path || route.path.startsWith(`${path}/`);
-}
-
-function toggleSidebar() {
-  isMobileOpen.value = !isMobileOpen.value;
-}
-
-function closeMobileSidebar() {
-  isMobileOpen.value = false;
-}
-
-// Expose methods for parent components
-defineExpose({ toggleSidebar });
+// Updated to use Lucide component references
+const data = {
+  user: {
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
+  },
+  teams: [
+    {
+      name: 'Acme Inc',
+      logo: GalleryVerticalEnd,
+      plan: 'Enterprise',
+    },
+    {
+      name: 'Acme Corp.',
+      logo: AudioWaveform,
+      plan: 'Startup',
+    },
+    {
+      name: 'Evil Corp.',
+      logo: Command,
+      plan: 'Free',
+    },
+  ],
+  navMain: [
+    {
+      title: 'Playground',
+      url: '#',
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: 'History',
+          url: '#',
+        },
+        {
+          title: 'Starred',
+          url: '#',
+        },
+        {
+          title: 'Settings',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Models',
+      url: '#',
+      icon: Bot,
+      items: [
+        {
+          title: 'Genesis',
+          url: '#',
+        },
+        {
+          title: 'Explorer',
+          url: '#',
+        },
+        {
+          title: 'Quantum',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Documentation',
+      url: '#',
+      icon: BookOpen,
+      items: [
+        {
+          title: 'Introduction',
+          url: '#',
+        },
+        {
+          title: 'Get Started',
+          url: '#',
+        },
+        {
+          title: 'Tutorials',
+          url: '#',
+        },
+        {
+          title: 'Changelog',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Settings',
+      url: '#',
+      icon: Settings2,
+      items: [
+        {
+          title: 'General',
+          url: '#',
+        },
+        {
+          title: 'Team',
+          url: '#',
+        },
+        {
+          title: 'Billing',
+          url: '#',
+        },
+        {
+          title: 'Limits',
+          url: '#',
+        },
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: 'Design Engineering',
+      url: '#',
+      icon: Frame,
+    },
+    {
+      name: 'Sales & Marketing',
+      url: '#',
+      icon: PieChart,
+    },
+    {
+      name: 'Travel',
+      url: '#',
+      icon: Map,
+    },
+  ],
+};
 </script>
