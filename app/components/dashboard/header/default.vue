@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { Bell, LogOut, Settings, User } from 'lucide-vue-next';
+import { Bell, LogOut, PanelRight, Settings, User } from 'lucide-vue-next';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { 
   Breadcrumb, 
