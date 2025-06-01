@@ -91,12 +91,15 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
-// Props for dynamic page titles
 const props = withDefaults(defineProps<{
   parentPage?: string;
   currentPage?: string;
+  rightSidebarVisible?: boolean;
 }>(), {
   parentPage: 'Building Your Application',
-  currentPage: 'Data Fetching'
+  currentPage: 'Data Fetching',
+  rightSidebarVisible: false
 });
+
+defineEmits(['toggle-right-sidebar']);
 </script>
