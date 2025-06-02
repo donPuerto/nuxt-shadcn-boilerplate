@@ -13,8 +13,8 @@
         <header class="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div class="flex items-center gap-2 px-4">
             <SidebarTrigger class="-ml-1" />
-            <!-- Enhanced separator with more visible styling -->
-            <div class="mx-2 h-5 w-px bg-border opacity-70"/>
+            <!-- Use the shadcn Separator component with increased visibility -->
+            <Separator orientation="vertical" class="mx-2 h-5 opacity-80" />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem class="hidden md:block">
@@ -79,7 +79,8 @@
           </div>
         </header>
         
-        <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <!-- Fix content overlap by adding proper spacing -->
+        <div class="flex flex-1 flex-col gap-4 p-4 pt-4 overflow-y-auto">
           <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div class="aspect-video rounded-xl bg-muted/50" />
             <div class="aspect-video rounded-xl bg-muted/50" />
@@ -122,6 +123,7 @@ import {
   BreadcrumbPage, 
   BreadcrumbSeparator 
 } from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -172,5 +174,13 @@ defineExpose({
 .h-4.w-4 {
   height: 1rem !important;
   width: 1rem !important;
+}
+
+/* Make the separator more visible */
+:deep(.separator[data-orientation="vertical"]) {
+  background-color: var(--border) !important;
+  opacity: 0.8 !important;
+  height: 20px !important;
+  margin: 0 8px !important;
 }
 </style>
