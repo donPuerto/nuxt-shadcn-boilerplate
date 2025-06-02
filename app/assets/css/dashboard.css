@@ -1,0 +1,100 @@
+/* Force sidebar to be visible */
+[data-sidebar="sidebar"] {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+/* Fix for SSR hydration issues */
+.sidebar-provider-client-only {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Ensure proper sidebar transitions */
+[data-collapsible="icon"],
+[data-collapsible="full"] {
+  transition: width 0.3s ease, min-width 0.3s ease !important;
+}
+
+/* Fix sidebar toggle button */
+[data-sidebar-trigger] {
+  z-index: 50;
+  cursor: pointer !important;
+}
+
+/* Make sure sidebar rail is visible */
+[data-sidebar-rail] {
+  display: flex !important;
+}
+
+/* Fix width values to ensure proper transition */
+[data-sidebar="sidebar"][data-collapsible="icon"] {
+  width: var(--sidebar-width-icon, 64px) !important;
+  min-width: var(--sidebar-width-icon, 64px) !important;
+}
+
+[data-sidebar="sidebar"][data-collapsible="full"] {
+  width: var(--sidebar-width, 280px) !important;
+  min-width: var(--sidebar-width, 280px) !important;
+}
+
+/* Fix inset spacing when sidebar is collapsed */
+[data-sidebar="inset"] {
+  margin-left: var(--sidebar-width, 280px);
+  transition: margin-left 0.3s ease;
+}
+
+[data-sidebar="inset"][data-collapsible="icon"] {
+  margin-left: var(--sidebar-width-icon, 64px);
+}
+
+/* Hide text in collapsed sidebar */
+[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
+  display: none !important;
+}
+
+/* Center buttons in collapsed sidebar */
+[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+
+/* Fix right sidebar positioning */
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 320px;
+  z-index: 40;
+  background-color: var(--background);
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.right-sidebar.visible {
+  transform: translateX(0);
+}
+
+/* Fix for full screen layout */
+.dashboard-layout {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Fix for content area */
+.dashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix header sticky positioning */
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: var(--background);
+}
