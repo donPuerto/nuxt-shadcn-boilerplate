@@ -1,11 +1,11 @@
-<!-- components/dashboard/right-sidebar/default.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\right-sidebar\default.vue -->
 <template>
-  <Sidebar
-    class="sticky hidden lg:flex top-0 h-svh border-l"
-    collapsible="none"
+  <div 
+    class="right-sidebar"
+    :class="{ 'visible': visible }"
   >
-    <SidebarHeader class="h-16 border-b border-sidebar-border">
-      <div class="flex items-center justify-between gap-2 p-2">
+    <div class="h-16 border-b border-sidebar-border">
+      <div class="flex items-center justify-between gap-2 p-4">
         <div class="flex items-center gap-2">
           <Avatar>
             <AvatarImage :src="user.avatar" alt="" />
@@ -21,12 +21,13 @@
           <span class="sr-only">Close</span>
         </Button>
       </div>
-    </SidebarHeader>
-    <SidebarContent>
+    </div>
+    
+    <div class="h-[calc(100%-64px)] overflow-y-auto">
       <div class="p-4">
         <Calendar />
       </div>
-      <SidebarSeparator class="mx-0" />
+      <div class="border-t mx-0" />
       <div class="px-4 py-2">
         <div v-for="calendar in calendars" :key="calendar.name" class="mb-4">
           <h3 class="text-sm font-medium mb-2">{{ calendar.name }}</h3>
@@ -43,32 +44,26 @@
           </div>
         </div>
       </div>
-    </SidebarContent>
-    <SidebarFooter>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <PlusIcon class="mr-2" />
-            <span>New Calendar</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    </SidebarFooter>
-  </Sidebar>
+      
+      <div class="border-t p-4">
+        <Button class="w-full" variant="outline">
+          <Plus class="mr-2 h-4 w-4" />
+          <span>New Calendar</span>
+        </Button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Backdrop for mobile -->
+  <div 
+    v-if="visible" 
+    class="fixed inset-0 bg-black/20 z-30 lg:hidden"
+    @click="$emit('close')"
+  />
 </template>
 
 <script setup lang="ts">
-import { MoreVertical, Plus as PlusIcon, X } from 'lucide-vue-next';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarSeparator,
-} from '@/components/ui/sidebar';
+import { Plus, X } from 'lucide-vue-next';
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

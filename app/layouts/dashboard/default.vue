@@ -1,11 +1,6 @@
-<!-- layouts/dashboard/default.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\layouts\dashboard\default.vue -->
 <template>
-  <div class="min-h-screen">
+  <ClientOnly>
     <slot />
-  </div>
+  </ClientOnly>
 </template>
-
-<script setup lang="ts">
-// Simple layout that renders the slot content
-// The dashboard structure is handled in each page
-</script>

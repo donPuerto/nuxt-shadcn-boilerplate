@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   devtools: { enabled: true },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/tailwind.css', '~/assets/css/dashboard.css'],
   vite: {
     plugins: [
       tailwindcss(),

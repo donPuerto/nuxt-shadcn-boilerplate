@@ -1,8 +1,8 @@
-<!-- components/dashboard/sidebar/default.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\sidebar\default.vue -->
 <template>
   <Sidebar 
-    v-bind="props" 
-    :style="{ '--sidebar-width': '280px' }"
+    v-bind="props"
+    class="min-h-screen border-r"
   >
     <SidebarHeader>
       <DashboardNavigationTeamSwitcher :teams="data.teams" />
@@ -14,7 +14,6 @@
     <SidebarFooter>
       <DashboardNavigationUser :user="data.user" />
     </SidebarFooter>
-    <SidebarRail />
   </Sidebar>
 </template>
 
@@ -37,7 +36,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
 } from '@/components/ui/sidebar';
 
 import DashboardNavigationUser from '@/components/dashboard/navigation/user.vue';
@@ -49,7 +47,7 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 });
 
-// Updated to use Lucide component references
+// This is sample data.
 const data = {
   user: {
     name: 'shadcn',

@@ -1,4 +1,4 @@
-<!-- components/dashboard/navigation/user.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\user.vue -->
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
@@ -6,7 +6,7 @@
         <DropdownMenuTrigger as-child>
           <SidebarMenuButton
             size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
           >
             <Avatar class="h-8 w-8 rounded-lg">
               <AvatarImage :src="user.avatar" :alt="user.name" />
@@ -14,11 +14,11 @@
                 {{ user.name.charAt(0).toUpperCase() }}
               </AvatarFallback>
             </Avatar>
-            <div class="grid flex-1 text-left text-sm leading-tight">
+            <div class="grid flex-1 text-left text-sm leading-tight sidebar-text">
               <span class="truncate font-semibold">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto size-4" />
+            <ChevronsUpDown class="ml-auto size-4 sidebar-text" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -44,28 +44,28 @@
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Sparkles class="mr-2" />
+              <Sparkles class="mr-2 h-4 w-4" />
               Upgrade to Pro
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <BadgeCheck class="mr-2" />
+              <BadgeCheck class="mr-2 h-4 w-4" />
               Account
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <CreditCard class="mr-2" />
+              <CreditCard class="mr-2 h-4 w-4" />
               Billing
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Bell class="mr-2" />
+              <Bell class="mr-2 h-4 w-4" />
               Notifications
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <LogOut class="mr-2" />
+            <LogOut class="mr-2 h-4 w-4" />
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -75,42 +75,51 @@
 </template>
 
 <script setup lang="ts">
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
+import { 
+  BadgeCheck, 
+  Bell, 
+  ChevronsUpDown, 
+  CreditCard, 
+  LogOut, 
+  Sparkles 
 } from 'lucide-vue-next';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuButton,
   useSidebar,
 } from '@/components/ui/sidebar';
 
-const props = defineProps<{
+const { isMobile } = useSidebar();
+
+defineProps<{
   user: {
     name: string;
     email: string;
     avatar: string;
   };
 }>();
-
-const { isMobile } = useSidebar();
 </script>
+
+<style scoped>
+/* Hide text when sidebar is collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
+  display: none !important;
+}
+
+/* Center button when collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+</style>

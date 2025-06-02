@@ -1,7 +1,7 @@
-<!-- components/dashboard/navigation/main.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\main.vue -->
 <template>
   <SidebarGroup>
-    <SidebarGroupLabel>Platform</SidebarGroupLabel>
+    <SidebarGroupLabel class="sidebar-text">Platform</SidebarGroupLabel>
     <SidebarMenu>
       <Collapsible
         v-for="item in items"
@@ -14,8 +14,8 @@
           <CollapsibleTrigger as-child>
             <SidebarMenuButton :tooltip="item.title">
               <component :is="item.icon" v-if="item.icon" />
-              <span>{{ item.title }}</span>
-              <ChevronRight class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+              <span class="sidebar-text">{{ item.title }}</span>
+              <ChevronRight class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 sidebar-text" />
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
@@ -55,14 +55,27 @@ import {
 
 defineProps<{
   items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
+    title: string
+    url: string
+    icon?: LucideIcon
+    isActive?: boolean
     items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
+      title: string
+      url: string
+    }[]
+  }[]
 }>();
 </script>
+
+<style scoped>
+/* Hide text when sidebar is collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
+  display: none !important;
+}
+
+/* Center button when collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+</style>

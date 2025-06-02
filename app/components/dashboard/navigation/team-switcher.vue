@@ -1,4 +1,4 @@
-<!-- components/dashboard/navigation/team-switcher.vue -->
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\team-switcher.vue -->
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
@@ -11,13 +11,13 @@
             <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <component :is="activeTeam.logo" class="size-4" />
             </div>
-            <div class="grid flex-1 text-left text-sm leading-tight">
+            <div class="grid flex-1 text-left text-sm leading-tight sidebar-text">
               <span class="truncate font-semibold">
                 {{ activeTeam.name }}
               </span>
               <span class="truncate text-xs">{{ activeTeam.plan }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto" />
+            <ChevronsUpDown class="ml-auto sidebar-text" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -32,7 +32,7 @@
           <DropdownMenuItem
             v-for="(team, index) in teams"
             :key="team.name"
-            class="gap-2 p-2 cursor-pointer"
+            class="gap-2 p-2"
             @click="activeTeam = team"
           >
             <div class="flex size-6 items-center justify-center rounded-sm border">
@@ -42,7 +42,7 @@
             <DropdownMenuShortcut>⌘{{ index + 1 }}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="gap-2 p-2 cursor-pointer">
+          <DropdownMenuItem class="gap-2 p-2">
             <div class="flex size-6 items-center justify-center rounded-md border bg-background">
               <Plus class="size-4" />
             </div>
@@ -57,8 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronsUpDown, Plus, type LucideIcon } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ChevronsUpDown, Plus } from 'lucide-vue-next';
+import { type Component, ref } from 'vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +68,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -78,7 +79,7 @@ import {
 const props = defineProps<{
   teams: {
     name: string;
-    logo: LucideIcon;
+    logo: Component;
     plan: string;
   }[];
 }>();
@@ -86,3 +87,16 @@ const props = defineProps<{
 const { isMobile } = useSidebar();
 const activeTeam = ref(props.teams[0]);
 </script>
+
+<style scoped>
+/* Hide text when sidebar is collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
+  display: none !important;
+}
+
+/* Center button when collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
+  justify-content: center !important;
+  padding: 0.5rem !important;
+}
+</style>
