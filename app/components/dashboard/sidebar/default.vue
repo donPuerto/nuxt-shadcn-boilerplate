@@ -1,23 +1,6 @@
 <!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\sidebar\default.vue -->
-<template>
-  <Sidebar 
-    v-bind="props"
-    class="min-h-screen border-r"
-  >
-    <SidebarHeader>
-      <DashboardNavigationTeamSwitcher :teams="data.teams" />
-    </SidebarHeader>
-    <SidebarContent>
-      <DashboardNavigationMain :items="data.navMain" />
-      <DashboardNavigationProjects :projects="data.projects" />
-    </SidebarContent>
-    <SidebarFooter>
-      <DashboardNavigationUser :user="data.user" />
-    </SidebarFooter>
-  </Sidebar>
-</template>
-
 <script setup lang="ts">
+import type { SidebarProps } from '@/components/ui/sidebar';
 import {
   AudioWaveform,
   BookOpen,
@@ -30,24 +13,23 @@ import {
   Settings2,
   SquareTerminal,
 } from 'lucide-vue-next';
-import type { SidebarProps } from '@/components/ui/sidebar';
+import DashboardNavigationMain from '@/components/dashboard/navigation/main.vue';
+import DashboardNavigationProjects from '@/components/dashboard/navigation/projects.vue';
+import DashboardNavigationUser from '@/components/dashboard/navigation/user.vue';
+import DashboardNavigationTeamSwitcher from '@/components/dashboard/navigation/team-switcher.vue';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarRail,
 } from '@/components/ui/sidebar';
-
-import DashboardNavigationUser from '@/components/dashboard/navigation/user.vue';
-import DashboardNavigationMain from '@/components/dashboard/navigation/main.vue';
-import DashboardNavigationTeamSwitcher from '@/components/dashboard/navigation/team-switcher.vue';
-import DashboardNavigationProjects from '@/components/dashboard/navigation/projects.vue';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 });
 
-// This is sample data.
+// Sample data
 const data = {
   user: {
     name: 'shadcn',
@@ -177,3 +159,19 @@ const data = {
   ],
 };
 </script>
+
+<template>
+  <Sidebar v-bind="props">
+    <SidebarHeader>
+      <DashboardNavigationTeamSwitcher :teams="data.teams" />
+    </SidebarHeader>
+    <SidebarContent>
+      <DashboardNavigationMain :items="data.navMain" />
+      <DashboardNavigationProjects :projects="data.projects" />
+    </SidebarContent>
+    <SidebarFooter>
+      <DashboardNavigationUser :user="data.user" />
+    </SidebarFooter>
+    <SidebarRail />
+  </Sidebar>
+</template>
