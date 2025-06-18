@@ -1,89 +1,80 @@
+import { config } from './config'
+
 export default defineAppConfig({
-  app: {
-    header: {
-      title: 'shadcn-docs',
-    }
+
+  // App basic info
+  name: config.shared.app.name,
+  description: config.shared.app.description,
+  version: config.shared.app.version,
+  author: config.shared.app.author,
+  url: config.shared.app.url,
+  
+  // Theme configuration
+  theme: config.shared.app.theme,
+
+  // Core app information
+  app: sharedConfig.app.app,
+
+  // Features
+  features: config.shared.app.features,
+
+  // Navigation configuration
+  navigation: {
+    main: config.shared.navigation.mainNav,
+    user: config.shared.navigation.userNav,
+    admin: config.shared.navigation.adminNav,
+    mobile: config.shared.navigation.mobileNav,
+    breadcrumb: config.shared.navigation.breadcrumb,
+    behavior: config.shared.navigation.behavior
   },
-  heroButtons: [
-    {
-      key: 'GitHub',
-      url: 'https://github.com/donPuerto/nuxt-shadcn-boilerplate.git',
-      icon: 'GithubIcon'
-    }   
-    // Add more buttons as needed
-  ],
-  features: [
-    {
-      key: 'vue',
-      icon: 'code',
-      url: 'https://vuejs.org/'
-    },
-    {
-      key: 'nuxt',
-      icon: 'layers',
-      url: 'https://nuxt.com/'
-    },
-    {
-      key: 'shadcn',
-      icon: 'layout',
-      url: 'https://ui.shadcn.com/'
-    },    
-    {
-      key: 'tailwind',
-      icon: 'palette',
-      url: 'https://tailwindcss.com/'
-    },
-    {
-      key: 'i18n',
-      icon: 'globe',
-      url: 'https://i18n.nuxtjs.org/'
-    }
-  ],
-  ui: {
-    // Theme settings
+  
+   // Social links configuration
+  social: {
+    links: config.shared.social.links,
+    developer: config.shared.social.developer,
+    display: config.shared.social.display,
+    shareButtons: config.shared.social.shareButtons
   },
-  // Default particles preset
-  defaultVantaEffect: 'waves',
-  // Three.js Background Settings
-  threeBackground: {
-    defaultPreset: 'default',
-    presets: {
-      default: {
-        count: 7000,
-        speed: 5,
-        size: 2,
-        colors: ['#3f51b5', '#5e35b1', '#1a237e', '#0d47a1'] // Blues
-      },
-      sunset: {
-        count: 5000,
-        speed: 0.8,
-        size: 2.5,
-        colors: ['#ff9e80', '#ff6e40', '#ff3d00', '#dd2c00'] // Oranges
-      },
-      emerald: {
-        count: 6000,
-        speed: 0.9,
-        size: 2,
-        colors: ['#00c853', '#00e676', '#69f0ae', '#004d40'] // Greens
-      },
-      galaxy: {
-        count: 10000,
-        speed: 1.5,
-        size: 1.5,
-        colors: ['#aa00ff', '#d500f9', '#e040fb', '#304ffe'] // Purple/Blue
-      }
-    }
+
+  // Footer configuration
+  footer: {
+    companyName: config.shared.footer.companyName,
+    description: config.shared.footer.description,
+    copyright: config.shared.footer.copyright,
+    navigation: config.shared.footer.navigation,
+    actions: config.shared.footer.actions,
+    contact: config.shared.footer.contact,
+    display: config.shared.footer.display,
+    newsletter: config.shared.footer.newsletter,
+    backToTop: config.shared.footer.backToTop
   },
-  theme: {
-    default: 'zinc',
-    defaultRadius: 0.5,
-    availableColors: [
-      'zinc', 'rose', 'blue', 'green', 'orange', 'red',
-      'slate', 'stone', 'gray', 'neutral', 'yellow', 'violet',
-    ]
+
+   // SEO configuration
+  seo: {
+    default: config.shared.seo.default,
+    pages: config.shared.seo.pages,
+    organization: config.shared.seo.organization,
+    meta: config.shared.seo.meta,
+    jsonLd: config.shared.seo.jsonLd
   },
-  icon: {
-    mode: 'css',
-    cssLayer: 'base'
+
+  // PWA configuration
+  pwa: {
+    name: config.shared.pwa.name,
+    shortName: config.shared.pwa.shortName,
+    description: config.shared.pwa.description,
+    themeColor: config.shared.pwa.themeColor,
+    backgroundColor: config.shared.pwa.backgroundColor,
+    display: config.shared.pwa.display,
+    orientation: config.shared.pwa.orientation,
+    icons: config.shared.pwa.icons,
+    startUrl: config.shared.pwa.startUrl,
+    scope: config.shared.pwa.scope,
+    categories: config.shared.pwa.categories,
+    screenshots: config.shared.pwa.screenshots,
+    features: config.shared.pwa.features,
+    serviceWorker: config.shared.pwa.serviceWorker,
+    shortcuts: config.shared.pwa.shortcuts
   }
+    
 })

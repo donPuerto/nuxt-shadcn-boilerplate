@@ -1,76 +1,101 @@
-// Define a type for all theme settings
-export interface ThemeSettings {
-  theme: string
-  radius: number
-}
-
 export function useCustomize() {
-  const appConfig = useAppConfig()
+  // Initialize with proper defaults
+  const theme = useState<string>('app-theme', () => 'zinc')
+  const radius = useState<number>('app-radius', () => 0.5)
   
-  // Get defaults from app config
-  const defaultTheme = appConfig.theme?.default || 'zinc'
-  const defaultRadius = appConfig.theme?.defaultRadius || 0.5
+  // Color mode
+  const colorMode = useColorMode()
+  const preference = computed({
+    get: () => colorMode.preference,
+    set: (value) => {
+      colorMode.preference = value
+    }
+  })
 
-  // Create reactive refs
-  const theme = useState('ui-theme', () => defaultTheme)
-  const radius = useState('ui-radius', () => defaultRadius)
+  // Available colors
+  const availableColors = ref([
+    'zinc', 'rose', 'blue', 'green', 'orange', 'red',
+    'slate', 'stone', 'gray', 'neutral', 'yellow', 'violet'
+  ])
 
-  // Load saved settings on init
-  function loadSavedSettings() {
-    if (!import.meta.client) return
-    
-    try {
-      const savedSettings = localStorage.getItem('theme-settings')
-      if (savedSettings) {
-        const parsed = JSON.parse(savedSettings) as ThemeSettings
-        theme.value = parsed.theme || defaultTheme
-        radius.value = parsed.radius ?? defaultRadius
+  // Load from localStorage on client
+  onMounted(() => {
+    if (import.meta.client) {
+      try {
+        const storedTheme = localStorage.getItem('theme-settings')
+        if (storedTheme) {
+          const settings = JSON.parse(storedTheme)
+          theme.value = settings.theme || 'zinc'
+          radius.value = settings.radius || 0.5
+          applyTheme(theme.value)
+          applyRadius(radius.value)
+        }
+      } catch (error) {
+        console.warn('Failed to load theme settings from localStorage:', error)
       }
-    } catch (error) {
-      console.error('Failed to load saved theme settings', error)
-      // Reset to defaults if loading fails
-      theme.value = defaultTheme
-      radius.value = defaultRadius
+    }
+  })
+
+  // Save to localStorage when settings change
+  watch(
+    () => ({ theme: theme.value, radius: radius.value }),
+    (newSettings) => {
+      if (import.meta.client) {
+        try {
+          localStorage.setItem('theme-settings', JSON.stringify(newSettings))
+        } catch (error) {
+          console.warn('Failed to save theme settings to localStorage:', error)
+        }
+      }
+    },
+    { deep: true }
+  )
+
+  // Apply theme to document
+  const applyTheme = (newTheme: string) => {
+    if (import.meta.client) {
+      const root = document.documentElement
+      root.setAttribute('data-theme', newTheme)
+      root.className = root.className.replace(/theme-\w+/g, '')
+      root.classList.add(`theme-${newTheme}`)
     }
   }
 
-  // Save settings to localStorage
-  function saveSettings() {
-    if (!import.meta.client) return
-    
-    try {
-      const settings: ThemeSettings = {
-        theme: theme.value,
-        radius: radius.value
-      }
-      localStorage.setItem('theme-settings', JSON.stringify(settings))
-    } catch (error) {
-      console.error('Failed to save theme settings', error)
+  // Apply radius CSS custom property
+  const applyRadius = (newRadius: number) => {
+    if (import.meta.client) {
+      document.documentElement.style.setProperty('--radius', `${newRadius}rem`)
     }
   }
 
-  // Set theme with automatic saving
-  function setTheme(value: string) {
-    theme.value = value
-    saveSettings()
+  // Actions
+  const setTheme = (newTheme: string) => {
+    theme.value = newTheme
+    applyTheme(newTheme)
   }
 
-  // Set radius with automatic saving
-  function setRadius(value: number) {
-    radius.value = value
-    saveSettings()
+  const setRadius = (newRadius: number) => {
+    radius.value = newRadius
+    applyRadius(newRadius)
   }
 
-  // Call loadSavedSettings to initialize from localStorage when in client mode
-  if (import.meta.client) {
-    loadSavedSettings()
+  const resetThemeToDefaults = () => {
+    setTheme('zinc')
+    setRadius(0.5)
+    preference.value = 'system'
+    
+    if (import.meta.client) {
+      localStorage.removeItem('theme-settings')
+    }
   }
 
-  // Return the reactive refs and setter functions
   return {
-    theme,
-    radius,
+    theme: readonly(theme),
+    radius: readonly(radius),
+    preference,
+    availableColors: readonly(availableColors),
     setTheme,
-    setRadius
+    setRadius,
+    resetThemeToDefaults
   }
 }

@@ -1,135 +1,126 @@
-/* Force sidebar to be visible */
+/* Core sidebar styles */
 [data-sidebar="sidebar"] {
   display: flex !important;
-  visibility: visible !important;
-}
-
-/* Fix for SSR hydration issues */
-.sidebar-provider-client-only {
-  min-height: 100vh;
-  display: flex;
-}
-
-/* Ensure proper sidebar transitions */
-[data-collapsible="icon"],
-[data-collapsible="full"] {
+  flex-direction: column !important;
+  height: 100vh !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  border-right: 1px solid var(--border) !important;
+  background-color: var(--background) !important;
   transition: width 0.3s ease, min-width 0.3s ease !important;
 }
 
-/* Fix sidebar toggle button */
-[data-sidebar-trigger] {
-  z-index: 50;
-  cursor: pointer !important;
+/* Fixed width values */
+[data-sidebar="sidebar"][data-collapsible="full"] {
+  width: var(--sidebar-width, 280px) !important;
+  min-width: var(--sidebar-width, 280px) !important;
 }
 
-/* Make sure sidebar rail is visible */
-[data-sidebar-rail] {
-  display: flex !important;
-}
-
-/* Fix width values to ensure proper transition */
 [data-sidebar="sidebar"][data-collapsible="icon"] {
   width: var(--sidebar-width-icon, 48px) !important;
   min-width: var(--sidebar-width-icon, 48px) !important;
   max-width: var(--sidebar-width-icon, 48px) !important;
 }
 
-[data-sidebar="sidebar"][data-collapsible="full"] {
-  width: var(--sidebar-width, 280px) !important;
-  min-width: var(--sidebar-width, 280px) !important;
+/* Make sidebar trigger clickable */
+[data-sidebar-trigger] {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 50 !important;
 }
 
-/* Fix inset spacing when sidebar is collapsed */
+/* Inset content */
 [data-sidebar="inset"] {
   margin-left: var(--sidebar-width, 280px);
-  transition: margin-left 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-
-[data-sidebar="inset"][data-collapsible="icon"] {
-  margin-left: var(--sidebar-width-icon, 48px);
-}
-
-/* Fix right sidebar positioning */
-.right-sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 320px;
-  z-index: 40;
-  background-color: var(--background);
-  border-left: 1px solid var(--border);
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-}
-
-.right-sidebar.visible {
-  transform: translateX(0);
-}
-
-/* Fix for full screen layout */
-.dashboard-layout {
+  transition: margin-left 0.3s ease, width 0.3s ease, margin-right 0.3s ease;
   min-height: 100vh;
-  width: 100%;
-}
-
-/* Fix for content area */
-.dashboard-content {
-  flex: 1;
-  overflow-y: auto;
+  width: calc(100% - var(--sidebar-width, 280px));
   display: flex;
   flex-direction: column;
 }
 
-/* Fix header sticky positioning */
-.dashboard-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background-color: var(--background);
+/* Default behavior for inset when sidebar is in icon mode */
+[data-sidebar="sidebar"][data-collapsible="icon"] ~ [data-sidebar="inset"] {
+  margin-left: var(--sidebar-width-icon, 48px) !important;
+  width: calc(100% - var(--sidebar-width-icon, 48px)) !important;
 }
 
-/* Hide text in collapsed sidebar */
+/* Mobile-first: Default to collapsed sidebar on small screens */
+@media (max-width: 768px) {
+  [data-sidebar="inset"] {
+    margin-left: var(--sidebar-width-icon, 48px) !important;
+    width: calc(100% - var(--sidebar-width-icon, 48px)) !important;
+  }
+}
+
+/* Hide elements in collapsed mode */
 [data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
   display: none !important;
+}
+
+/* Style sidebar group labels in collapsed mode */
+[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-group-label] {
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Center buttons in collapsed sidebar */
 [data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
   justify-content: center !important;
   padding: 0.5rem !important;
-  width: 100% !important;
 }
 
-/* Fix menu items in collapsed state */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-item] {
+/* Style sidebar rail */
+[data-sidebar-rail] {
+  display: flex !important;
+}
+
+/* Content squeezed by right sidebar */
+.content-squeezed {
+  transition: margin-right 0.3s ease, width 0.3s ease !important;
+  margin-right: var(--right-sidebar-width, 320px) !important;
+  width: calc(100% - var(--right-sidebar-width, 320px) - var(--sidebar-width, 280px)) !important;
+}
+
+/* Handle content when both sidebars are present and left is collapsed */
+[data-sidebar="sidebar"][data-collapsible="icon"] ~ [data-sidebar="inset"].content-squeezed {
+  width: calc(100% - var(--right-sidebar-width, 320px) - var(--sidebar-width-icon, 48px)) !important;
+}
+
+/* Handle both sidebars on tablet */
+@media (max-width: 1024px) {
+  .content-squeezed {
+    margin-right: var(--right-sidebar-width, 320px) !important;
+    width: calc(100% - var(--right-sidebar-width, 320px) - var(--sidebar-width-icon, 48px)) !important;
+  }
+}
+
+/* Right sidebar */
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: var(--right-sidebar-width, 320px);
+  background-color: var(--background);
+  border-left: 1px solid var(--border);
+  z-index: 45;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
   display: flex;
-  justify-content: center;
-  width: 100%;
+  flex-direction: column;
 }
 
-/* Center icons in collapsed state */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] > :first-child:not(.sidebar-text) {
-  margin-left: auto;
-  margin-right: auto;
+.right-sidebar.visible {
+  transform: translateX(0);
 }
 
-/* Fix for sidebar group labels in collapsed state */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-group-label] {
-  height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Make separators more visible */
-.separator[data-orientation="vertical"] {
-  background-color: var(--border);
-  opacity: 0.8;
-  height: 20px;
-  margin: 0 8px;
+/* Client-only sidebar wrapper */
+.sidebar-provider-client-only {
+  min-height: 100vh;
+  display: flex;
 }

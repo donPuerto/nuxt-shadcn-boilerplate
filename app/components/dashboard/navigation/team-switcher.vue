@@ -1,4 +1,42 @@
 <!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\team-switcher.vue -->
+<script setup lang="ts">
+import { ref } from 'vue';
+import { ChevronsUpDown, PlusCircle } from 'lucide-vue-next';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+interface Team {
+  name: string;
+  logo: any;
+  plan: string;
+}
+
+const props = defineProps<{
+  teams: Team[];
+}>();
+
+const activeTeam = ref<Team | null>(null);
+
+onMounted(() => {
+  // Set the first team as active by default
+  if (props.teams && props.teams.length > 0) {
+    activeTeam.value = props.teams[0];
+  }
+});
+</script>
+
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
@@ -9,21 +47,19 @@
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <component :is="activeTeam.logo" class="size-4" />
+              <component :is="activeTeam?.logo" v-if="activeTeam" class="size-4" />
             </div>
-            <div class="grid flex-1 text-left text-sm leading-tight sidebar-text">
-              <span class="truncate font-semibold">
-                {{ activeTeam.name }}
-              </span>
-              <span class="truncate text-xs">{{ activeTeam.plan }}</span>
+            <div class="grid flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold">{{ activeTeam?.name || 'Select team' }}</span>
+              <span class="truncate text-xs">{{ activeTeam?.plan || '' }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto sidebar-text" />
+            <ChevronsUpDown class="ml-auto" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+          class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
           align="start"
-          :side="isMobile ? 'bottom' : 'right'"
+          side="bottom"
           :side-offset="4"
         >
           <DropdownMenuLabel class="text-xs text-muted-foreground">
@@ -44,59 +80,12 @@
           <DropdownMenuSeparator />
           <DropdownMenuItem class="gap-2 p-2">
             <div class="flex size-6 items-center justify-center rounded-md border bg-background">
-              <Plus class="size-4" />
+              <PlusCircle class="size-4" />
             </div>
-            <div class="font-medium text-muted-foreground">
-              Add team
-            </div>
+            <div class="font-medium text-muted-foreground">Add team</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>
   </SidebarMenu>
 </template>
-
-<script setup lang="ts">
-import { ChevronsUpDown, Plus } from 'lucide-vue-next';
-import { type Component, ref } from 'vue';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/components/ui/sidebar';
-
-const props = defineProps<{
-  teams: {
-    name: string;
-    logo: Component;
-    plan: string;
-  }[];
-}>();
-
-const { isMobile } = useSidebar();
-const activeTeam = ref(props.teams[0]);
-</script>
-
-<style scoped>
-/* Hide text when sidebar is collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
-  display: none !important;
-}
-
-/* Center button when collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
-  justify-content: center !important;
-  padding: 0.5rem !important;
-}
-</style>

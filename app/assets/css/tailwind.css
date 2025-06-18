@@ -197,14 +197,46 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  
 }
 
-/* html {
-  color-scheme: light dark;
+/* Custom animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-html.dark {
-  color-scheme: dark;
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
 }
-html.light {
-  color-scheme: light;
-} */
+
+/* Sidebar responsive styles */
+.sidebar-open {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 1023px) {
+  .sidebar-open {
+    transform: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

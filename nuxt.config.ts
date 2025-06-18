@@ -9,6 +9,12 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css', '~/assets/css/dashboard.css'],
+  ssr: true, // Keep SSR enabled globally
+  nitro: {
+    routeRules: {
+      '/dashboard/**': { ssr: false }, // Disable SSR for all dashboard routes
+    }
+  },
   vite: {
     plugins: [
       tailwindcss(),
@@ -26,7 +32,8 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@nuxt/scripts',
     '@nuxtjs/color-mode',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@vueuse/nuxt',
   ],
   shadcn: {
     prefix: '',
@@ -55,6 +62,7 @@ export default defineNuxtConfig({
   },
   colorMode: {
     preference: 'system', // Default preference
+    dataValue: 'theme', // activate data-theme in <html> tag
     fallback: 'light',    // Fallback when system preference isn't available
     classSuffix: '',      // Important for Tailwind dark mode
     storageKey: 'nuxt-color-mode'
@@ -63,4 +71,10 @@ export default defineNuxtConfig({
   experimental: {
     componentIslands: true
   },
+  runtimeConfig: {   
+    
+    public: {
+     
+    }
+  }
 })

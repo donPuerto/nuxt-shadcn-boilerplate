@@ -1,114 +1,146 @@
 {
-  "navigation": {
-    "home": "Home",
-    "components": "Components",
-    "roadmap": "Roadmap"
-  },
-  "themeCustomizer":{
-    "title": "Theme Customizer",
-    "description": "Customize the theme to your liking",
-    "categories": {
-      "color": "Color",
-      "radius": "Radius",
-      "theme": "Theme" 
-    },
-    "theme": {
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
+  "shared": {
+    "navigation": {
+      "home": "Home",
+      "roadmap": "Roadmap",
+      "dashboard": "Dashboard"
     }
   },
-  "common": {
-    "changeLanguage": "Change Language",
-    "toggleTheme": "Toggle Theme",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "retry": "Retry",
-    "close": "Close"
-  },
-  "home": {
-    "title": "Nuxt Shadcn Boilerplate",
-    "subtitle": "A modern, fast, and customizable starter template for Nuxt 4 applications with Shadcn UI components.",
-    "getStarted": "Get Started",
-    "buttons": {
-      "github": "GitHub"
-    },
-    "features": "Features",
-    "featuresDescription": "Everything you need to build beautiful web applications",
-    "learnMore": "Learn more",
-    "featureCards": {
-      "shadcn": {
-        "title": "Shadcn UI Components",
-        "description": "Beautiful, accessible UI components",
-        "content": "Ready-to-use components that you can copy and paste into your apps. Accessible, customizable, and open source."
+  "pages": {
+    "roadmap": {
+      "meta": {
+        "title": "Roadmap - Nuxt Shadcn Boilerplate",
+        "description": "Our development roadmap showing completed features, current progress, and future plans."
       },
-      "vue": {
-        "title": "Vue.js",
-        "description": "Progressive JavaScript framework",
-        "content": "An approachable, performant and versatile framework for building web user interfaces."
+      "hero": {
+        "title": "Development Roadmap",
+        "subtitle": "Track our progress and upcoming features",
+        "description": "See what we've accomplished, what we're currently working on, and what's planned for the future."
       },
-      "nuxt": {
-        "title": "Nuxt Framework",
-        "description": "The Intuitive Vue Framework",
-        "content": "Build your next Vue.js application with confidence using Nuxt. An open source framework making web development simple and powerful."
+      "stats": {
+        "completed": "Completed",
+        "in-progress": "In Progress",
+        "planned": "Planned",
+        "ideas": "Ideas"
       },
-      "tailwind": {
-        "title": "Tailwind CSS",
-        "description": "Utility-first CSS framework",
-        "content": "A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup."
+      "categories": {
+        "core": "Core Features",
+        "ui-components": "UI Components",
+        "developer-experience": "Developer Experience",
+        "performance": "Performance",
+        "documentation": "Documentation",
+        "testing": "Testing"
       },
-      "i18n": {
-        "title": "i18n Support",
-        "description": "Built-in internationalization",
-        "content": "Support for multiple languages out of the box with simple translation keys and seamless language switching."
-      }
-    },
-    "components": "Components",
-    "componentsDescription": "Explore some of the UI components included in this template",
-    "ready": "Ready to Get Started?",
-    "readyDescription": "Start building your next project with this boilerplate today",
-    "documentation": "Documentation"
-  },
-  "components": {
-    "title": "UI Components",
-    "description": "Explore the available Shadcn UI components"
-  },
-  "roadmap": {
-    "title": "Project Roadmap",
-    "description": "Upcoming features and improvements",
-    "planned": "Planned",
-    "inProgress": "In Progress",
-    "completed": "Completed"
-  },
-  "footer": {
-    "description": "A modern boilerplate combining the power of Nuxt.js and Shadcn UI components with Tailwind CSS for building beautiful, accessible, and responsive web applications.",
-    "copyright": "Nuxt Shadcn Boilerplate. All rights reserved.",
-    "sections": {
-      "resources": {
-        "title": "Resources",
-        "links": {
-          "components": "Components",
-          "roadmap": "Roadmap",
+      "timeline": {
+        "completed": {
+          "nuxt4-upgrade": {
+            "title": "Nuxt 4 Upgrade",
+            "description": "Upgraded to Nuxt 4 with latest features and performance improvements"
+          },
+          "shadcn-integration": {
+            "title": "Shadcn UI Integration",
+            "description": "Complete integration of Shadcn UI components with proper theming"
+          },
+          "tailwind-setup": {
+            "title": "Tailwind CSS Setup",
+            "description": "Configured Tailwind CSS with custom design tokens and utilities"
+          },
+          "i18n-implementation": {
+            "title": "Internationalization",
+            "description": "Multi-language support with Nuxt i18n module"
+          },
+          "theme-system": {
+            "title": "Dynamic Theme System",
+            "description": "Dark/light mode with customizable color schemes"
+          }
+        },
+        "in-progress": {
+          "auth-system": {
+            "title": "Authentication System",
+            "description": "Complete auth solution with JWT, OAuth, and role-based access"
+          },
+          "dashboard-components": {
+            "title": "Dashboard Components",
+            "description": "Advanced dashboard components for admin interfaces"
+          },
+          "testing-setup": {
+            "title": "Testing Framework",
+            "description": "Unit, integration, and E2E testing setup with Vitest and Playwright"
+          }
+        },
+        "planned": {
+          "api-integration": {
+            "title": "API Integration Layer",
+            "description": "Standardized API integration with caching and error handling"
+          },
+          "advanced-forms": {
+            "title": "Advanced Form Components",
+            "description": "Complex form components with validation and multi-step support"
+          },
+          "cms-integration": {
+            "title": "CMS Integration",
+            "description": "Headless CMS integration options (Strapi, Contentful, etc.)"
+          },
+          "pwa-support": {
+            "title": "PWA Support",
+            "description": "Progressive Web App features with offline support"
+          }
+        },
+        "ideas": {
+          "mobile-app-template": {
+            "title": "Mobile App Template",
+            "description": "React Native or Capacitor template sharing the same design system"
+          },
+          "ai-components": {
+            "title": "AI-Powered Components",
+            "description": "Components that leverage AI for enhanced user experience"
+          },
+          "micro-animations": {
+            "title": "Micro Animations",
+            "description": "Subtle animations and transitions throughout the interface"
+          },
+          "deployment-templates": {
+            "title": "Deployment Templates",
+            "description": "One-click deployment templates for various platforms"
+          }
+        }
+      },
+      "contributing": {
+        "title": "How to Contribute",
+        "description": "We welcome contributions from the community! Here's how you can help:",
+        "types": {
+          "code": "Code Contributions",
           "documentation": "Documentation",
-          "tutorials": "Tutorials"
+          "testing": "Testing & QA",
+          "design": "Design & UX",
+          "feedback": "Feedback & Ideas"
         }
       },
-      "community": {
-        "title": "Community",
-        "links": {
-          "github": "GitHub",
-          "discord": "Discord",
-          "twitter": "Twitter",
-          "contributors": "Contributors"
+      "cta": {
+        "title": "Want to Contribute?",
+        "description": "Help us build the best Nuxt boilerplate for the community",
+        "buttons": {
+          "contribute": "Start Contributing",
+          "suggest-feature": "Suggest a Feature"
         }
       },
-      "legal": {
-        "title": "Legal",
-        "links": {
-          "privacy": "Privacy Policy",
-          "terms": "Terms of Service",
-          "license": "License"
-        }
+      "filters": {
+        "all": "All Items",
+        "status": "Filter by Status",
+        "category": "Filter by Category",
+        "priority": "Filter by Priority"
+      },
+      "priority": {
+        "low": "Low Priority",
+        "medium": "Medium Priority",
+        "high": "High Priority",
+        "critical": "Critical"
+      },
+      "effort": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "extra-large": "Extra Large"
       }
     }
   }

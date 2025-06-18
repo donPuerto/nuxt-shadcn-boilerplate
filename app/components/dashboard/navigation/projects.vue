@@ -1,29 +1,5 @@
 <!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\projects.vue -->
-<template>
-  <SidebarGroup>
-    <SidebarGroupLabel class="flex items-center justify-between">
-      <span class="sidebar-text">Projects</span>
-      <Button variant="ghost" size="icon" class="mr-1.5 h-4 w-4">
-        <Plus class="h-4 w-4" />
-        <span class="sr-only">Add project</span>
-      </Button>
-    </SidebarGroupLabel>
-    <SidebarMenu>
-      <SidebarMenuItem v-for="project in projects" :key="project.name">
-        <SidebarMenuButton as-child :tooltip="project.name">
-          <a :href="project.url">
-            <component :is="project.icon" v-if="project.icon" />
-            <span class="sidebar-text">{{ project.name }}</span>
-          </a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
-  </SidebarGroup>
-</template>
-
 <script setup lang="ts">
-import { Plus, type LucideIcon } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -31,25 +7,66 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { MoreHorizontal } from 'lucide-vue-next';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-defineProps<{
-  projects: {
-    name: string;
-    url: string;
-    icon?: LucideIcon;
-  }[];
+interface Project {
+  name: string;
+  url: string;
+  icon: any;
+}
+
+const props = defineProps<{
+  projects: Project[];
 }>();
 </script>
 
-<style scoped>
-/* Hide text when sidebar is collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
-  display: none !important;
-}
-
-/* Center button when collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
-  justify-content: center !important;
-  padding: 0.5rem !important;
-}
-</style>
+<template>
+  <SidebarGroup class="group-data-[collapsible=icon]:hidden">
+    <SidebarGroupLabel>Projects</SidebarGroupLabel>
+    <SidebarMenu>
+      <SidebarMenuItem v-for="project in projects" :key="project.name">
+        <SidebarMenuButton as-child>
+          <a :href="project.url">
+            <component :is="project.icon" />
+            <span>{{ project.name }}</span>
+          </a>
+        </SidebarMenuButton>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <SidebarMenuButton
+              variant="ghost"
+              size="sm"
+              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <MoreHorizontal />
+              <span class="sr-only">More</span>
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            class="w-48 rounded-lg"
+            side="bottom"
+            align="end"
+          >
+            <DropdownMenuItem>
+              <span>View Project</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <span>Share Project</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <span>Delete Project</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarGroup>
+</template>

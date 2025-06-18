@@ -1,4 +1,44 @@
 <!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate\app\components\dashboard\navigation\user.vue -->
+<script setup lang="ts">
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Sparkles,
+} from 'lucide-vue-next';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar';
+
+interface UserProps {
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+const props = defineProps<{
+  user: UserProps;
+}>();
+</script>
+
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
@@ -6,24 +46,22 @@
         <DropdownMenuTrigger as-child>
           <SidebarMenuButton
             size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
               <AvatarImage :src="user.avatar" :alt="user.name" />
-              <AvatarFallback class="rounded-lg">
-                {{ user.name.charAt(0).toUpperCase() }}
-              </AvatarFallback>
+              <AvatarFallback class="rounded-lg">CN</AvatarFallback>
             </Avatar>
-            <div class="grid flex-1 text-left text-sm leading-tight sidebar-text">
+            <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-semibold">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto size-4 sidebar-text" />
+            <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-          :side="isMobile ? 'bottom' : 'right'"
+          class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+          side="right"
           align="end"
           :side-offset="4"
         >
@@ -31,9 +69,7 @@
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
                 <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg">
-                  {{ user.name.charAt(0).toUpperCase() }}
-                </AvatarFallback>
+                <AvatarFallback class="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">{{ user.name }}</span>
@@ -73,53 +109,3 @@
     </SidebarMenuItem>
   </SidebarMenu>
 </template>
-
-<script setup lang="ts">
-import { 
-  BadgeCheck, 
-  Bell, 
-  ChevronsUpDown, 
-  CreditCard, 
-  LogOut, 
-  Sparkles 
-} from 'lucide-vue-next';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  useSidebar,
-} from '@/components/ui/sidebar';
-
-const { isMobile } = useSidebar();
-
-defineProps<{
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}>();
-</script>
-
-<style scoped>
-/* Hide text when sidebar is collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] .sidebar-text {
-  display: none !important;
-}
-
-/* Center button when collapsed */
-[data-sidebar="sidebar"][data-collapsible="icon"] [data-sidebar-menu-button] {
-  justify-content: center !important;
-  padding: 0.5rem !important;
-}
-</style>
