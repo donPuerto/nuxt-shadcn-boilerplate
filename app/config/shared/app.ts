@@ -67,15 +67,10 @@ export const appConfig = {
   // Social links (reference from social config)
   social: {
     // Get only enabled profiles
-    profiles: Object.entries(socialConfig.profiles)
-      .filter(([_, profile]) => profile.enabled)
-      .reduce((acc, [key, profile]) => {
-        acc[key] = profile
-        return acc
-      }, {} as Record<string, any>),
-    
-    // Project-specific social
-    project: socialConfig.project
+    profiles: socialConfig?.profiles ? Object.fromEntries(
+      Object.entries(socialConfig.profiles)
+        .filter(([_, profile]) => profile.enabled)
+    ) : {},
   },
 
   // Brand assets

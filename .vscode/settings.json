@@ -1,11 +1,14 @@
 {
+  // Vue language server configuration
   "vue.server.hybridMode": true,
   "vue.server.includeLanguages": [
     "vue",
     "markdown"
   ],
+  // Formatting configuration
   "prettier.enable": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
+  // Language-specific formatting settings
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
@@ -24,13 +27,18 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  // Default formatter for unlisted file types
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  // Auto-fix on save settings
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
+  // ESLint configuration
   "eslint.format.enable": true,
+  // Enable the ESLint flat config support
   "eslint.useFlatConfig": true,
+  // ESLint rule customizations to control formatting rules
   "eslint.rules.customizations": [
     {
       "rule": "style/*",
@@ -73,6 +81,7 @@
       "severity": "off"
     }
   ],
+  // File types that ESLint should validate
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -85,6 +94,7 @@
     "jsonc",
     "yaml"
   ],
+  // TailwindCSS configuration
   "tailwindCSS.experimental.classRegex": [
     [
       "cva\\(([^)]*)\\)",
@@ -95,11 +105,15 @@
       "[\"'`]([^\"'`]*).*?[\"'`]"
     ]
   ],
+  // File associations
   "files.associations": {
-    "*.md": "markdown"
+    "*.md": "markdown",
+    "*.css": "postcss"
   },
+  // Disable TypeScript/JavaScript built-in validation in favor of ESLint
   "typescript.validate.enable": false,
   "javascript.validate.enable": false,
+  // Spell checker dictionary
   "cSpell.words": [
     "Componente",
     "Consolas",
@@ -115,12 +129,15 @@
     "Shadcn",
     "Startseite"
   ],
+  // Editor behavior settings
   "files.autoSave": "onWindowChange",
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
   "workbench.startupEditor": "none",
   "explorer.compactFolders": false,
+  // Extension management
   "extensions.autoUpdate": false,
   "extensions.autoCheckUpdates": false,
+  // Performance settings
   "typescript.tsserver.maxTsServerMemory": 2048
 }

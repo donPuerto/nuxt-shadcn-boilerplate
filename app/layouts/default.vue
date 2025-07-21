@@ -8,8 +8,11 @@
       <slot />
     </main>
 
-    <!-- Footer (optional) -->
+    <!-- Footer -->
     <AppFooter />
+
+    <!-- Cookie Banner -->
+    <AppCookieBanner />
   </div>
 </template>
 

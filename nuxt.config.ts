@@ -58,6 +58,9 @@ export default defineNuxtConfig({
       { code: 'de', iso: 'de-DE', name: 'German' },
     ],
     defaultLocale: 'en',
+    bundle: {
+      optimizeTranslationDirective: false
+    }
     
   },
   colorMode: {

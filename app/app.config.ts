@@ -3,17 +3,17 @@ import { config } from './config'
 export default defineAppConfig({
 
   // App basic info
-  name: config.shared.app.name,
-  description: config.shared.app.description,
-  version: config.shared.app.version,
+  name: config?.shared?.app?.app?.name || 'Nuxt Shadcn Boilerplate',
+  description: config?.shared?.app?.app?.description || 'A modern Nuxt 3 boilerplate with Shadcn UI components',
+  version: config.shared.app.app.version,
   author: config.shared.app.author,
-  url: config.shared.app.url,
+  url: config.shared.app.repository.homepage,
   
   // Theme configuration
   theme: config.shared.app.theme,
 
-  // Core app information
-  app: sharedConfig.app.app,
+  // Core app information - FIX: Use config instead of sharedConfig
+  app: config.shared.app.app,
 
   // Features
   features: config.shared.app.features,
@@ -75,6 +75,60 @@ export default defineAppConfig({
     features: config.shared.pwa.features,
     serviceWorker: config.shared.pwa.serviceWorker,
     shortcuts: config.shared.pwa.shortcuts
+  },
+
+  // Cookie consent configuration
+  cookies: {
+    enabled: true,
+    version: '1.0',
+    banner: {
+      position: 'bottom',
+      theme: 'light',
+      showOnFirstVisit: true,
+      autoHide: false,
+      hideDelay: 0
+    },
+    categories: [
+      {
+        id: 'necessary',
+        name: 'Necessary',
+        description: 'Essential cookies for website functionality',
+        required: true,
+        cookies: ['session', 'csrf', 'auth']
+      },
+      {
+        id: 'analytics',
+        name: 'Analytics',
+        description: 'Help us understand how visitors interact with our website',
+        required: false,
+        cookies: ['_ga', '_gid', '_gtag', 'analytics']
+      },
+      {
+        id: 'marketing',
+        name: 'Marketing',
+        description: 'Used to track visitors and display relevant ads',
+        required: false,
+        cookies: ['_fbp', '_fbc', 'marketing', 'ads']
+      },
+      {
+        id: 'preferences',
+        name: 'Preferences',
+        description: 'Remember your settings and preferences',
+        required: false,
+        cookies: ['theme', 'language', 'sidebar', 'preferences']
+      }
+    ],
+    links: {
+      policy: '/cookie-policy',
+      privacy: '/privacy',
+      terms: '/terms'
+    },
+    compliance: {
+      gdpr: true,
+      ccpa: true,
+      showDeclineOption: true,
+      requiredCategories: ['necessary']
+    }
   }
     
 })
