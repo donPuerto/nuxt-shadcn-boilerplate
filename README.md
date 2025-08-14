@@ -1,75 +1,68 @@
-# Nuxt Minimal Starter
+# 🚀 Nuxt 4 + Tailwind CSS 4 + Shadcn Boilerplate ✨
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern, opinionated starter template for building beautiful, fast, and scalable web apps with:
 
-## Setup
+- ⚡ **Nuxt 4** (latest) — The intuitive Vue framework for building universal apps
+- 🎨 **Tailwind CSS 4** (latest) — Utility-first CSS for rapid UI development
+- 🧩 **Shadcn UI** (latest) — Beautiful, accessible, and customizable UI components
 
-Make sure to install dependencies:
+## 🌟 Why use this boilerplate?
 
-```bash
-# npm
-npm install
+This boilerplate jumpstarts your next project with:
 
-# pnpm
-pnpm install
+- 📦 Pre-configured Nuxt 4 project structure
+- 🎯 Tailwind CSS 4 integration for instant styling
+- 🛠️ Shadcn UI components ready to use and customize
+- 🏎️ Fast development experience with hot reload
+- 🧪 Easy to extend and scale for production
+- 📝 Clean codebase and best practices
+- 🗂️ **Nuxt modules included:**
+  - [`@nuxt/content`](https://content.nuxt.com/) — Markdown & content management
+  - [`@nuxt/fonts`](https://fonts.nuxt.com/) — Easy font management
+  - [`@nuxt/icon`](https://icon.nuxt.com/) — Icon integration
+  - [`@nuxt/image`](https://image.nuxt.com/) — Optimized image handling
+  - [`@nuxt/eslint`](https://github.com/nuxt/eslint-module) — ESLint integration
+  - [`@nuxt/scripts`](https://github.com/nuxt/scripts) — Custom scripts
+  - [`@nuxt/test-utils`](https://github.com/nuxt/test-utils) — Testing utilities
+- 🧩 **Other integrations:**
+  - [`@unhead/vue`](https://unhead.unjs.io/) — Head management
+  - [`@tailwindcss/vite`](https://tailwindcss.com/docs/guides/vite) — Tailwind with Vite
+  - [`@nuxtjs/tailwindcss`](https://tailwindcss.nuxtjs.org/) — Tailwind Nuxt module
+  - TypeScript, ESLint, and more
 
-# yarn
-yarn install
+## 🚦 Getting Started
 
-# bun
-bun install
-```
+> **Recommended:** Use [pnpm](https://pnpm.io/) as your package manager.
 
-## Development Server
+1. 📥 **Install dependencies:**
 
-Start the development server on `http://localhost:3000`:
+   ```bash
+   pnpm install
+   ```
 
-```bash
-# npm
-npm run dev
+2. 🏃 **Start the development server:**
 
-# pnpm
-pnpm dev
+   ```bash
+   pnpm run dev
+   ```
 
-# yarn
-yarn dev
+3. 🏗️ **Build for production:**
 
-# bun
-bun run dev
-```
+   ```bash
+   pnpm run build
+   ```
 
-## Production
+## 📚 Learn More
 
-Build the application for production:
+- [Nuxt Documentation](https://nuxt.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Shadcn UI Documentation](https://ui.shadcn.com/docs)
+- [Nuxt Content](https://content.nuxt.com/)
+- [Nuxt Fonts](https://fonts.nuxt.com/)
+- [Nuxt Icon](https://icon.nuxt.com/)
+- [Nuxt Image](https://image.nuxt.com/)
+- [Nuxt UI](https://ui.nuxt.com/)
 
-```bash
-# npm
-npm run build
+## 🪪 License
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+MIT
