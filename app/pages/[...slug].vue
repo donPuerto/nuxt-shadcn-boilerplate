@@ -1,19 +1,19 @@
 <script setup lang="ts">
-const { path } = useRoute()
-const { data } = await useAsyncData(`content-${path}`, () => {
-  return queryContent().where({ _path: path }).findOne()
+const route = useRoute()
+const { data: page } = await useAsyncData(route.path, () => {
+  return queryCollection('docs').path(route.path).first()
 })
 </script>
 
 <template>
-  <main class="docs">
-    <ContentRenderer v-if="data" :value="data" />
-    <ContentNavigation v-slot="{ navigation }">
-      <div class="navigation">
-        <li v-for="link of navigation" :key="link._path">
-          <NuxtLink :to="link._path">{{ link.title }}</NuxtLink>
-        </li>
-      </div>
-    </ContentNavigation>
-  </main>
+  <template v-if="page">
+    <ContentRenderer :value="page" />
+  </template>
+  <template v-else>
+    <div class="empty-page">
+      <h1>Page Not Found</h1>
+      <p>Oops! The content you're looking for doesn't exist.</p>
+      <NuxtLink to="/">Go back home</NuxtLink>
+    </div>
+  </template>
 </template>

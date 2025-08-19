@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <NuxtLink to="/">Home</NuxtLink> <br>
-    <NuxtLink to="/docs/getting-started">Documentation</NuxtLink>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 <style scoped>
 nav {
