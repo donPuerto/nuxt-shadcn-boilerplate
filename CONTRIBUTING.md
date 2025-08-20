@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to this Nuxt + shadcn-vue boilerplate!
 
-Please review this document before submitting a pull request. For questions or help, reach out via [Discord](https://chat.unovue.com/) or open an issue.
+Please review this document before submitting a pull request. For questions or help, reach out via [Discord](https://discord.gg/u6TX9Gnb) or open an issue.
 
 ## About this Boilerplate
 
@@ -14,27 +14,39 @@ This repository provides a starter template for Nuxt projects using shadcn-vue c
 ## Project Structure
 
 ```
-assets/
-components/
-  ui/
-  ...
-content/
-pages/
-public/
 app/
+  assets/
+      css/
+        tailwind.css
   components/
     ui/
-  assets/
-    css/
-      tailwind.css
+  composables/
+  layouts/
+  middleware/
+  pages/
+  plugins/
+  utils/
+  app.vue
+  app.config.ts
+  error.vue
+content/
+modules/
+public/
+server/
+shared/
+.env
+.gitignore
+.nuxtignore
+.nuxtrc
 nuxt.config.ts
-...
+package.json
+tsconfig.json
 ```
 
 | Path                        | Description                                 |
 |-----------------------------|---------------------------------------------|
 | `components/ui`             | UI components (shadcn-vue)                  |
-| `assets/css/tailwind.css`   | Tailwind CSS entry                          |
+| `@/assets/css/tailwind.css`   | Tailwind CSS entry                          |
 | `nuxt.config.ts`            | Nuxt configuration                          |
 | `content/`                  | Content files (if using @nuxt/content)      |
 
