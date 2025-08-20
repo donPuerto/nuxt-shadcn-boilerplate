@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/test-utils',
     'shadcn-nuxt',
+    'motion-v/nuxt'
   ],
   css: ['@/assets/css/tailwind.css'],
   vite: {
