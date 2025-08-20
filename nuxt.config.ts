@@ -1,3 +1,6 @@
+import tailwindcss from '@tailwindcss/vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools:{ enabled: true },
@@ -11,6 +14,29 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/scripts',
     '@nuxt/test-utils',
+    'shadcn-nuxt',
   ],
+  css: ['@/assets/css/tailwind.css'],
+  vite: {
+    plugins: [
+      tsconfigPaths(),
+      tailwindcss(),
+    ],
+  },
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './app/components/ui'
+  },
+
+  content: {
+    experimental: { nativeSqlite: true },
+  },
   
 })
