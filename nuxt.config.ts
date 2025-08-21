@@ -15,7 +15,8 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/test-utils',
     'shadcn-nuxt',
-    'motion-v/nuxt'
+    'motion-v/nuxt',
+    '@nuxtjs/color-mode',
   ],
   css: ['@/assets/css/tailwind.css'],
   vite: {
@@ -25,19 +26,19 @@ export default defineNuxtConfig({
     ],
   },
   shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
     prefix: '',
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
     componentDir: './app/components/ui'
   },
 
   content: {
     experimental: { nativeSqlite: true },
+  },
+  colorMode: {
+    preference: 'system', // Default preference
+    dataValue: 'theme', // activate data-theme in <html> tag
+    fallback: 'light',    // Fallback when system preference isn't available
+    classSuffix: '',      // Important for Tailwind dark mode
+    storageKey: 'nuxt-color-mode'
   },
   
 })
