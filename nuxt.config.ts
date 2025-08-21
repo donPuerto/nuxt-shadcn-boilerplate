@@ -35,9 +35,13 @@ export default defineNuxtConfig({
   },
   colorMode: {
     preference: 'system', // Default preference
-    dataValue: 'theme', // activate data-theme in <html> tag
     fallback: 'light',    // Fallback when system preference isn't available
+    hid: 'nuxt-color-mode-script',
+    globalName: '__NUXT_COLOR_MODE__',
+    componentName: 'ColorScheme',
+    classPrefix: '',
     classSuffix: '',      // Important for Tailwind dark mode
+    storage: 'localStorage', // or 'sessionStorage' or 'cookie'
     storageKey: 'nuxt-color-mode'
   },
   
