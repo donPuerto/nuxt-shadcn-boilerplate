@@ -1,38 +1,103 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface Props {
+  width?: string | number
+  height?: string | number
+  imgSrc?: string
+}
+
+// Define props with default values
+const props = withDefaults(defineProps<Props>(), {
+  width: '36',
+  height: '36',
+  imgSrc: '/logo.png'
+})
+</script>
 
 <template>
-  <div class="inline-block">
-    <div class="flex items-center justify-center space-x-2 md:space-x-3">
-      <div
-        class="logo-circle relative flex items-center justify-center rounded-full border-2 bg-primary transition-all duration-300 ease-in-out overflow-hidden shadow-md hover:shadow-lg"
-      >
-        <NuxtImg
-          class="logo-image w-13 h-13 sm:w-16 sm:h-16 object-contain filter grayscale-[20%] hover:grayscale-0 dark:grayscale-[20%] dark:hover:grayscale-0 transition-all duration-300 ease-in-out hover:scale-105"
-          src="/logo.png"
-          alt="Logo"
-          width="559"
-          height="560"
-          format="webp"
-          quality="90"
-          loading="eager"
-          sizes="64px md:96px"
-        />
-
-        <!-- <img src="/logo.png"> -->
-         <!-- <NuxtImg src="/logo-test.png" /> -->
-
-      </div>
-
-      <div class="text-block text-left">
-        <div
-          class="font-heading text-[1.8rem] sm:text-[2.25rem] text-foreground -mt-1 -mb-1 sm:-mb-2"
-        >
-          Don Puerto
-        </div>
-        <div class="text-[0.72rem] sm:text-[0.9rem] text-foreground">
-          Fullstack Developer
-        </div>
-      </div>
-    </div>
+  <div
+    class="logo-container relative rounded-full border-2 border-border transition-all duration-300 ease-in-out overflow-hidden dark:bg-background"
+    :style="{
+      width: typeof props.width === 'number' ? `${props.width}px` : props.width,
+      height: typeof props.height === 'number' ? `${props.height}px` : props.height
+    }"
+  >
+    <NuxtImg
+      class="w-full h-full object-contain transition-all duration-300 ease-in-out hover:scale-105"
+      :src="imgSrc"
+      alt="Logo"
+      format="webp"
+      quality="100"
+      loading="eager"
+      :width="Number(width)"
+      :height="Number(height)"
+      sizes="sm:100vw md:50vw lg:400px"
+      placeholder
+      preload
+    />
   </div>
 </template>
+<style scoped>
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  backdrop-filter: blur(0);
+}
+
+/* Light theme glow */
+.logo-container:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 
+    0 0 0 1px hsl(var(--primary) / 0.2),
+    0 0 0 3px hsl(var(--primary) / 0.1),
+    0 0 10px hsl(var(--primary) / 0.1);
+}
+
+/* Dark theme specific styles */
+:global(.dark) .logo-container:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 
+    0 0 0 1px hsl(var(--primary) / 0.3),
+    0 0 0 3px hsl(var(--primary) / 0.2),
+    0 0 15px hsl(var(--primary) / 0.2);
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary) / 0.2),
+      0 0 0 3px hsl(var(--primary) / 0.1),
+      0 0 10px hsl(var(--primary) / 0.1);
+  }
+  to {
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary) / 0.3),
+      0 0 0 4px hsl(var(--primary) / 0.2),
+      0 0 20px hsl(var(--primary) / 0.2);
+  }
+}
+
+@keyframes glowDark {
+  from {
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary) / 0.3),
+      0 0 0 3px hsl(var(--primary) / 0.2),
+      0 0 15px hsl(var(--primary) / 0.2);
+  }
+  to {
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary) / 0.4),
+      0 0 0 4px hsl(var(--primary) / 0.3),
+      0 0 25px hsl(var(--primary) / 0.3);
+  }
+}
+
+.logo-container:hover {
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+:global(.dark) .logo-container:hover {
+  animation: glowDark 1.5s ease-in-out infinite alternate;
+}
+</style>
