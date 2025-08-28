@@ -17,15 +17,21 @@
   ],
    "compilerOptions": {
     "strict": true,
-    "forceConsistentCasingInFileNames": true,   
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,   
     "baseUrl": ".",
-    "paths": {
-      // "~/*": ["./app/*"],
-      // "@/*": ["./app/*"],
-      // "~~/*": ["./*"],
-      // "@@/*": ["./*"]
-      "@/*": ["./*"]
+     "types": [
+      "@nuxt/image", 
+      "@nuxt/types",
+      "@types/node"
+      ],
+     "paths": {
+      "~/*": ["./app/*"],
+      "@/*": ["./app/*"],
+      "~~/*": ["./*" ],
+      "@@/*": ["./*"]
     }
-  }
-  
+  },
+  "exclude": ["node_modules"]
+ 
 }
