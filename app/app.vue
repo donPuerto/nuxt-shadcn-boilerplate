@@ -1,11 +1,12 @@
 <template>
   <NuxtRouteAnnouncer />
   <NuxtLayout>
-    <AppNavLogo />
     <NuxtPage />
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+
+
 const meta = [
   { name: 'description', content: 'Nuxt 4 application with Shadcn and Inspira UI' },
   { name: 'format-detection', content: 'telephone=no' },

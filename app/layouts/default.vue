@@ -1,5 +1,6 @@
 <template>
   <div class="relative h-60 w-full flex flex-col items-center justify-center gap-4">
+    <AppNav />
     <!-- Main Content -->
     <main>
       <slot />
