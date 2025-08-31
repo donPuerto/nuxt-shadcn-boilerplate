@@ -1,8 +1,10 @@
 <template>
-  <div class="relative h-60 w-full flex flex-col items-center justify-center gap-4">
+  <div class="relative min-h-screen w-full flex flex-col">
+    <!-- Navigation -->
     <AppNav />
+
     <!-- Main Content -->
-    <main>
+    <main class="container flex-1 py-6">
       <slot />
     </main>
     <ClientOnly>

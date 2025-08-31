@@ -1,3 +1,6 @@
 export default defineAppConfig({
-  foo: 'bar'
+  icon: {
+    mode: 'css',
+    cssLayer: 'base'
+  }
 })

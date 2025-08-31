@@ -7,35 +7,61 @@ interface Props {
 
 // Define props with default values
 const props = withDefaults(defineProps<Props>(), {
-  width: '36',
-  height: '36',
+  width: '28',
+  height: '28',
   imgSrc: '/logo.png'
 })
+
+const isLoading = ref(true)
+const isImageVisible = ref(false)
+
+const handleImageLoad = () => {
+  // Show container first
+  isLoading.value = false
+  // Then show image after a small delay
+  setTimeout(() => {
+    isImageVisible.value = true
+  }, 300)
+}
 </script>
 
 <template>
   <div
-    class="logo-container relative rounded-full border-2 border-border transition-all duration-300 ease-in-out overflow-hidden dark:bg-background"
+    class="logo-container relative rounded-full border border-border transition-all duration-500 ease-in-out overflow-hidden dark:bg-background flex-shrink-0"
+    :class="{ 'opacity-0': isLoading }"
     :style="{
       width: typeof props.width === 'number' ? `${props.width}px` : props.width,
-      height: typeof props.height === 'number' ? `${props.height}px` : props.height
+      height: typeof props.height === 'number' ? `${props.height}px` : props.height,
     }"
   >
+    <div 
+        class="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
+        :class="{ 'opacity-0': isImageVisible }"
+      >
+      <Icon
+        name="svg-spinners:180-ring-with-bg"
+        class="w-1/2 h-1/2 text-primary"
+      />
+    </div>
+
     <NuxtImg
-      class="w-full h-full object-contain transition-all duration-300 ease-in-out hover:scale-105"
-      :src="imgSrc"
+      :class="[
+        'w-full h-full object-cover p-0.5 transition-all duration-500 ease-in-out hover:scale-105',
+        { 'opacity-0': !isImageVisible }
+      ]"
+      :src="props.imgSrc"
       alt="Logo"
       format="webp"
       quality="100"
       loading="eager"
-      :width="Number(width)"
-      :height="Number(height)"
-      sizes="sm:100vw md:50vw lg:400px"
-      placeholder
-      preload
+      :width="Number(props.width)"
+      :height="Number(props.height)"
+      
+      @load="handleImageLoad"
     />
   </div>
 </template>
+
 <style scoped>
 .logo-container {
   display: flex;
