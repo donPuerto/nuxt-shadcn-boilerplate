@@ -20,6 +20,7 @@
     "@nuxtjs/color-mode": "3.5.2",
     "@unhead/vue": "^2.0.3",
     "@vueuse/core": "^13.7.0",
+    "D": "^1.0.0",
     "better-sqlite3": "^12.2.0",
     "eslint": "^9.0.0",
     "lucide-vue-next": "^0.540.0",
