@@ -11,6 +11,7 @@ import {
 
 
 
+
 // Define props with default values
 interface NavProps {
   logoWidth?: string | number
@@ -181,10 +182,7 @@ const components: { title: string, href: string, description: string }[] = [
       </div>
 
       <div class="flex items-center gap-4">
-        <Icon 
-          name="radix-icons:github-logo"
-          class="w-5 h-5 cursor-pointer hover:text-primary"
-        />
+        <CommonThemeToggle />
         <Icon 
           name="radix-icons:discord-logo"
           class="w-5 h-5 cursor-pointer hover:text-primary"

@@ -10,7 +10,7 @@
     <ClientOnly>
       <FluidCursor />
     </ClientOnly>
-
+    <CommonThemeCustomizer />
   </div>
 </template>
 
