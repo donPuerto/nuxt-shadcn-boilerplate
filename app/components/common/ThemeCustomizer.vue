@@ -201,7 +201,7 @@
                     </span>
                   </div>
                 </div>
-                                
+
               </div>
             </div>
 
@@ -222,7 +222,7 @@
                 <Button
                   v-for="color in theme.primaryColors"
                   :key="color"
-                  class="flex-col gap-1 h-auto p-2 transition-all duration-200 relative"
+                  class="flex items-center gap-2 h-auto p-2 transition-all duration-200 relative justify-start"
                   variant="outline"
                   :class="{ 
                     'border-primary border-2 bg-primary/5': currentPrimaryColor === color,
@@ -231,22 +231,24 @@
                   :style="{ borderRadius: `${currentRadius}rem` }"
                   @click="handlePrimaryColorChange(color)"
                 >
+                  <!-- Color circle on the left -->
                   <span
-                    class="h-4 w-4 flex items-center justify-center border transition-all duration-200 mx-auto"
+                    class="h-3 w-3 flex items-center justify-center border transition-all duration-200 flex-shrink-0"
                     :style="{ 
                       backgroundColor: theme.getColorValue(color),
-                      borderRadius: `${currentRadius}rem`,
+                      borderRadius: `${currentRadius * 0.5}rem`,
                       border: color === 'white' ? '1px solid #e5e7eb' : 'none'
                     }"
                   >
                     <Icon
                       v-if="currentPrimaryColor === color"
                       name="lucide:check"
-                      class="h-3 w-3 transition-all duration-200"
+                      class="h-2 w-2 transition-all duration-200"
                       :class="color === 'white' ? 'text-gray-600' : 'text-white'"
                     />
                   </span>
-                  <span class="text-xs capitalize font-medium text-center">{{ color }}</span>
+                  <!-- Color label on the right -->
+                  <span class="text-xs capitalize font-medium text-left flex-1">{{ color }}</span>
                 </Button>
               </div>
             </div>
@@ -268,7 +270,7 @@
                 <Button
                   v-for="color in theme.neutralColors"
                   :key="color"
-                  class="flex-col gap-1 h-auto p-2 transition-all duration-200 relative"
+                  class="flex items-center gap-2 h-auto p-2 transition-all duration-200 relative justify-start"
                   variant="outline"
                   :class="{ 
                     'border-primary border-2 bg-primary/5': currentNeutralColor === color,
@@ -277,20 +279,23 @@
                   :style="{ borderRadius: `${currentRadius}rem` }"
                   @click="handleNeutralColorChange(color)"
                 >
+                  <!-- Color circle on the left -->
                   <span
-                    class="h-4 w-4 flex items-center justify-center border transition-all duration-200 mx-auto"
+                    class="h-3 w-3 flex items-center justify-center border transition-all duration-200 flex-shrink-0"
                     :style="{ 
                       backgroundColor: theme.getColorValue(color),
-                      borderRadius: `${currentRadius}rem`
+                      borderRadius: `${currentRadius * 0.5}rem`,
+                      border: '1px solid rgba(255,255,255,0.1)'
                     }"
                   >
                     <Icon
                       v-if="currentNeutralColor === color"
                       name="lucide:check"
-                      class="h-3 w-3 text-white drop-shadow-sm transition-all duration-200"
+                      class="h-2 w-2 text-white drop-shadow-sm transition-all duration-200"
                     />
                   </span>
-                  <span class="text-xs capitalize font-medium text-center">{{ color }}</span>
+                  <!-- Color label on the right -->
+                  <span class="text-xs capitalize font-medium text-left flex-1">{{ color }}</span>
                 </Button>
               </div>
             </div>
@@ -317,12 +322,13 @@
               <div class="space-y-2">
                 <Label class="text-xs">Preview</Label>
                 <div
-                  class="w-full h-12 bg-muted border flex items-center justify-center text-xs font-medium transition-all duration-300 ease-out"
+                  class="w-full h-10 bg-muted border flex items-center justify-center text-xs font-medium transition-all duration-300 ease-out"
                   :style="{ borderRadius: `${currentRadius}rem` }"
                 >
                   <span class="font-mono">{{ currentRadius }}rem</span>
                 </div>
               </div>
+              
               <!-- Radius presets -->
               <div class="flex gap-1">
                 <Button
@@ -349,7 +355,7 @@
                 <Button
                   v-for="mode in theme.modeOptions"
                   :key="mode.value"
-                  class="flex-col gap-1 h-auto p-3 transition-all duration-200 relative"
+                  class="flex items-center gap-2 h-auto p-2 transition-all duration-200 relative justify-start"
                   variant="outline"
                   :class="{ 
                     'border-primary border-2 bg-primary/5': currentMode === mode.value,
@@ -358,12 +364,15 @@
                   :style="{ borderRadius: `${currentRadius}rem` }"
                   @click="handleModeChange(mode.value)"
                 >
-                  <Icon :name="mode.icon" class="h-4 w-4 mx-auto" />
-                  <span class="text-xs font-medium text-center">{{ mode.label }}</span>
+                  <!-- Icon on the left -->
+                  <Icon :name="mode.icon" class="h-4 w-4 flex-shrink-0" />
+                  <!-- Label on the right -->
+                  <span class="text-xs font-medium text-left flex-1">{{ mode.label }}</span>
+                  <!-- Check icon when selected -->
                   <Icon
                     v-if="currentMode === mode.value"
                     name="lucide:check"
-                    class="h-3 w-3 text-primary absolute top-1 right-1"
+                    class="h-3 w-3 text-primary flex-shrink-0"
                   />
                 </Button>
               </div>
