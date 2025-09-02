@@ -465,27 +465,22 @@ const radiusPresets = [
 
 // Event handlers with proper reactivity
 const handlePrimaryColorChange = (color: string) => {
-  console.log('Primary color changed to:', color)
   theme.setPrimaryColor(color)
 }
 
 const handleNeutralColorChange = (color: string) => {
-  console.log('Neutral color changed to:', color)
   theme.setNeutralColor(color)
 }
 
 const handleRadiusChange = (value: number[]) => {
-  console.log('Radius changed to:', value[0])
   theme.setRadius(value[0])
 }
 
 const handleModeChange = (mode: string) => {
-  console.log('Mode changed to:', mode)
   theme.setColorMode(mode)
 }
 
 const handleResetClick = () => {
-  console.log('Resetting to defaults')
   theme.resetToDefaults()
 }
 
@@ -497,20 +492,4 @@ const handleOverlayClick = () => {
   theme.closeCustomizer()
 }
 
-// Watch for changes (for debugging and potential side effects)
-watch(currentPrimaryColor, (newVal, oldVal) => {
-  console.log('Current primary color changed:', oldVal, '->', newVal)
-})
-
-watch(currentNeutralColor, (newVal, oldVal) => {
-  console.log('Current neutral color changed:', oldVal, '->', newVal)
-})
-
-watch(currentRadius, (newVal, oldVal) => {
-  console.log('Current radius changed:', oldVal, '->', newVal)
-})
-
-watch(currentMode, (newVal, oldVal) => {
-  console.log('Current mode changed:', oldVal, '->', newVal)
-})
 </script>

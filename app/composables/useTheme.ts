@@ -12,7 +12,7 @@ export const useTheme = () => {
           return saved
         }
       } catch (error) {
-        console.warn('Error reading theme-primary-color from localStorage:', error)
+        // Silent error handling
       }
     }
     return themeConfig.primaryColor
@@ -26,7 +26,7 @@ export const useTheme = () => {
           return saved
         }
       } catch (error) {
-        console.warn('Error reading theme-neutral-color from localStorage:', error)
+        // Silent error handling
       }
     }
     return themeConfig.neutralColor
@@ -43,24 +43,10 @@ export const useTheme = () => {
           }
         }
       } catch (error) {
-        console.warn('Error reading theme-radius from localStorage:', error)
+        // Silent error handling
       }
     }
     return themeConfig.radius
-  }
-
-  const getInitialMode = () => {
-    if (import.meta.client) {
-      try {
-        const saved = localStorage.getItem('theme-mode')
-        if (saved && themeConfig.modeOptions.some(mode => mode.value === saved)) {
-          return saved
-        }
-      } catch (error) {
-        console.warn('Error reading theme-mode from localStorage:', error)
-      }
-    }
-    return themeConfig.mode
   }
 
   // Use Nuxt's useState for SSR-safe global state
@@ -69,65 +55,73 @@ export const useTheme = () => {
   const currentNeutralColor = useState('theme-current-neutral-color', () => getInitialNeutralColor())
   const currentRadius = useState('theme-current-radius', () => getInitialRadius())
 
+  // Screen size reactive state
+  const isMobile = ref(false)
+  const screenWidth = ref(0)
+
+  // Check if screen is mobile/small (xs breakpoint: 640px)
+  const checkScreenSize = () => {
+    if (import.meta.client) {
+      screenWidth.value = window.innerWidth
+      isMobile.value = window.innerWidth < 640 // xs breakpoint
+      
+      // Auto-close on mobile if open
+      if (isMobile.value && isOpen.value) {
+        isOpen.value = false
+      }
+    }
+  }
+
   // Actions with localStorage persistence
   const setPrimaryColor = (color: string) => {
-    console.log('Setting primary color:', color)
     currentPrimaryColor.value = color
     
     if (import.meta.client) {
       try {
-        localStorage.setItem('theme-primary-color', color)
-        console.log('Saved primary color to localStorage:', color)
+        localStorage.setItem('theme-primary-color', color)        
       } catch (error) {
-        console.error('Error saving theme-primary-color to localStorage:', error)
+        // Silent error handling
       }
     }
   }
 
   const setNeutralColor = (color: string) => {
-    console.log('Setting neutral color:', color)
     currentNeutralColor.value = color
     
     if (import.meta.client) {
       try {
         localStorage.setItem('theme-neutral-color', color)
-        console.log('Saved neutral color to localStorage:', color)
       } catch (error) {
-        console.error('Error saving theme-neutral-color to localStorage:', error)
+        // Silent error handling
       }
     }
   }
 
   const setRadius = (radius: number) => {
-    console.log('Setting theme radius:', radius)
     currentRadius.value = radius
     
     if (import.meta.client) {
       try {
         localStorage.setItem('theme-radius', String(radius))
-        console.log('Saved radius to localStorage:', radius)
       } catch (error) {
-        console.error('Error saving theme-radius to localStorage:', error)
+        // Silent error handling
       }
     }
   }
 
   const setColorMode = (mode: string) => {
-    console.log('Setting color mode:', mode)
     colorMode.preference = mode
     
     if (import.meta.client) {
       try {
         localStorage.setItem('theme-mode', mode)
-        console.log('Saved mode to localStorage:', mode)
       } catch (error) {
-        console.error('Error saving theme-mode to localStorage:', error)
+        // Silent error handling
       }
     }
   }
 
   const resetToDefaults = () => {
-    console.log('Resetting to defaults from themeConfig')
     setPrimaryColor(themeConfig.primaryColor)
     setNeutralColor(themeConfig.neutralColor)
     setRadius(themeConfig.radius)
@@ -138,15 +132,18 @@ export const useTheme = () => {
         localStorage.removeItem('theme-primary-color')
         localStorage.removeItem('theme-neutral-color')
         localStorage.removeItem('theme-radius') 
-        localStorage.removeItem('theme-mode')
-        console.log('Cleared localStorage theme settings')
+        localStorage.removeItem('theme-mode')        
       } catch (error) {
-        console.error('Error clearing localStorage:', error)
+        // Silent error handling
       }
     }
   }
 
   const toggleCustomizer = () => {
+    // Prevent opening on mobile (xs breakpoint)
+    if (isMobile.value && !isOpen.value) {
+      return
+    }
     isOpen.value = !isOpen.value
   }
 
@@ -169,76 +166,51 @@ export const useTheme = () => {
   onMounted(() => {
     if (import.meta.client) {
       try {
-        console.log('Initializing theme from localStorage on mount...')
-        console.log('Default config:', {
-          primaryColor: themeConfig.primaryColor,
-          neutralColor: themeConfig.neutralColor,
-          radius: themeConfig.radius,
-          mode: themeConfig.mode
-        })
+        // Initialize screen size detection
+        checkScreenSize()
         
+        // Add resize listener
+        const handleResize = () => {
+          checkScreenSize()
+        }
+        
+        window.addEventListener('resize', handleResize)
+        
+        // Cleanup on unmount
+        onUnmounted(() => {
+          window.removeEventListener('resize', handleResize)
+        })
+
         const savedPrimaryColor = localStorage.getItem('theme-primary-color')
         const savedNeutralColor = localStorage.getItem('theme-neutral-color')
         const savedRadius = localStorage.getItem('theme-radius')
         const savedMode = localStorage.getItem('theme-mode')
         
         if (savedPrimaryColor && themeConfig.primaryColors.includes(savedPrimaryColor as any)) {
-          currentPrimaryColor.value = savedPrimaryColor
-          console.log('Restored primary color:', savedPrimaryColor)
-        } else {
-          console.log('Using default primary color:', themeConfig.primaryColor)
+          currentPrimaryColor.value = savedPrimaryColor        
         }
 
         if (savedNeutralColor && themeConfig.neutralColors.includes(savedNeutralColor as any)) {
-          currentNeutralColor.value = savedNeutralColor
-          console.log('Restored neutral color:', savedNeutralColor)
-        } else {
-          console.log('Using default neutral color:', themeConfig.neutralColor)
+          currentNeutralColor.value = savedNeutralColor          
         }
         
         if (savedRadius) {
           const radius = parseFloat(savedRadius)
           if (!isNaN(radius) && radius >= 0 && radius <= 1) {
-            currentRadius.value = radius
-            console.log('Restored radius:', radius)
-          } else {
-            console.log('Using default radius:', themeConfig.radius)
+            currentRadius.value = radius            
           }
-        } else {
-          console.log('Using default radius:', themeConfig.radius)
         }
         
         if (savedMode && themeConfig.modeOptions.some(mode => mode.value === savedMode)) {
-          colorMode.preference = savedMode
-          console.log('Restored mode:', savedMode)
+          colorMode.preference = savedMode          
         } else {
-          colorMode.preference = themeConfig.mode
-          console.log('Using default mode:', themeConfig.mode)
-        }
+          colorMode.preference = themeConfig.mode          
+        }        
         
-        console.log('Theme initialization completed:', {
-          primaryColor: currentPrimaryColor.value,
-          neutralColor: currentNeutralColor.value,
-          radius: currentRadius.value,
-          mode: colorMode.preference
-        })
       } catch (error) {
-        console.error('Error during theme initialization:', error)
+        // Silent error handling
       }
     }
-  })
-
-  // Watchers for debugging
-  watch(currentPrimaryColor, (newVal, oldVal) => {
-    console.log('Primary color changed:', oldVal, '->', newVal)
-  })
-
-  watch(currentNeutralColor, (newVal, oldVal) => {
-    console.log('Neutral color changed:', oldVal, '->', newVal)
-  })
-
-  watch(currentRadius, (newVal, oldVal) => {
-    console.log('Theme radius changed:', oldVal, '->', newVal)
   })
 
   return {
@@ -247,6 +219,10 @@ export const useTheme = () => {
     currentPrimaryColor: readonly(currentPrimaryColor),
     currentNeutralColor: readonly(currentNeutralColor),
     currentRadius: readonly(currentRadius),
+    
+    // Screen size state
+    isMobile: readonly(isMobile),
+    screenWidth: readonly(screenWidth),
     
     // Theme config
     availableColors: themeConfig.availableColors,

@@ -1,3 +1,4 @@
+<!-- filepath: d:\Code\Nuxt\v4\LearnNuxt\nuxt-shadcn-boilerplate-next\app\components\app\nav\index.vue -->
 <script setup lang="ts">
 import {
   NavigationMenu,
@@ -9,9 +10,6 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-
-
-
 // Define props with default values
 interface NavProps {
   logoWidth?: string | number
@@ -22,12 +20,15 @@ interface NavProps {
 }
 
 const props = withDefaults(defineProps<NavProps>(), {
-  logoWidth: '28',
-  logoHeight: '28',
+  logoWidth: '32',
+  logoHeight: '32',
   logoSrc: '/logo.png',
   brandName: 'Don Puerto',
   showBrand: true
 })
+
+// Mobile sheet state
+const isMobileMenuOpen = ref(false)
 
 const components: { title: string, href: string, description: string }[] = [
   {
@@ -69,23 +70,24 @@ const components: { title: string, href: string, description: string }[] = [
 </script>
 
 <template>
-  <nav class="h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div class="container mx-auto h-full flex items-center justify-between px-4">
+  <nav class="h-16 sm:h-20 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div class="mx-auto max-w-7xl h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
 
       <!-- Left Section - Logo -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
         <AppLogo 
           :width="props.logoWidth"
           :height="props.logoHeight"
           :img-src="props.logoSrc"
         />
-       <span v-if="props.showBrand" class="font-semibold text-sm">
+        <!-- Hide brand name on small screens, show on sm and up -->
+        <span v-if="props.showBrand" class="hidden sm:block font-semibold text-lg">
           {{ props.brandName }}
         </span>
       </div>
 
-      <!-- Middle Section - Navigation -->
-      <div class="flex-1 flex justify-center">
+      <!-- Middle Section - Navigation (Desktop only) -->
+      <div class="hidden lg:flex flex-1 justify-center">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -155,7 +157,7 @@ const components: { title: string, href: string, description: string }[] = [
             <NavigationMenuItem>
               <NavigationMenuTrigger>Components</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                <ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   <li v-for="component in components" :key="component.title">
                     <NavigationMenuLink as-child>
                       <a
@@ -181,16 +183,21 @@ const components: { title: string, href: string, description: string }[] = [
         </NavigationMenu>
       </div>
 
+      <!-- Right Section -->
       <div class="flex items-center gap-4">
+        <!-- Theme Toggle -->
         <CommonThemeToggle />
+        
+        <!-- Discord Icon (Hidden on mobile) -->
         <Icon 
           name="radix-icons:discord-logo"
-          class="w-5 h-5 cursor-pointer hover:text-primary"
+          class="hidden sm:block w-5 h-5 cursor-pointer hover:text-primary transition-colors"
         />
-      </div>
 
+        <!-- Mobile Menu -->
+        <AppNavMobileNav v-model:open="isMobileMenuOpen" />
+      </div>
 
     </div>
   </nav>
 </template>
-
