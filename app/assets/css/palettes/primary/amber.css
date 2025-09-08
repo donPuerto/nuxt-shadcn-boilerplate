@@ -1,0 +1,12 @@
+[data-primary='amber'] {
+  /* Amber aims for good contrast on light backgrounds */
+  --primary: oklch(0.78 0.18 75);       /* similar to Tailwind amber-500 but in OKLCH */
+  --primary-foreground: #3a2500;        /* deep brown for readable text */
+  --ring: var(--primary);
+}
+.dark[data-primary='amber'] {
+  /* Slightly brighter & higher chroma for dark surfaces */
+  --primary: oklch(0.82 0.19 75);
+  --primary-foreground: #2b1900;
+  --ring: var(--primary);
+}

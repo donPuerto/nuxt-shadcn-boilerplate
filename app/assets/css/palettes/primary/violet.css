@@ -1,0 +1,10 @@
+[data-primary='violet'] {
+  --primary: oklch(0.55 0.18 300);
+  --primary-foreground: #ffffff;
+  --ring: var(--primary);
+}
+.dark[data-primary='violet'] {
+  --primary: oklch(0.65 0.24 300);
+  --primary-foreground: #ffffff;
+  --ring: var(--primary);
+}
