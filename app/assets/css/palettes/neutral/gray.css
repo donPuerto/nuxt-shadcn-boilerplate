@@ -1,0 +1,38 @@
+[data-neutral='gray'] {
+  --background:#f9fafb;           /* gray-50 */
+  --card:#ffffff;
+  --popover:#ffffff;
+  --foreground:#111827;           /* gray-900 */
+
+  --muted:#f3f4f6;                /* gray-100 */
+  --muted-foreground:#6b7280;     /* gray-500 */
+
+  --accent:#f3f4f6;
+  --accent-foreground:#111827;
+
+  --border:#e5e7eb;               /* gray-200 */
+  --input:#e5e7eb;
+
+  /* Secondary can mirror accent or muted */
+  --secondary:#f3f4f6;
+  --secondary-foreground:#111827;
+}
+
+.dark[data-neutral='gray'] {
+  --background:#030712;           /* gray-950 */
+  --card:#111827;                 /* gray-900 */
+  --popover:#111827;
+  --foreground:#f3f4f6;           /* gray-100 */
+
+  --muted:#1f2937;                /* gray-800 */
+  --muted-foreground:#9ca3af;     /* gray-400 */
+
+  --accent:#1f2937;
+  --accent-foreground:#f3f4f6;
+
+  --border:#1f2937;
+  --input:#1f2937;
+
+  --secondary:#1f2937;
+  --secondary-foreground:#f3f4f6;
+}

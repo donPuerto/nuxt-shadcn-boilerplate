@@ -1,0 +1,32 @@
+.dark {
+  --background:#020617;
+  --foreground:#f1f5f9;
+
+  --card:#0f172a;
+  --card-foreground:#f8fafc;
+
+  --popover:#0f172a;
+  --popover-foreground:#f8fafc;
+
+  --muted:#1e293b;
+  --muted-foreground:#94a3b8;
+
+  --accent:#1e293b;
+  --accent-foreground:#f1f5f9;
+
+  --secondary:#1e293b;
+  --secondary-foreground:#f1f5f9;
+
+  --border:#1e293b;
+  --input:#1e293b;
+
+  --primary: oklch(0.65 0.24 300);
+  --primary-foreground:#ffffff;
+
+  --destructive:#b91c1c;
+  --destructive-foreground:#ffffff;
+
+  --ring: var(--primary);
+
+  
+}
