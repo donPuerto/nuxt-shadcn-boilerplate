@@ -10,12 +10,21 @@
     <ClientOnly>
       <FluidCursor />
     </ClientOnly>
-    <CommonThemeCustomizer />
+    <CommonThemeCustomizer class="fixed bottom-4 right-4 z-50" />
   </div>
 </template>
 
 <script setup lang="ts">
-// import { FluidCursor } from '@/app/components/ui/fluid-cursor/FluidCursor.vue'
+import { useTheme } from '@/composables/useTheme'
 
-// Clean layout that uses the navigation component
+const { currentPrimaryColor, currentNeutralColor, currentRadius, fontScale, direction } = useTheme()
+useHead(() => ({
+  htmlAttrs: {
+    'data-theme-primary': currentPrimaryColor.value,
+    'data-theme-neutral': currentNeutralColor.value,
+    'data-radius': String(currentRadius.value),
+    'data-font': fontScale.value,
+    dir: direction.value
+  }
+}))
 </script>

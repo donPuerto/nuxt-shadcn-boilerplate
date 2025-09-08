@@ -38,6 +38,7 @@ const links = [
 ]
 
 useHead({
+  htmlAttrs: { dir: 'ltr' }, 
   titleTemplate: '%s - Nuxt 4 App',
   title: 'Welcome',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',

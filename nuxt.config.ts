@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools:{ enabled: true },
   ssr: true,
-
+  
   modules: [
     '@nuxt/devtools',
     '@nuxt/content',
@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     'motion-v/nuxt',
     '@nuxtjs/color-mode',
   ],
+  plugins: ['~/plugins/direction.client'],
   css: ['@/assets/css/tailwind.css'],
   image: {
    
