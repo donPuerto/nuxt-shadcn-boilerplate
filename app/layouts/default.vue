@@ -15,16 +15,16 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/useTheme'
+// import { useTheme } from '@/composables/useTheme'
 
-const { currentPrimaryColor, currentNeutralColor, currentRadius, fontScale, direction } = useTheme()
-useHead(() => ({
-  htmlAttrs: {
-    'data-theme-primary': currentPrimaryColor.value,
-    'data-theme-neutral': currentNeutralColor.value,
-    'data-radius': String(currentRadius.value),
-    'data-font': fontScale.value,
-    dir: direction.value
-  }
-}))
+// const { currentPrimaryColor, currentNeutralColor, currentRadius, fontScale, direction } = useTheme()
+// useHead(() => ({
+//   htmlAttrs: {
+//     'data-theme-primary': currentPrimaryColor.value,
+//     'data-theme-neutral': currentNeutralColor.value,
+//     'data-radius': String(currentRadius.value),
+//     'data-font': fontScale.value,
+//     dir: direction.value
+//   }
+// }))
 </script>

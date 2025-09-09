@@ -1,71 +1,108 @@
-import colors from 'tailwindcss/colors'
-
 export const themeConfig = {
-  // Default settings - separate for primary and neutral
-  primaryColor: 'white' as const,
-  neutralColor: 'neutral' as const,
-  mode: 'system' as const,
+  // Defaults
+  theme: 'default',
+  primaryColor: 'violet',
+  neutralColor: 'slate',
   radius: 0.5,
-
-  // Available colors organized by category
-  primaryColors: ['white', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'] as const,
-  neutralColors: ['slate', 'gray', 'neutral', 'zinc', 'stone'] as const,
+  fontScale: 'base' as FontScale,
+  mode: 'system',
+  direction: 'ltr' as Direction,
   
-  // All available colors (for backward compatibility)
-  get availableColors() {
-    return [...this.primaryColors, ...this.neutralColors] as const
-  },
+  // Available presets (matches your presets folder)
+  presets: [
+    { value: 'default', label: 'Default (Custom)' },
+    { value: 'vercel', label: 'Vercel' },
+    { value: 'cosmicNight', label: 'Cosmic Night' },
+    { value: 'twitter', label: 'Twitter' },
+    { value: 'claude', label: 'Claude' },
+  ],
+  
+  // Primary color options (matches your CSS data-primary selectors)
+  primaryColors: [
+    { value: 'violet', label: 'Violet' },
+    { value: 'blue', label: 'Blue' },
+    { value: 'green', label: 'Green' },
+    { value: 'amber', label: 'Amber' },
+    { value: 'red', label: 'Red' },
+    { value: 'rose', label: 'Rose' },
+  ],
+  
+  // Neutral color options (matches your CSS data-theme selectors)
+  neutralColors: [
+    { value: 'slate', label: 'Slate' },
+    { value: 'gray', label: 'Gray' },
+    { value: 'zinc', label: 'Zinc' },
+    { value: 'neutral', label: 'Neutral' },
+    { value: 'stone', label: 'Stone' },
+  ],
+  
+  fontScales: [
+    { value: 'sm', label: 'Small' },
+    { value: 'base', label: 'Base' },
+    { value: 'md', label: 'Medium' },
+    { value: 'lg', label: 'Large' },
+  ],
+  
+  modeOptions: [
+    { value: 'light', label: 'Light', icon: 'lucide:sun' },
+    { value: 'dark', label: 'Dark', icon: 'lucide:moon' },
+    { value: 'system', label: 'System', icon: 'lucide:monitor' },
+  ],
 
-  // Color definitions with Tailwind colors
+  // Color definitions for preview purposes
   colorDefinitions: {
     // Primary colors
-    white: { name: 'White', primary: colors.white, category: 'primary' },
-    red: { name: 'Red', primary: colors.red[500], category: 'primary' },
-    orange: { name: 'Orange', primary: colors.orange[500], category: 'primary' },
-    amber: { name: 'Amber', primary: colors.amber[500], category: 'primary' },
-    yellow: { name: 'Yellow', primary: colors.yellow[500], category: 'primary' },
-    lime: { name: 'Lime', primary: colors.lime[500], category: 'primary' },
-    green: { name: 'Green', primary: colors.green[500], category: 'primary' },
-    emerald: { name: 'Emerald', primary: colors.emerald[500], category: 'primary' },
-    teal: { name: 'Teal', primary: colors.teal[500], category: 'primary' },
-    cyan: { name: 'Cyan', primary: colors.cyan[500], category: 'primary' },
-    sky: { name: 'Sky', primary: colors.sky[500], category: 'primary' },
-    blue: { name: 'Blue', primary: colors.blue[500], category: 'primary' },
-    indigo: { name: 'Indigo', primary: colors.indigo[500], category: 'primary' },
-    violet: { name: 'Violet', primary: colors.violet[500], category: 'primary' },
-    purple: { name: 'Purple', primary: colors.purple[500], category: 'primary' },
-    fuchsia: { name: 'Fuchsia', primary: colors.fuchsia[500], category: 'primary' },
-    pink: { name: 'Pink', primary: colors.pink[500], category: 'primary' },
-    rose: { name: 'Rose', primary: colors.rose[500], category: 'primary' },
-    
-    // Neutral colors
-    slate: { name: 'Slate', primary: colors.slate[500], category: 'neutral' },
-    gray: { name: 'Gray', primary: colors.gray[500], category: 'neutral' },
-    neutral: { name: 'Neutral', primary: colors.neutral[500], category: 'neutral' },
-    zinc: { name: 'Zinc', primary: colors.zinc[500], category: 'neutral' },
-    stone: { name: 'Stone', primary: colors.stone[500], category: 'neutral' },
-  } as const,
+    violet: {
+      primary: 'oklch(0.592 0.183 299.323)',
+      category: 'primary'
+    },
+    blue: {
+      primary: 'oklch(0.578 0.15 255.718)',
+      category: 'primary'
+    },
+    green: {
+      primary: 'oklch(0.682 0.167 149.579)',
+      category: 'primary'
+    },
+    amber: {
+      primary: 'oklch(0.781 0.186 74.885)',
+      category: 'primary'
+    },
+    red: {
+      primary: 'oklch(0.633 0.244 25.331)',
+      category: 'primary'
+    },
+    rose: {
+      primary: 'oklch(0.658 0.232 15.24)',
+      category: 'primary'
+    },
+    // Neutral colors (using a representative color for preview)
+    slate: {
+      primary: 'oklch(0.554 0.046 257.417)',
+      category: 'neutral'
+    },
+    gray: {
+      primary: 'oklch(0.551 0.027 264.364)',
+      category: 'neutral'
+    },
+    zinc: {
+      primary: 'oklch(0.552 0.016 285.938)',
+      category: 'neutral'
+    },
+    neutral: {
+      primary: 'oklch(0.556 0 0)',
+      category: 'neutral'
+    },
+    stone: {
+      primary: 'oklch(0.553 0.013 58.071)',
+      category: 'neutral'
+    },
+    white: {
+      primary: '#ffffff',
+      category: 'neutral'
+    }
+  }
+}
 
-  // Radius options
-  radiusOptions: [
-    { value: 0, label: '0' },
-    { value: 0.25, label: '0.25' },
-    { value: 0.5, label: '0.5' },
-    { value: 0.75, label: '0.75' },
-    { value: 1, label: '1' }
-  ] as const,
-
-  // Mode options
-  modeOptions: [
-    { value: 'light' as const, label: 'Light', icon: 'lucide:sun' },
-    { value: 'dark' as const, label: 'Dark', icon: 'lucide:moon' },
-    { value: 'system' as const, label: 'System', icon: 'lucide:monitor' }
-  ] as const
-} as const
-
-// Type exports
-export type ThemeColor = typeof themeConfig.availableColors[number]
-export type PrimaryColor = typeof themeConfig.primaryColors[number]
-export type NeutralColor = typeof themeConfig.neutralColors[number]
-export type ThemeMode = typeof themeConfig.modeOptions[number]['value']
-export type ThemeConfig = typeof themeConfig
+export type FontScale = 'sm' | 'base' | 'md' | 'lg'
+export type Direction = 'ltr' | 'rtl'

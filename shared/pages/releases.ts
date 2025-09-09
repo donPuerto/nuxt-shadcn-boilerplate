@@ -1,128 +1,113 @@
+export type FontScale = 'sm' | 'base' | 'md' | 'lg'
+export type Direction = 'ltr' | 'rtl'
+
 export interface Release {
-  id: number
+  id: string
   title: string
   tag: string
   description: string
   date: Date
   author?: string
-  changelog?: Record<string, string[]>
+  changelog?: {
+    features?: string[]
+    performance?: string[]
+    fixes?: string[]
+    chore?: string[]
+    tests?: string[]
+    ci?: string[]
+    documentation?: string[]
+    contributors?: string[]
+  }
 }
 
 export const allReleases: Release[] = [
   {
-    id: 1,
-    title: 'v1.0.0 - Touch Down',
-    tag: 'v1.0.0',
-    description: 'First public release of the Nuxt + Shadcn UI + Tailwind CSS v4 starter.',
-    date: new Date('2024-01-15'),
-    author: 'Don Puerto',
+    id: '1',
+    title: 'Enhanced Theme System',
+    tag: 'v1.2.0',
+    description: 'Major improvements to the theming system with better customization options and performance enhancements.',
+    date: new Date('2025-09-09'),
+    author: 'Development Team',
+    changelog: {
+      features: [
+        'New ThemeCustomizer component with real-time preview',
+        'Support for custom primary and neutral color combinations',
+        'Dynamic radius adjustment with live preview',
+        'Font scaling system with multiple presets',
+        'RTL direction support'
+      ],
+      performance: [
+        'Improved theme persistence with localStorage',
+        'Better SSR support for theme initialization',
+        'Smoother theme transitions with CSS animations',
+        'Optimized CSS custom property management',
+        'Enhanced mobile responsiveness for theme controls'
+      ],
+      fixes: [
+        'Fixed theme flashing on initial page load',
+        'Resolved color mode toggle inconsistencies',
+        'Fixed radius scaling calculations',
+        'Corrected dark mode color contrasts',
+        'Fixed theme customizer z-index issues'
+      ]
+    }
+  },
+  {
+    id: '2',
+    title: 'Performance & Bug Fixes',
+    tag: 'v1.1.2',
+    description: 'Minor performance improvements and bug fixes for better stability.',
+    date: new Date('2025-09-01'),
+    author: 'Development Team',
     changelog: {
       performance: [
-        'Enabled Nuxt route-level code splitting & component-level lazy imports',
-        'Configured Tailwind CSS v4 JIT for faster dev rebuilds',
-        'Reduced initial CSS payload via layer pruning & safelist auditing',
-        'Deferred non-critical icon components with dynamic import',
-        'Optimized image and font loading with modern formats'
+        'Reduced bundle size by 15%',
+        'Improved component loading times',
+        'Better error handling in composables'
       ],
       fixes: [
-        'Resolved initial hydration mismatch in dark mode toggle',
-        'Fixed layout shift on first paint by stabilizing container sizes',
-        'Corrected timeline alignment issues in responsive breakpoints'
-      ],
-      features: [
-        'Integrated Nuxt 4 foundation with SSR + dynamic meta handling',
-        'Added Shadcn UI component registry & automatic style tokens',
-        'Implemented Tailwind CSS v4 setup with custom design tokens',
-        'Dark / Light mode system preference detection & persistence',
-        'Reusable Timeline component with responsive label positions',
-        'Release notes page with structured changelog categories',
-        'Semantic theming (background / foreground / border / ring)',
-        'Accessibility-focused focus states & skip logic',
-        'Global icon system using lucide with tree-shaking',
-        'Auto-imported composables & components configuration',
-        'Pre-configured alias paths and TypeScript strict mode',
-        'Responsive typography + container sizing patterns'
-      ],
-      chore: [
-        'Established folder structure: components/ui, composables, config',
-        'Created theme + navigation config injection via app.config',
-        'Added ESLint + Prettier + Stylelint baseline rules',
-        'Added commit conventions + lint-staged hooks',
-        'Cleaned unused scaffold files and demo clutter'
-      ],
-      tests: [
-        'Prepared testing setup placeholders (unit + e2e)',
-        'Added accessibility linting pipeline hooks'
-      ],
-      ci: [
-        'Initial GitHub Actions workflow draft (build + typecheck)',
-        'Configured dependency caching for faster pipelines'
-      ],
-      documentation: [
-        'Authored README with setup, scripts, and deployment guide',
-        'Added component usage notes (buttons, badges, timeline)',
-        'Documented theming + adding new Shadcn components',
-        'Included Tailwind config notes for v4 transition',
-        'Added release workflow & semantic versioning guidelines'
-      ],
-      contributors: [
-        'Don Puerto (@donPuerto) - Lead Developer'
+        'Fixed navigation menu on mobile devices',
+        'Resolved form validation edge cases',
+        'Fixed memory leaks in theme watchers'
       ]
     }
   },
   {
-    id: 2,
-    title: 'v0.9.5 - Release Candidate',
-    tag: 'v0.9.5',
-    description: 'Release candidate with final refinements before 1.0.0.',
-    date: new Date('2024-01-10'),
-    author: 'Don Puerto',
+    id: '3',
+    title: 'Component Library Expansion',
+    tag: 'v1.1.0',
+    description: 'Added new components and improved existing ones with better accessibility.',
+    date: new Date('2025-08-25'),
+    author: 'UI Team',
     changelog: {
-      fixes: [
-        'Fixed memory leak in navigation component',
-        'Resolved SSR hydration mismatch'
+      features: [
+        'New Slider component with customizable ranges',
+        'Enhanced Button variants and sizes',
+        'Improved Badge component with more styles',
+        'Better Icon system with automatic loading'
       ],
-      chore: [
-        'Updated build configuration',
-        'Cleaned up development dependencies'
-      ],
-      tests: [
-        'Added missing test coverage for edge cases',
-        'Fixed flaky integration tests'
+      performance: [
+        'Enhanced accessibility across all components',
+        'Better TypeScript definitions',
+        'Improved component documentation'
       ]
     }
   },
   {
-    id: 3,
-    title: 'v0.9.0 - Beta Release',
-    tag: 'v0.9.0',
-    description: 'Beta release with major features and improvements.',
-    date: new Date('2024-01-05'),
-    author: 'Don Puerto',
+    id: '4',
+    title: 'Initial Release',
+    tag: 'v1.0.0',
+    description: 'The first stable release of our Nuxt 4 boilerplate with shadcn/ui integration.',
+    date: new Date('2025-08-15'),
+    author: 'Core Team',
     changelog: {
       features: [
-        'Added dark mode support',
-        'Implemented user authentication',
-        'Added dashboard functionality'
-      ],
-      fixes: [
-        'Fixed responsive layout issues',
-        'Resolved API timeout problems'
-      ]
-    }
-  },
-  {
-    id: 4,
-    title: 'v0.8.0 - Alpha Release',
-    tag: 'v0.8.0',
-    description: 'Alpha release with core functionality.',
-    date: new Date('2023-12-20'),
-    author: 'Don Puerto',
-    changelog: {
-      features: [
-        'Initial project setup',
-        'Basic routing implementation',
-        'Component library integration'
+        'Complete Nuxt 4 setup with latest features',
+        'shadcn/ui component integration',
+        'Dark/light mode support',
+        'Responsive design system',
+        'TypeScript support throughout',
+        'ESLint and Prettier configuration'
       ]
     }
   }
