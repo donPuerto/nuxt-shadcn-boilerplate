@@ -1,0 +1,10 @@
+/* Font scaling */
+[data-font='sm'] { --font-scale: 13px; }
+[data-font='base'] { --font-scale: 14px; }
+[data-font='md'] { --font-scale: 15px; }
+[data-font='lg'] { --font-scale: 16px; }
+
+@theme {
+  --font-sans: "Geist", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
