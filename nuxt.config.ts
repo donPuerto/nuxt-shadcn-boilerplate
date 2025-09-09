@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
   plugins: ['~/plugins/direction.client'],
-  css: ['@/assets/css/tailwind.css'],
+  css: ['@/assets/css/main.css'],
   image: {
    
   },
