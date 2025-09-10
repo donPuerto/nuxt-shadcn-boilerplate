@@ -106,3 +106,4 @@ export const themeConfig = {
 
 export type FontScale = 'sm' | 'base' | 'md' | 'lg'
 export type Direction = 'ltr' | 'rtl'
+export type ThemePreset = 'default' | 'vercel' | 'cosmicNight' | 'twitter' | 'claude'

@@ -1,4 +1,4 @@
-import { themeConfig, navigationConfig } from '../shared'
+import { themeConfig, navigationConfig } from '~~/shared'
 
 
 export default defineAppConfig({

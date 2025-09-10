@@ -15,40 +15,29 @@ const LS_FONT        = 'theme-font-scale'
 export const useTheme = () => {
   const colorMode = useColorMode()
 
-  // ---------- Theme Metadata (only names/descriptions, no color values) ----------
-  const presetMetadata = {
-    default: {
-      name: 'Default',
-      description: 'Customizable theme with individual color controls',
-      supportsCustomColors: true
-    },
-    vercel: {
-      name: 'Vercel',
-      description: 'Clean black and white design inspired by Vercel',
-      supportsCustomColors: false
-    },
-    cosmicNight: {
-      name: 'Cosmic Night',
-      description: 'Dark space-themed design with cosmic purple hues',
-      supportsCustomColors: false
-    },
-    twitter: {
-      name: 'Twitter',
-      description: 'Social media inspired blue theme',
-      supportsCustomColors: false
-    },
-    claude: {
-      name: 'Claude',
-      description: 'Warm and friendly AI-inspired theme',
-      supportsCustomColors: false
-    }
-  }
+  // ---------- Theme Metadata (derived from themeConfig presets) ----------
+  const presetMetadata = computed(() => {
+    const metadata: Record<string, { name: string, description: string, supportsCustomColors: boolean }> = {}
+    
+    // Build metadata from themeConfig.presets
+    themeConfig.presets?.forEach(preset => {
+      metadata[preset.value] = {
+        name: preset.label,
+        description: preset.value === 'default' 
+          ? 'Customizable theme with individual color controls'
+          : `Predefined theme: ${preset.label}`,
+        supportsCustomColors: preset.value === 'default'
+      }
+    })
+    
+    return metadata
+  })
 
   // ---------- Initializers ----------
   const getInitialPreset = (): ThemePreset => {
     if (import.meta.client) {
       const saved = localStorage.getItem(LS_PRESET) as ThemePreset | null
-      if (saved && Object.keys(presetMetadata).includes(saved)) return saved
+      if (saved && themeConfig.presets?.some(p => p.value === saved)) return saved
     }
     return 'default'
   }
@@ -155,7 +144,7 @@ export const useTheme = () => {
   // ---------- Actions ----------
   const setPreset = (preset: ThemePreset) => {
     console.log('Setting preset:', preset)
-    if (!Object.keys(presetMetadata).includes(preset)) {
+    if (!themeConfig.presets?.some(p => p.value === preset)) {
       console.warn('Invalid preset:', preset)
       return
     }
@@ -291,12 +280,11 @@ export const useTheme = () => {
     return 'custom'
   }
 
-  // ---------- Watchers ----------
+  // ---------- Watchers and Lifecycle ----------
   if (import.meta.client) {
     // Watch for color mode changes
     watch(colorMode, () => {
       console.log('Color mode changed:', colorMode.value)
-      // CSS will handle light/dark switching via :root and .dark selectors
       applyTheme()
     })
 
@@ -308,24 +296,37 @@ export const useTheme = () => {
       },
       { immediate: true }
     )
-    
-    onMounted(() => {
-      console.log('useTheme onMounted')
-      applyTheme()
-      checkScreen()
-      window.addEventListener('resize', checkScreen)
-      onUnmounted(() => window.removeEventListener('resize', checkScreen))
-    })
   }
 
-  // ---------- Color mode restore ----------
+  // ---------- Setup resize handler ----------
+  let resizeHandler: (() => void) | null = null
+
+  // ---------- Mount handling ----------
   onMounted(() => {
     if (!import.meta.client) return
+    
+    console.log('useTheme onMounted')
+    applyTheme()
+    checkScreen()
+    
+    // Setup resize listener
+    resizeHandler = checkScreen
+    window?.addEventListener?.('resize', resizeHandler)
+    
+    // Color mode restore
     const savedMode = localStorage.getItem(LS_MODE)
     if (savedMode && themeConfig.modeOptions?.some(m => m.value === savedMode)) {
       colorMode.preference = savedMode
     } else {
       colorMode.preference = 'system'
+    }
+  })
+
+  // ---------- Cleanup ----------
+  onUnmounted(() => {
+    if (resizeHandler && import.meta.client) {
+      window?.removeEventListener?.('resize', resizeHandler)
+      resizeHandler = null
     }
   })
 
@@ -344,7 +345,7 @@ export const useTheme = () => {
     isCustomTheme: readonly(isCustomTheme),
 
     // metadata
-    presetMetadata: readonly(ref(presetMetadata)),
+    presetMetadata: readonly(presetMetadata),
 
     // config (pass-through)
     presets: themeConfig.presets || [],
