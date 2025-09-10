@@ -15,11 +15,40 @@ const LS_FONT        = 'theme-font-scale'
 export const useTheme = () => {
   const colorMode = useColorMode()
 
+  // ---------- Theme Metadata (only names/descriptions, no color values) ----------
+  const presetMetadata = {
+    default: {
+      name: 'Default',
+      description: 'Customizable theme with individual color controls',
+      supportsCustomColors: true
+    },
+    vercel: {
+      name: 'Vercel',
+      description: 'Clean black and white design inspired by Vercel',
+      supportsCustomColors: false
+    },
+    cosmicNight: {
+      name: 'Cosmic Night',
+      description: 'Dark space-themed design with cosmic purple hues',
+      supportsCustomColors: false
+    },
+    twitter: {
+      name: 'Twitter',
+      description: 'Social media inspired blue theme',
+      supportsCustomColors: false
+    },
+    claude: {
+      name: 'Claude',
+      description: 'Warm and friendly AI-inspired theme',
+      supportsCustomColors: false
+    }
+  }
+
   // ---------- Initializers ----------
   const getInitialPreset = (): ThemePreset => {
     if (import.meta.client) {
       const saved = localStorage.getItem(LS_PRESET) as ThemePreset | null
-      if (saved && themeConfig.presets?.map(p => p.value).includes(saved)) return saved
+      if (saved && Object.keys(presetMetadata).includes(saved)) return saved
     }
     return 'default'
   }
@@ -89,205 +118,48 @@ export const useTheme = () => {
     if (isMobile.value && isOpen.value) isOpen.value = false
   }
 
-  // ---------- Preset Theme Definitions ----------
-  const presetThemes = {
-    default: {
-      // Uses individual color settings
-    },
-    vercel: {
-      light: {
-        background: 'oklch(0.9900 0 0)',
-        foreground: 'oklch(0 0 0)',
-        card: 'oklch(1 0 0)',
-        'card-foreground': 'oklch(0 0 0)',
-        popover: 'oklch(0.9900 0 0)',
-        'popover-foreground': 'oklch(0 0 0)',
-        primary: 'oklch(0 0 0)',
-        'primary-foreground': 'oklch(1 0 0)',
-        secondary: 'oklch(0.9400 0 0)',
-        'secondary-foreground': 'oklch(0 0 0)',
-        muted: 'oklch(0.9700 0 0)',
-        'muted-foreground': 'oklch(0.4400 0 0)',
-        accent: 'oklch(0.9400 0 0)',
-        'accent-foreground': 'oklch(0 0 0)',
-        destructive: 'oklch(0.6300 0.1900 23.0300)',
-        'destructive-foreground': 'oklch(1 0 0)',
-        border: 'oklch(0.9200 0 0)',
-        input: 'oklch(0.9400 0 0)',
-        ring: 'oklch(0 0 0)',
-        radius: '0.5rem'
-      },
-      dark: {
-        background: 'oklch(0 0 0)',
-        foreground: 'oklch(1 0 0)',
-        card: 'oklch(0.1400 0 0)',
-        'card-foreground': 'oklch(1 0 0)',
-        popover: 'oklch(0.1800 0 0)',
-        'popover-foreground': 'oklch(1 0 0)',
-        primary: 'oklch(1 0 0)',
-        'primary-foreground': 'oklch(0 0 0)',
-        secondary: 'oklch(0.2500 0 0)',
-        'secondary-foreground': 'oklch(1 0 0)',
-        muted: 'oklch(0.2300 0 0)',
-        'muted-foreground': 'oklch(0.7200 0 0)',
-        accent: 'oklch(0.3200 0 0)',
-        'accent-foreground': 'oklch(1 0 0)',
-        destructive: 'oklch(0.6900 0.2000 23.9100)',
-        'destructive-foreground': 'oklch(0 0 0)',
-        border: 'oklch(0.2600 0 0)',
-        input: 'oklch(0.3200 0 0)',
-        ring: 'oklch(0.7200 0 0)',
-        radius: '0.5rem'
-      }
-    },
-    cosmicNight: {
-      light: {
-        background: 'oklch(0.98 0.02 280)',
-        foreground: 'oklch(0.15 0.05 280)',
-        card: 'oklch(1 0 0)',
-        'card-foreground': 'oklch(0.15 0.05 280)',
-        popover: 'oklch(1 0 0)',
-        'popover-foreground': 'oklch(0.15 0.05 280)',
-        primary: 'oklch(0.35 0.15 280)',
-        'primary-foreground': 'oklch(0.98 0.02 280)',
-        secondary: 'oklch(0.92 0.05 280)',
-        'secondary-foreground': 'oklch(0.25 0.08 280)',
-        muted: 'oklch(0.95 0.02 280)',
-        'muted-foreground': 'oklch(0.45 0.05 280)',
-        accent: 'oklch(0.90 0.08 280)',
-        'accent-foreground': 'oklch(0.25 0.08 280)',
-        destructive: 'oklch(0.65 0.20 25)',
-        'destructive-foreground': 'oklch(0.98 0.02 280)',
-        border: 'oklch(0.88 0.05 280)',
-        input: 'oklch(0.92 0.05 280)',
-        ring: 'oklch(0.35 0.15 280)',
-        radius: '0.75rem'
-      },
-      dark: {
-        background: 'oklch(0.08 0.05 280)',
-        foreground: 'oklch(0.95 0.02 280)',
-        card: 'oklch(0.12 0.08 280)',
-        'card-foreground': 'oklch(0.95 0.02 280)',
-        popover: 'oklch(0.12 0.08 280)',
-        'popover-foreground': 'oklch(0.95 0.02 280)',
-        primary: 'oklch(0.65 0.20 280)',
-        'primary-foreground': 'oklch(0.08 0.05 280)',
-        secondary: 'oklch(0.18 0.10 280)',
-        'secondary-foreground': 'oklch(0.85 0.05 280)',
-        muted: 'oklch(0.15 0.08 280)',
-        'muted-foreground': 'oklch(0.65 0.05 280)',
-        accent: 'oklch(0.25 0.12 280)',
-        'accent-foreground': 'oklch(0.85 0.05 280)',
-        destructive: 'oklch(0.70 0.25 25)',
-        'destructive-foreground': 'oklch(0.08 0.05 280)',
-        border: 'oklch(0.20 0.10 280)',
-        input: 'oklch(0.18 0.10 280)',
-        ring: 'oklch(0.65 0.20 280)',
-        radius: '0.75rem'
-      }
-    },
-    twitter: {
-      light: {
-        background: 'oklch(1 0 0)',
-        foreground: 'oklch(0.15 0 0)',
-        card: 'oklch(1 0 0)',
-        'card-foreground': 'oklch(0.15 0 0)',
-        popover: 'oklch(1 0 0)',
-        'popover-foreground': 'oklch(0.15 0 0)',
-        primary: 'oklch(0.60 0.20 230)',
-        'primary-foreground': 'oklch(1 0 0)',
-        secondary: 'oklch(0.97 0.01 230)',
-        'secondary-foreground': 'oklch(0.25 0.02 230)',
-        muted: 'oklch(0.97 0.01 230)',
-        'muted-foreground': 'oklch(0.45 0.02 230)',
-        accent: 'oklch(0.95 0.02 230)',
-        'accent-foreground': 'oklch(0.25 0.02 230)',
-        destructive: 'oklch(0.65 0.20 25)',
-        'destructive-foreground': 'oklch(1 0 0)',
-        border: 'oklch(0.90 0.02 230)',
-        input: 'oklch(0.95 0.02 230)',
-        ring: 'oklch(0.60 0.20 230)',
-        radius: '0.5rem'
-      },
-      dark: {
-        background: 'oklch(0.08 0 0)',
-        foreground: 'oklch(0.95 0 0)',
-        card: 'oklch(0.12 0 0)',
-        'card-foreground': 'oklch(0.95 0 0)',
-        popover: 'oklch(0.12 0 0)',
-        'popover-foreground': 'oklch(0.95 0 0)',
-        primary: 'oklch(0.65 0.20 230)',
-        'primary-foreground': 'oklch(0.08 0 0)',
-        secondary: 'oklch(0.18 0.02 230)',
-        'secondary-foreground': 'oklch(0.85 0.02 230)',
-        muted: 'oklch(0.15 0.02 230)',
-        'muted-foreground': 'oklch(0.65 0.02 230)',
-        accent: 'oklch(0.22 0.05 230)',
-        'accent-foreground': 'oklch(0.85 0.02 230)',
-        destructive: 'oklch(0.70 0.25 25)',
-        'destructive-foreground': 'oklch(0.08 0 0)',
-        border: 'oklch(0.20 0.02 230)',
-        input: 'oklch(0.18 0.02 230)',
-        ring: 'oklch(0.65 0.20 230)',
-        radius: '0.5rem'
-      }
-    },
-    claude: {
-      light: {
-        background: 'oklch(0.98 0.02 60)',
-        foreground: 'oklch(0.15 0.05 30)',
-        card: 'oklch(1 0 0)',
-        'card-foreground': 'oklch(0.15 0.05 30)',
-        popover: 'oklch(1 0 0)',
-        'popover-foreground': 'oklch(0.15 0.05 30)',
-        primary: 'oklch(0.55 0.15 60)',
-        'primary-foreground': 'oklch(0.98 0.02 60)',
-        secondary: 'oklch(0.92 0.05 60)',
-        'secondary-foreground': 'oklch(0.25 0.08 30)',
-        muted: 'oklch(0.95 0.02 60)',
-        'muted-foreground': 'oklch(0.45 0.05 30)',
-        accent: 'oklch(0.90 0.08 60)',
-        'accent-foreground': 'oklch(0.25 0.08 30)',
-        destructive: 'oklch(0.65 0.20 25)',
-        'destructive-foreground': 'oklch(0.98 0.02 60)',
-        border: 'oklch(0.88 0.05 60)',
-        input: 'oklch(0.92 0.05 60)',
-        ring: 'oklch(0.55 0.15 60)',
-        radius: '0.75rem'
-      },
-      dark: {
-        background: 'oklch(0.08 0.05 30)',
-        foreground: 'oklch(0.95 0.02 60)',
-        card: 'oklch(0.12 0.08 30)',
-        'card-foreground': 'oklch(0.95 0.02 60)',
-        popover: 'oklch(0.12 0.08 30)',
-        'popover-foreground': 'oklch(0.95 0.02 60)',
-        primary: 'oklch(0.65 0.20 60)',
-        'primary-foreground': 'oklch(0.08 0.05 30)',
-        secondary: 'oklch(0.18 0.10 30)',
-        'secondary-foreground': 'oklch(0.85 0.05 60)',
-        muted: 'oklch(0.15 0.08 30)',
-        'muted-foreground': 'oklch(0.65 0.05 30)',
-        accent: 'oklch(0.25 0.12 60)',
-        'accent-foreground': 'oklch(0.85 0.05 60)',
-        destructive: 'oklch(0.70 0.25 25)',
-        'destructive-foreground': 'oklch(0.08 0.05 30)',
-        border: 'oklch(0.20 0.10 30)',
-        input: 'oklch(0.18 0.10 30)',
-        ring: 'oklch(0.65 0.20 60)',
-        radius: '0.75rem'
-      }
+  // ---------- Theme Application (CSS handles everything) ----------
+  const applyTheme = () => {
+    if (!import.meta.client) return
+    console.log('Applying theme:', currentPreset.value)
+    
+    const root = document.documentElement
+
+    // Set data attributes - CSS will handle all theme switching
+    root.setAttribute('data-preset', currentPreset.value)
+    root.setAttribute('data-radius', currentRadius.value.toString())
+    root.setAttribute('data-font', fontScale.value)
+    root.setAttribute('dir', direction.value)
+
+    // Only set individual colors for default/custom theme
+    if (currentPreset.value === 'default') {
+      console.log('Setting custom theme attributes')
+      root.setAttribute('data-primary', currentPrimaryColor.value)
+      root.setAttribute('data-neutral', currentNeutralColor.value)
+      root.setAttribute('data-theme', currentNeutralColor.value)
+    } else {
+      console.log('Using preset theme - removing custom attributes')
+      // Remove custom color attributes - preset CSS handles everything
+      root.removeAttribute('data-primary')
+      root.removeAttribute('data-neutral')
+      root.removeAttribute('data-theme')
     }
+
+    // Always allow radius customization (even for presets)
+    const radiusRem = currentRadius.value * 0.625
+    root.style.setProperty('--radius', `${radiusRem}rem`)
+
+    console.log('Theme applied successfully')
   }
 
-  // ---------- Persistence setters ----------
+  // ---------- Actions ----------
   const setPreset = (preset: ThemePreset) => {
-    console.log('setPreset called with:', preset)
-    const validPresets = ['default', 'vercel', 'cosmicNight', 'twitter', 'claude']
-    if (!validPresets.includes(preset)) {
+    console.log('Setting preset:', preset)
+    if (!Object.keys(presetMetadata).includes(preset)) {
       console.warn('Invalid preset:', preset)
       return
     }
+    
     currentPreset.value = preset
     if (import.meta.client) localStorage.setItem(LS_PRESET, preset)
     applyTheme()
@@ -397,63 +269,6 @@ export const useTheme = () => {
     isOpen.value = false
   }
 
-  // ---------- Apply CSS Variables ----------
-  const applyCSSVariables = (variables: Record<string, string>) => {
-    if (!import.meta.client) return
-    const root = document.documentElement
-    
-    Object.entries(variables).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value)
-    })
-  }
-
-  // ---------- Theme Application ----------
-  const applyTheme = async () => {
-    if (!import.meta.client) return
-    console.log('applyTheme called')
-    const root = document.documentElement
-
-    // Set data attributes
-    root.setAttribute('data-preset', currentPreset.value)
-    root.setAttribute('data-radius', currentRadius.value.toString())
-    root.setAttribute('data-font', fontScale.value)
-    root.setAttribute('dir', direction.value)
-
-    // Apply preset theme or custom theme
-    if (currentPreset.value !== 'default' && presetThemes[currentPreset.value]) {
-      const preset = presetThemes[currentPreset.value]
-      const isDark = colorMode.value === 'dark'
-      const themeVariables = isDark ? preset.dark : preset.light
-      
-      console.log('Applying preset theme:', currentPreset.value, isDark ? 'dark' : 'light')
-      applyCSSVariables(themeVariables)
-      
-      // Remove individual color attributes when using presets
-      root.removeAttribute('data-primary')
-      root.removeAttribute('data-neutral') 
-      root.removeAttribute('data-theme')
-    } else {
-      // Apply custom theme with individual colors
-      console.log('Applying custom/default theme')
-      root.setAttribute('data-primary', currentPrimaryColor.value)
-      root.setAttribute('data-neutral', currentNeutralColor.value)
-      root.setAttribute('data-theme', currentNeutralColor.value)
-    }
-
-    // Always apply custom radius (overrides preset radius if user changes it)
-    const radiusRem = currentRadius.value * 0.625
-    root.style.setProperty('--radius', `${radiusRem}rem`)
-
-    console.log('Theme applied:', {
-      preset: currentPreset.value,
-      primary: currentPrimaryColor.value,
-      neutral: currentNeutralColor.value,
-      radius: currentRadius.value,
-      direction: direction.value,
-      mode: colorMode.value
-    })
-  }
-
   // ---------- Helpers ----------
   const getColorValue = (name: string) => {
     const colorMap: Record<string, string> = {
@@ -481,6 +296,7 @@ export const useTheme = () => {
     // Watch for color mode changes
     watch(colorMode, () => {
       console.log('Color mode changed:', colorMode.value)
+      // CSS will handle light/dark switching via :root and .dark selectors
       applyTheme()
     })
 
@@ -511,7 +327,6 @@ export const useTheme = () => {
     } else {
       colorMode.preference = 'system'
     }
-    applyTheme()
   })
 
   // ---------- Public API ----------
@@ -527,6 +342,9 @@ export const useTheme = () => {
     isMobile: readonly(isMobile),
     screenWidth: readonly(screenWidth),
     isCustomTheme: readonly(isCustomTheme),
+
+    // metadata
+    presetMetadata: readonly(ref(presetMetadata)),
 
     // config (pass-through)
     presets: themeConfig.presets || [],

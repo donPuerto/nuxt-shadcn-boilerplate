@@ -1,4 +1,5 @@
-:root {
+/* Vercel Preset - Light Mode */
+[data-preset="vercel"] {
   --background: oklch(0.9900 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
@@ -47,7 +48,8 @@
   --spacing: 0.25rem;
 }
 
-.dark {
+/* Vercel Preset - Dark Mode */
+[data-preset="vercel"].dark {
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
   --card: oklch(0.1400 0 0);
