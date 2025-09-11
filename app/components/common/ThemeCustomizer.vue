@@ -369,81 +369,40 @@
               <AccordionItem value="shadow">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
-                    <Icon name="lucide:box-shadow" class="h-4 w-4" />
-                    Shadow Style
-                    <div 
-                      class="ml-auto w-6 h-6 bg-card border rounded shadow-sm"
-                      :style="{ boxShadow: computedShadowCSS }"
-                    />
+                    <Icon name="lucide:box" class="h-4 w-4" />
+                    Shadow Style                   
                   </div>
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
                   <div class="space-y-6">
-                    <!-- Shadow Color Type -->
+                    <!-- Shadow Color (single picker) -->
                     <div class="space-y-3">
                       <label class="text-sm font-medium text-foreground">Shadow Color</label>
-                      <div class="grid grid-cols-2 gap-2">
-                        <!-- Custom Color Button -->
-                        <div class="relative">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            class="w-full h-auto p-3 flex items-center gap-2"
-                            :class="{ 
-                              'border-primary bg-primary/10 shadow-sm': currentShadowConfig.colorType === 'custom',
-                              'hover:border-primary/50': currentShadowConfig.colorType !== 'custom'
-                            }"
-                            @click="handleShadowColorTypeClick('custom')"
-                          >
-                            <div class="relative">
-                              <input
-                                :value="currentShadowConfig.customColor"
-                                type="color"
-                                class="w-5 h-5 rounded border-none cursor-pointer bg-transparent"
-                                @input="handleShadowCustomColorInput"
-                                @click.stop
-                              >
-                            </div>
-                            <span class="text-xs font-medium">Custom</span>
-                            <Icon
-                              v-if="currentShadowConfig.colorType === 'custom'"
-                              name="lucide:check"
-                              class="h-3 w-3 ml-auto text-primary"
-                            />
-                          </Button>
-                        </div>
-
-                        <!-- Tailwind Colors -->
-                        <div class="relative">
-                          <select
-                            :value="currentShadowConfig.tailwindColor"
-                            class="w-full px-3 py-3 text-xs border rounded bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent appearance-none cursor-pointer"
-                            :class="{ 
-                              'border-primary bg-primary/5': currentShadowConfig.colorType === 'tailwind',
-                              'hover:border-primary/50': currentShadowConfig.colorType !== 'tailwind'
-                            }"
-                            @change="handleShadowTailwindColorChange"
-                            @focus="handleShadowColorTypeClick('tailwind')"
-                          >
-                            <option 
-                              v-for="color in shadowColorsList"
-                              :key="color.value"
-                              :value="color.value"
-                            >
-                              {{ color.label }}
-                            </option>
-                          </select>
-                          <Icon
-                            v-if="currentShadowConfig.colorType === 'tailwind'"
-                            name="lucide:check"
-                            class="absolute right-8 top-1/2 transform -translate-y-1/2 h-3 w-3 text-primary pointer-events-none"
-                          />
-                          <Icon
-                            name="lucide:chevron-down"
-                            class="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
-                          />
-                        </div>
+                      <div class="flex items-center gap-3">
+                        <input
+                          :value="currentShadowConfig.customColor"
+                          type="color"
+                          class="h-9 w-9 p-0 rounded border cursor-pointer"
+                          title="Pick shadow color"
+                          @input="handleShadowCustomColorInput"
+                        >
+                        <input
+                          :value="currentShadowConfig.customColor"
+                          type="text"
+                          spellcheck="false"
+                          class="w-28 px-2 py-1 text-xs font-mono border rounded bg-background"
+                          placeholder="#000000"
+                          @input="handleShadowCustomHexInput"
+                        >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          class="h-9 text-xs"
+                          title="Reset color"
+                          @click="handleShadowCustomColorReset"
+                        >Reset</Button>
                       </div>
+                      <p class="text-[10px] text-muted-foreground uppercase tracking-wide">Format: #RGB or #RRGGBB</p>
                     </div>
 
                     <!-- Shadow Controls Grid -->
@@ -859,11 +818,6 @@ const neutralColorsList = computed(() => {
   return Array.isArray(colors) ? colors : []
 })
 
-const shadowColorsList = computed(() => {
-  const colors = theme.shadowColors.value
-  return Array.isArray(colors) ? colors : []
-})
-
 const modeOptionsList = computed(() => {
   const modes = theme.modeOptions.value
   return Array.isArray(modes) ? modes : []
@@ -1023,21 +977,31 @@ const handleSpacingInput = (event: Event) => {
 }
 
 // IMPROVED: Shadow handlers with comprehensive debugging
-const handleShadowColorTypeClick = (colorType: 'custom' | 'tailwind') => {
-  console.log('[customizer] Setting shadow color type:', colorType)
-  theme.setShadowColorType(colorType)
-}
-
 const handleShadowCustomColorInput = (event: Event) => {
   const target = event.target as HTMLInputElement
-  console.log('[customizer] Setting custom color:', target.value)
-  theme.setShadowCustomColor(target.value)
+  const value = target.value
+  console.log('[customizer] Setting custom color:', value)
+  theme.setShadowColorType('custom')
+  theme.setShadowCustomColor(value)
 }
 
-const handleShadowTailwindColorChange = (event: Event) => {
-  const target = event.target as HTMLSelectElement
-  console.log('[customizer] Setting tailwind color:', target.value)
-  theme.setShadowTailwindColor(target.value)
+// New: manual hex input handler
+const handleShadowCustomHexInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  let value = target.value.trim()
+  if (!value.startsWith('#')) value = '#' + value
+  const valid = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value)
+  if (valid) {
+    theme.setShadowColorType('custom')
+    theme.setShadowCustomColor(value)
+  }
+}
+
+// New: reset shadow color
+const handleShadowCustomColorReset = () => {
+  const fallback = '#000000'
+  theme.setShadowColorType('custom')
+  theme.setShadowCustomColor(fallback)
 }
 
 const handleShadowOpacityChange = (value: number[]) => {

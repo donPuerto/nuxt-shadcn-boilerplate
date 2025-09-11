@@ -71,8 +71,7 @@ const components: { title: string, href: string, description: string }[] = [
 
 <template>
   <nav class="h-16 sm:h-20 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div class="mx-auto max-w-7xl h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
-
+    <div class="w-full h-full flex items-center justify-between gap-4">
       <!-- Left Section - Logo -->
       <div class="flex items-center gap-3">
         <AppLogo 
@@ -87,7 +86,7 @@ const components: { title: string, href: string, description: string }[] = [
       </div>
 
       <!-- Middle Section - Navigation (Desktop only) -->
-      <div class="hidden lg:flex flex-1 justify-center">
+      <div class="hidden lg:flex flex-1 justify-center min-w-0">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -184,7 +183,7 @@ const components: { title: string, href: string, description: string }[] = [
       </div>
 
       <!-- Right Section -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 flex-shrink-0">
         <!-- Theme Toggle -->
         <CommonThemeToggle />
         
@@ -197,7 +196,6 @@ const components: { title: string, href: string, description: string }[] = [
         <!-- Mobile Menu -->
         <AppNavMobileNav v-model:open="isMobileMenuOpen" />
       </div>
-
     </div>
   </nav>
 </template>

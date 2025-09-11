@@ -1,11 +1,17 @@
 <template>
   <div class="relative min-h-screen w-full flex flex-col">
-    <!-- Navigation -->
-    <AppNav />
+    <!-- Navigation (wrapped in layout container) -->
+    <div class="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+        <AppNav />
+      </div>
+    </div>
 
     <!-- Main Content -->
-    <main class="container flex-1 py-6">
-      <slot />
+    <main class="flex-1 w-full">
+      <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+        <slot />
+      </div>
     </main>
     <ClientOnly>
       <FluidCursor />
