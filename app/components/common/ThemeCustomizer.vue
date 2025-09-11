@@ -369,7 +369,7 @@
               <AccordionItem value="shadow">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
-                    <Icon name="lucide:shadow" class="h-4 w-4" />
+                    <Icon name="lucide:box-shadow" class="h-4 w-4" />
                     Shadow Style
                     <div 
                       class="ml-auto w-6 h-6 bg-card border rounded shadow-sm"
