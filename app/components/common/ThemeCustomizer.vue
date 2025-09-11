@@ -1,11 +1,6 @@
 <template>
   <ClientOnly>
     <Teleport to="body">
-      <!-- Debug info -->
-      <div v-if="isOpenState" class="fixed top-4 left-4 z-[10000] bg-red-500 text-white p-2 text-xs rounded">
-        DEBUG: isOpen = {{ isOpenState }}
-      </div>
-
       <!-- Overlay -->
       <div
         v-if="isOpenState"
@@ -65,33 +60,56 @@
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
                   <div class="space-y-3">
-                    <div class="bg-muted/20 p-3 rounded border-l-2 border-primary/20">
-                      <div class="flex items-center justify-between text-sm">
-                        <span class="text-muted-foreground">Preset:</span>
-                        <span class="font-medium">{{ currentPresetLabel }}</span>
-                      </div>
-                      <div v-if="isCustomThemeComputed" class="flex items-center justify-between text-sm mt-2">
-                        <span class="text-muted-foreground">Colors:</span>
-                        <div class="flex items-center gap-2">
-                          <span
-                            class="h-3 w-3 rounded-full border"
-                            :style="{ backgroundColor: theme.getColorValue(currentPrimaryColorValue) }"
-                          />
-                          <span class="text-xs">{{ currentPrimaryColorValue }}</span>
-                          <span
-                            class="h-3 w-3 rounded-full border ml-2"
-                            :style="{ backgroundColor: theme.getColorValue(currentNeutralColorValue) }"
-                          />
-                          <span class="text-xs">{{ currentNeutralColorValue }}</span>
+                    <div class="bg-muted/20 p-4 rounded-lg border-l-2 border-primary/20">
+                      <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Preset:</span>
+                          <span class="font-medium">{{ currentPresetLabel }}</span>
                         </div>
-                      </div>
-                      <div class="flex items-center justify-between text-sm mt-2">
-                        <span class="text-muted-foreground">Radius:</span>
-                        <span class="font-medium">{{ radiusDisplay }}rem</span>
-                      </div>
-                      <div class="flex items-center justify-between text-sm mt-2">
-                        <span class="text-muted-foreground">Mode:</span>
-                        <span class="font-medium capitalize">{{ colorMode.preference }}</span>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Mode:</span>
+                          <span class="font-medium capitalize">{{ colorMode.preference }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Primary:</span>
+                          <div class="flex items-center gap-2">
+                            <span
+                              class="h-3 w-3 rounded-full border shadow-sm"
+                              :style="{ backgroundColor: theme.getColorValue(currentPrimaryColorValue) }"
+                            />
+                            <span class="text-xs font-medium capitalize">{{ currentPrimaryColorValue }}</span>
+                          </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Neutral:</span>
+                          <div class="flex items-center gap-2">
+                            <span
+                              class="h-3 w-3 rounded-full border shadow-sm"
+                              :style="{ backgroundColor: theme.getColorValue(currentNeutralColorValue) }"
+                            />
+                            <span class="text-xs font-medium capitalize">{{ currentNeutralColorValue }}</span>
+                          </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Radius:</span>
+                          <span class="font-medium">{{ radiusDisplay }}rem</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Spacing:</span>
+                          <span class="font-medium">{{ spacingDisplay }}rem</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Shadow:</span>
+                          <span class="font-medium">{{ shadowDisplay }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Font:</span>
+                          <span class="font-medium capitalize">{{ currentFontScaleValue }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-muted-foreground">Direction:</span>
+                          <span class="font-medium uppercase">{{ currentDirectionValue }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -129,12 +147,15 @@
                 </AccordionContent>
               </AccordionItem>
 
-              <!-- Primary Colors (only for customizable themes) -->
-              <AccordionItem v-if="isCustomThemeComputed" value="primary">
+              <!-- Primary Colors -->
+              <AccordionItem value="primary">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
                     <Icon name="lucide:circle-dot" class="h-4 w-4" />
                     Primary Color
+                    <span v-if="!isCustomThemeComputed" class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full ml-auto">
+                      Preview Only
+                    </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
@@ -145,8 +166,10 @@
                       variant="outline"
                       class="flex items-center gap-2 h-auto p-3 justify-start transition-all hover:scale-105"
                       :class="{
-                        'border-primary border-2 bg-primary/10 shadow-sm': currentPrimaryColorValue === color.value
+                        'border-primary border-2 bg-primary/10 shadow-sm': currentPrimaryColorValue === color.value,
+                        'opacity-60 cursor-not-allowed': !isCustomThemeComputed
                       }"
+                      :disabled="!isCustomThemeComputed"
                       @click="handlePrimaryColorClick(color.value)"
                     >
                       <span
@@ -161,15 +184,21 @@
                       />
                     </Button>
                   </div>
+                  <div v-if="!isCustomThemeComputed" class="text-xs text-muted-foreground mt-2 p-2 bg-muted/20 rounded">
+                    Primary colors are locked for this preset. Switch to "Default" preset to customize.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <!-- Neutral Colors (only for customizable themes) -->
-              <AccordionItem v-if="isCustomThemeComputed" value="neutral">
+              <!-- Neutral Colors -->
+              <AccordionItem value="neutral">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
                     <Icon name="lucide:layers" class="h-4 w-4" />
                     Neutral Theme
+                    <span v-if="!isCustomThemeComputed" class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full ml-auto">
+                      Preview Only
+                    </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
@@ -180,8 +209,10 @@
                       variant="outline"
                       class="flex items-center gap-2 h-auto p-3 justify-start transition-all hover:scale-105"
                       :class="{
-                        'border-primary border-2 bg-primary/10 shadow-sm': currentNeutralColorValue === color.value
+                        'border-primary border-2 bg-primary/10 shadow-sm': currentNeutralColorValue === color.value,
+                        'opacity-60 cursor-not-allowed': !isCustomThemeComputed
                       }"
+                      :disabled="!isCustomThemeComputed"
                       @click="handleNeutralColorClick(color.value)"
                     >
                       <span
@@ -196,6 +227,9 @@
                       />
                     </Button>
                   </div>
+                  <div v-if="!isCustomThemeComputed" class="text-xs text-muted-foreground mt-2 p-2 bg-muted/20 rounded">
+                    Neutral colors are locked for this preset. Switch to "Default" preset to customize.
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 
@@ -209,7 +243,7 @@
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
                   <div class="space-y-4">
-                    <div class="space-y-3">
+                    <div class="space-y-4 pt-2">
                       <Slider
                         :model-value="[currentRadiusValue]"
                         :max="2"
@@ -218,14 +252,27 @@
                         class="w-full"
                         @update:model-value="handleRadiusChange"
                       />
-                      <div class="flex justify-between text-xs text-muted-foreground">
-                        <span>0 (Sharp)</span>
-                        <span class="font-medium">{{ radiusDisplay }}rem</span>
-                        <span>2 (Rounded)</span>
+                      <div class="flex items-center gap-2">
+                        <div class="flex justify-between text-xs text-muted-foreground flex-1">
+                          <span>0 (Sharp)</span>
+                          <span>2 (Rounded)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <input
+                            :value="currentRadiusValue.toFixed(1)"
+                            type="number"
+                            min="0"
+                            max="2"
+                            step="0.1"
+                            class="w-16 px-2 py-1 text-xs border rounded bg-background"
+                            @input="handleRadiusInput"
+                          >
+                          <span class="text-xs text-muted-foreground">rem</span>
+                        </div>
                       </div>
                     </div>
                     <!-- Preview -->
-                    <div class="flex gap-3 justify-center p-3 bg-muted/30 rounded">
+                    <div class="flex gap-3 justify-center p-4 bg-muted/30 rounded">
                       <div
                         class="w-8 h-8 bg-primary border shadow-sm"
                         :style="{ borderRadius: `${currentRadiusValue}rem` }"
@@ -243,6 +290,267 @@
                 </AccordionContent>
               </AccordionItem>
 
+              <!-- Spacing Scale -->
+              <AccordionItem value="spacing">
+                <AccordionTrigger class="py-4">
+                  <div class="flex items-center gap-2">
+                    <Icon name="lucide:square-dashed" class="h-4 w-4" />
+                    Spacing Scale
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent class="pb-4">
+                  <div class="space-y-4">
+                    <div class="space-y-4 pt-2">
+                      <Slider
+                        :model-value="[currentSpacingValue]"
+                        :max="3"
+                        :min="0.5"
+                        :step="0.1"
+                        class="w-full"
+                        @update:model-value="handleSpacingChange"
+                      />
+                      <div class="flex items-center gap-2">
+                        <div class="flex justify-between text-xs text-muted-foreground flex-1">
+                          <span>0.5 (Compact)</span>
+                          <span>3 (Spacious)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <input
+                            :value="currentSpacingValue.toFixed(1)"
+                            type="number"
+                            min="0.5"
+                            max="3"
+                            step="0.1"
+                            class="w-16 px-2 py-1 text-xs border rounded bg-background"
+                            @input="handleSpacingInput"
+                          >
+                          <span class="text-xs text-muted-foreground">rem</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Preview -->
+                    <div class="p-4 bg-muted/30 rounded">
+                      <div class="text-xs text-muted-foreground mb-2">Spacing Preview:</div>
+                      <div 
+                        class="flex items-center gap-2"
+                        :style="{ gap: `${currentSpacingValue * 0.5}rem` }"
+                      >
+                        <div 
+                          class="bg-primary w-4 h-4 rounded"
+                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                        />
+                        <div 
+                          class="bg-secondary w-4 h-4 rounded"
+                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                        />
+                        <div 
+                          class="bg-muted-foreground w-4 h-4 rounded"
+                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <!-- Shadow Style -->
+              <AccordionItem value="shadow">
+                <AccordionTrigger class="py-4">
+                  <div class="flex items-center gap-2">
+                    <Icon name="lucide:shadow" class="h-4 w-4" />
+                    Shadow Style
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent class="pb-4">
+                  <div class="space-y-4">
+                    <!-- Shadow Color Type -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Shadow Color</label>
+                      <div class="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          class="flex-1 h-auto p-2"
+                          :class="{ 'border-primary bg-primary/10': currentShadowConfig.colorType === 'custom' }"
+                          @click="handleShadowColorTypeClick('custom')"
+                        >
+                          <input
+                            :value="currentShadowConfig.customColor"
+                            type="color"
+                            class="w-4 h-4 rounded border-none mr-2"
+                            @input="handleShadowCustomColorInput"
+                          >
+                          <span class="text-xs">Pick Color</span>
+                        </Button>
+                        <select
+                          :value="currentShadowConfig.tailwindColor"
+                          class="flex-1 px-2 py-2 text-xs border rounded bg-background"
+                          @change="handleShadowTailwindColorChange"
+                          @focus="handleShadowColorTypeClick('tailwind')"
+                        >
+                          <option 
+                            v-for="color in shadowColorsList"
+                            :key="color.value"
+                            :value="color.value"
+                          >
+                            {{ color.label }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Shadow Opacity -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Shadow Opacity</label>
+                      <div class="flex items-center gap-2">
+                        <Slider
+                          :model-value="[currentShadowConfig.opacity]"
+                          :max="100"
+                          :min="0"
+                          :step="1"
+                          class="flex-1"
+                          @update:model-value="handleShadowOpacityChange"
+                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            :value="currentShadowConfig.opacity"
+                            type="number"
+                            min="0"
+                            max="100"
+                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            @input="handleShadowOpacityInput"
+                          >
+                          <span class="text-xs text-muted-foreground">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Blur Radius -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Blur Radius</label>
+                      <div class="flex items-center gap-2">
+                        <Slider
+                          :model-value="[currentShadowConfig.blurRadius]"
+                          :max="50"
+                          :min="0"
+                          :step="1"
+                          class="flex-1"
+                          @update:model-value="handleShadowBlurRadiusChange"
+                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            :value="currentShadowConfig.blurRadius"
+                            type="number"
+                            min="0"
+                            max="50"
+                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            @input="handleShadowBlurRadiusInput"
+                          >
+                          <span class="text-xs text-muted-foreground">px</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Spread -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Spread</label>
+                      <div class="flex items-center gap-2">
+                        <Slider
+                          :model-value="[currentShadowConfig.spread]"
+                          :max="25"
+                          :min="-25"
+                          :step="1"
+                          class="flex-1"
+                          @update:model-value="handleShadowSpreadChange"
+                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            :value="currentShadowConfig.spread"
+                            type="number"
+                            min="-25"
+                            max="25"
+                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            @input="handleShadowSpreadInput"
+                          >
+                          <span class="text-xs text-muted-foreground">px</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Offset X -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Offset X</label>
+                      <div class="flex items-center gap-2">
+                        <Slider
+                          :model-value="[currentShadowConfig.offsetX]"
+                          :max="25"
+                          :min="-25"
+                          :step="1"
+                          class="flex-1"
+                          @update:model-value="handleShadowOffsetXChange"
+                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            :value="currentShadowConfig.offsetX"
+                            type="number"
+                            min="-25"
+                            max="25"
+                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            @input="handleShadowOffsetXInput"
+                          >
+                          <span class="text-xs text-muted-foreground">px</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Offset Y -->
+                    <div class="space-y-2">
+                      <label class="text-xs font-medium text-muted-foreground">Offset Y</label>
+                      <div class="flex items-center gap-2">
+                        <Slider
+                          :model-value="[currentShadowConfig.offsetY]"
+                          :max="25"
+                          :min="-25"
+                          :step="1"
+                          class="flex-1"
+                          @update:model-value="handleShadowOffsetYChange"
+                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            :value="currentShadowConfig.offsetY"
+                            type="number"
+                            min="-25"
+                            max="25"
+                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            @input="handleShadowOffsetYInput"
+                          >
+                          <span class="text-xs text-muted-foreground">px</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Shadow Preview -->
+                    <div class="p-6 bg-muted/30 rounded">
+                      <div class="text-xs text-muted-foreground mb-4">Shadow Preview:</div>
+                      <div class="flex gap-4 justify-center">
+                        <div
+                          class="w-12 h-12 bg-background border rounded"
+                          :style="{ boxShadow: theme.computedShadowCSS }"
+                        />
+                        <div
+                          class="w-12 h-12 bg-primary/10 border rounded"
+                          :style="{ boxShadow: theme.computedShadowCSS }"
+                        />
+                        <div
+                          class="w-12 h-12 bg-secondary/20 border rounded"
+                          :style="{ boxShadow: theme.computedShadowCSS }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <!-- Font Size -->
               <AccordionItem value="font">
                 <AccordionTrigger class="py-4">
@@ -254,7 +562,7 @@
                 <AccordionContent class="pb-4">
                   <div class="grid grid-cols-2 gap-2">
                     <Button
-                      v-for="font in fontOptions"
+                      v-for="font in fontOptionsList"
                       :key="font.value"
                       variant="outline"
                       class="flex items-center gap-2 h-auto p-3 justify-start transition-all hover:scale-105"
@@ -307,7 +615,7 @@
                 </AccordionContent>
               </AccordionItem>
 
-              <!-- Direction Toggle -->
+              <!-- Text Direction -->
               <AccordionItem value="direction">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
@@ -352,39 +660,6 @@
                   </div>
                 </AccordionContent>
               </AccordionItem>
-
-              <!-- Debug Section -->
-              <AccordionItem value="debug">
-                <AccordionTrigger class="py-4">
-                  <div class="flex items-center gap-2">
-                    <Icon name="lucide:bug" class="h-4 w-4" />
-                    Debug Controls
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent class="pb-4">
-                  <div class="space-y-2">
-                    <Button variant="destructive" size="sm" class="w-full" @click="testClose">
-                      Test Close Function
-                    </Button>
-                    <Button variant="secondary" size="sm" class="w-full" @click="testToggle">
-                      Test Toggle Function
-                    </Button>
-                    <div class="text-xs p-2 bg-muted/20 rounded">
-                      <div>theme.isOpen: {{ theme.isOpen }}</div>
-                      <div>isOpenValue: {{ isOpenValue }}</div>
-                      <div>isOpenState: {{ isOpenState }}</div>
-                      <div>Component mounted: {{ isMounted }}</div>
-                      <div>Current Preset: {{ currentPresetValue }}</div>
-                      <div>Primary Color: {{ currentPrimaryColorValue }}</div>
-                      <div>Neutral Color: {{ currentNeutralColorValue }}</div>
-                      <div>Font Scale: {{ currentFontScaleValue }}</div>
-                      <div>Direction: {{ currentDirectionValue }}</div>
-                      <div>PresetsList Length: {{ presetsList.length }}</div>
-                      <div>PresetsList: {{ JSON.stringify(presetsList.map(p => ({ value: p.value, label: p.label }))) }}</div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
             </Accordion>
           </div>
         </div>
@@ -397,137 +672,79 @@
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { toast } from 'vue-sonner'
 
 const theme = useTheme()
 const colorMode = useColorMode()
-const isMounted = ref(false)
 
-console.log('[ThemeCustomizer] SETUP - theme.isOpen:', theme.isOpen)
-
-// Create local reactive state to test - this is now our single source of truth for UI
+// Create local reactive state for UI
 const isOpenState = ref(false)
 
-// Computed to unwrap theme.isOpen
-const isOpenValue = computed(() => {
-  const value = unref(theme.isOpen)
-  console.log('[ThemeCustomizer] isOpenValue computed - raw:', theme.isOpen, 'unref:', value)
-  return value
-})
-
-// CRITICAL FIX: Create computed values for all theme properties to properly unwrap the readonly refs
-const currentPresetValue = computed(() => {
-  const value = unref(theme.currentPreset)
-  console.log('[ThemeCustomizer] currentPresetValue computed:', value)
-  return value
-})
-
-const currentPrimaryColorValue = computed(() => {
-  const value = unref(theme.currentPrimaryColor)
-  console.log('[ThemeCustomizer] currentPrimaryColorValue computed:', value)
-  return value
-})
-
-const currentNeutralColorValue = computed(() => {
-  const value = unref(theme.currentNeutralColor)
-  console.log('[ThemeCustomizer] currentNeutralColorValue computed:', value)
-  return value
-})
-
+// Computed to unwrap theme values
+const isOpenValue = computed(() => unref(theme.isOpen))
+const currentPresetValue = computed(() => unref(theme.currentPreset))
+const currentPrimaryColorValue = computed(() => unref(theme.currentPrimaryColor))
+const currentNeutralColorValue = computed(() => unref(theme.currentNeutralColor))
 const currentRadiusValue = computed(() => {
   const value = unref(theme.currentRadius)
-  console.log('[ThemeCustomizer] currentRadiusValue computed:', value)
   return typeof value === 'number' && !isNaN(value) ? value : 0.5
 })
-
-const currentFontScaleValue = computed(() => {
-  const value = unref(theme.fontScale)
-  console.log('[ThemeCustomizer] currentFontScaleValue computed:', value)
-  return value
+const currentFontScaleValue = computed(() => unref(theme.fontScale))
+const currentDirectionValue = computed(() => unref(theme.direction))
+const currentSpacingValue = computed(() => {
+  const value = unref(theme.spacing)
+  return typeof value === 'number' && !isNaN(value) ? value : 1
 })
-
-const currentDirectionValue = computed(() => {
-  const value = unref(theme.direction)
-  console.log('[ThemeCustomizer] currentDirectionValue computed:', value)
-  return value
-})
-
-const isCustomThemeComputed = computed(() => {
-  const value = unref(theme.isCustomTheme)
-  console.log('[ThemeCustomizer] isCustomThemeComputed computed:', value)
-  return value
-})
-
-// Font size options
-const fontOptions = [
-  { label: 'Small', value: 'sm' },
-  { label: 'Base', value: 'base' },
-  { label: 'Medium', value: 'md' },
-  { label: 'Large', value: 'lg' }
-]
+const currentShadowConfig = computed(() => unref(theme.shadowConfig))
+const isCustomThemeComputed = computed(() => unref(theme.isCustomTheme))
 
 // Convert computed arrays to reactive arrays with safety checks
 const presetsList = computed(() => {
   const presets = theme.presets.value
-  console.log('[ThemeCustomizer] presets computed - RAW:', presets)
-  console.log('[ThemeCustomizer] presets computed - IS ARRAY:', Array.isArray(presets))
-  console.log('[ThemeCustomizer] presets computed - DETAILED:', presets?.map(p => ({ value: p.value, label: p.label })))
   return Array.isArray(presets) ? presets : []
 })
 
 const primaryColorsList = computed(() => {
   const colors = theme.primaryColors.value
-  console.log('[ThemeCustomizer] primaryColors computed:', colors)
   return Array.isArray(colors) ? colors : []
 })
 
 const neutralColorsList = computed(() => {
   const colors = theme.neutralColors.value
-  console.log('[ThemeCustomizer] neutralColors computed:', colors)
+  return Array.isArray(colors) ? colors : []
+})
+
+const shadowColorsList = computed(() => {
+  const colors = theme.shadowColors.value
   return Array.isArray(colors) ? colors : []
 })
 
 const modeOptionsList = computed(() => {
   const modes = theme.modeOptions.value
-  console.log('[ThemeCustomizer] modeOptions computed:', modes)
   return Array.isArray(modes) ? modes : []
 })
 
-const radiusDisplay = computed(() => {
-  return currentRadiusValue.value.toFixed(1)
+const fontOptionsList = computed(() => {
+  const fonts = theme.fontOptions.value
+  return Array.isArray(fonts) ? fonts : []
 })
 
-// ENHANCED DEBUG VERSION: currentPresetLabel with detailed logging
+// Display computed values
+const radiusDisplay = computed(() => currentRadiusValue.value.toFixed(1))
+const spacingDisplay = computed(() => currentSpacingValue.value.toFixed(1))
+const shadowDisplay = computed(() => {
+  const config = currentShadowConfig.value
+  return `${config.offsetX}px ${config.offsetY}px ${config.blurRadius}px ${config.opacity}%`
+})
+
 const currentPresetLabel = computed(() => {
   const searchValue = currentPresetValue.value
   const availablePresets = presetsList.value
   
-  console.log('[ThemeCustomizer] currentPresetLabel DEBUG - searchValue:', searchValue)
-  console.log('[ThemeCustomizer] currentPresetLabel DEBUG - availablePresets:', availablePresets)
-  console.log('[ThemeCustomizer] currentPresetLabel DEBUG - availablePresets length:', availablePresets.length)
-  
-  if (availablePresets.length === 0) {
-    console.log('[ThemeCustomizer] currentPresetLabel DEBUG - NO PRESETS AVAILABLE')
-    return 'Loading...'
-  }
-  
-  // Log each preset for comparison
-  availablePresets.forEach((preset, index) => {
-    console.log(`[ThemeCustomizer] currentPresetLabel DEBUG - preset[${index}]:`, { 
-      value: preset.value, 
-      label: preset.label,
-      matches: preset.value === searchValue,
-      valueType: typeof preset.value,
-      searchType: typeof searchValue
-    })
-  })
+  if (availablePresets.length === 0) return 'Loading...'
   
   const foundPreset = availablePresets.find(p => p.value === searchValue)
-  console.log('[ThemeCustomizer] currentPresetLabel DEBUG - foundPreset:', foundPreset)
-  
-  const result = foundPreset?.label || `Unknown (${searchValue})`
-  console.log('[ThemeCustomizer] currentPresetLabel DEBUG - RESULT:', result)
-  
-  return result
+  return foundPreset?.label || `Unknown (${searchValue})`
 })
 
 const currentPresetDescription = computed(() => {
@@ -537,134 +754,199 @@ const currentPresetDescription = computed(() => {
 
 // Sync local state with theme state
 watch(isOpenValue, (newValue) => {
-  console.log('[ThemeCustomizer] isOpenValue watcher - newValue:', newValue)
   isOpenState.value = newValue
 }, { immediate: true })
 
-// Watch theme.isOpen directly to extract the actual value
-watch(() => theme.isOpen, (newValue, oldValue) => {
-  console.log('[ThemeCustomizer] RAW theme.isOpen watcher - NEW:', newValue, 'OLD:', oldValue)
-  console.log('[ThemeCustomizer] RAW theme.isOpen watcher - NEW TYPE:', typeof newValue)
-  
-  // Try to extract actual value
+watch(() => theme.isOpen, (newValue) => {
   if (newValue && typeof newValue === 'object' && 'value' in newValue) {
-    console.log('[ThemeCustomizer] RAW theme.isOpen watcher - ACTUAL VALUE:', newValue.value)
     isOpenState.value = newValue.value
   } else {
-    console.log('[ThemeCustomizer] RAW theme.isOpen watcher - DIRECT VALUE:', newValue)
     isOpenState.value = !!newValue
   }
 }, { immediate: true })
 
-// Event handlers with detailed logging
+// Event handlers
 const handleClose = () => {
-  console.log('[ThemeCustomizer] handleClose clicked')
-  console.log('[ThemeCustomizer] Before close - isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] Before close - isOpenValue:', isOpenValue.value)
   theme.closeCustomizer()
-  console.log('[ThemeCustomizer] After close - isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] After close - isOpenValue:', isOpenValue.value)
 }
 
 const handleOverlayClick = () => {
-  console.log('[ThemeCustomizer] overlay clicked')
-  console.log('[ThemeCustomizer] Before overlay close - isOpenState:', isOpenState.value)
   theme.closeCustomizer()
-  console.log('[ThemeCustomizer] After overlay close - isOpenState:', isOpenState.value)
 }
 
 const handleReset = () => {
-  console.log('[ThemeCustomizer] handleReset called')
-  if (confirm('Reset all theme settings to defaults?')) {
-    theme.resetToDefaults()
-  }
+  toast('Are you sure you want to reset all theme settings to defaults?', {
+    position: 'top-center',
+    duration: 6000,
+    action: {
+      label: 'Reset',
+      onClick: () => {
+        theme.resetToDefaults()
+        toast.success('Theme settings have been reset to defaults', {
+          position: 'top-center',
+          duration: 3000
+        })
+      }
+    },
+    cancel: {
+      label: 'Cancel',
+      onClick: () => {
+        toast.info('Reset cancelled', {
+          position: 'top-center',
+          duration: 2000
+        })
+      }
+    }
+  })
 }
 
+// Basic handlers
 const handlePresetChange = (event: Event) => {
   const target = event.target as HTMLSelectElement
-  console.log('[ThemeCustomizer] handlePresetChange called with:', target.value)
   theme.setPreset(target.value as any)
 }
 
 const handlePrimaryColorClick = (value: string) => {
-  console.log('[ThemeCustomizer] handlePrimaryColorClick called with:', value)
-  theme.setPrimaryColor(value)
+  if (isCustomThemeComputed.value) {
+    theme.setPrimaryColor(value)
+  }
 }
 
 const handleNeutralColorClick = (value: string) => {
-  console.log('[ThemeCustomizer] handleNeutralColorClick called with:', value)
-  theme.setNeutralColor(value)
-}
-
-const handleRadiusChange = (value: number[]) => {
-  console.log('[ThemeCustomizer] handleRadiusChange called with:', value[0])
-  theme.setRadius(value[0])
+  if (isCustomThemeComputed.value) {
+    theme.setNeutralColor(value)
+  }
 }
 
 const handleFontScaleClick = (value: string) => {
-  console.log('[ThemeCustomizer] handleFontScaleClick called with:', value)
   theme.setFontScale(value as any)
 }
 
 const handleColorModeClick = (value: string) => {
-  console.log('[ThemeCustomizer] handleColorModeClick called with:', value)
   theme.setColorMode(value)
 }
 
 const handleDirectionClick = (value: string) => {
-  console.log('[ThemeCustomizer] handleDirectionClick called with:', value)
   theme.setDirection(value as any)
 }
 
-// Debug test functions
-const testClose = () => {
-  console.log('[ThemeCustomizer] Test close button clicked')
-  console.log('[ThemeCustomizer] Current isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] Current isOpenValue:', isOpenValue.value)
-  theme.closeCustomizer()
-  console.log('[ThemeCustomizer] After test close isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] After test close isOpenValue:', isOpenValue.value)
+// Radius handlers
+const handleRadiusChange = (value: number[]) => {
+  theme.setRadius(value[0])
 }
 
-const testToggle = () => {
-  console.log('[ThemeCustomizer] Test toggle button clicked')
-  console.log('[ThemeCustomizer] Current isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] Current isOpenValue:', isOpenValue.value)
-  theme.toggleCustomizer()
-  console.log('[ThemeCustomizer] After test toggle isOpenState:', isOpenState.value)
-  console.log('[ThemeCustomizer] After test toggle isOpenValue:', isOpenValue.value)
+const handleRadiusInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseFloat(target.value)
+  if (!isNaN(value)) {
+    theme.setRadius(value)
+  }
+}
+
+// Spacing handlers
+const handleSpacingChange = (value: number[]) => {
+  theme.setSpacing(value[0])
+}
+
+const handleSpacingInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseFloat(target.value)
+  if (!isNaN(value)) {
+    theme.setSpacing(value)
+  }
+}
+
+// Shadow handlers
+const handleShadowColorTypeClick = (colorType: 'custom' | 'tailwind') => {
+  theme.setShadowColorType(colorType)
+}
+
+const handleShadowCustomColorInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  theme.setShadowCustomColor(target.value)
+}
+
+const handleShadowTailwindColorChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement
+  theme.setShadowTailwindColor(target.value)
+}
+
+const handleShadowOpacityChange = (value: number[]) => {
+  theme.setShadowOpacity(value[0])
+}
+
+const handleShadowOpacityInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseInt(target.value)
+  if (!isNaN(value)) {
+    theme.setShadowOpacity(value)
+  }
+}
+
+const handleShadowBlurRadiusChange = (value: number[]) => {
+  theme.setShadowBlurRadius(value[0])
+}
+
+const handleShadowBlurRadiusInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseInt(target.value)
+  if (!isNaN(value)) {
+    theme.setShadowBlurRadius(value)
+  }
+}
+
+const handleShadowSpreadChange = (value: number[]) => {
+  theme.setShadowSpread(value[0])
+}
+
+const handleShadowSpreadInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseInt(target.value)
+  if (!isNaN(value)) {
+    theme.setShadowSpread(value)
+  }
+}
+
+const handleShadowOffsetXChange = (value: number[]) => {
+  theme.setShadowOffsetX(value[0])
+}
+
+const handleShadowOffsetXInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseInt(target.value)
+  if (!isNaN(value)) {
+    theme.setShadowOffsetX(value)
+  }
+}
+
+const handleShadowOffsetYChange = (value: number[]) => {
+  theme.setShadowOffsetY(value[0])
+}
+
+const handleShadowOffsetYInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const value = parseInt(target.value)
+  if (!isNaN(value)) {
+    theme.setShadowOffsetY(value)
+  }
 }
 
 // Keyboard handler for ESC key
 const handleKeydown = (event: KeyboardEvent) => {
   if (event.key === 'Escape' && isOpenState.value) {
-    console.log('[ThemeCustomizer] ESC key pressed')
     handleClose()
   }
 }
 
 onMounted(() => {
-  isMounted.value = true
   if (import.meta.client) {
     document.addEventListener('keydown', handleKeydown)
-    console.log('[ThemeCustomizer] mounted, keyboard listener added')
   }
-  console.log('[ThemeCustomizer] MOUNTED - theme.isOpen:', theme.isOpen)
-  console.log('[ThemeCustomizer] MOUNTED - isOpenValue:', isOpenValue.value)
-  console.log('[ThemeCustomizer] MOUNTED - isOpenState:', isOpenState.value)
 })
 
 onUnmounted(() => {
   if (import.meta.client) {
     document.removeEventListener('keydown', handleKeydown)
-    console.log('[ThemeCustomizer] unmounted, keyboard listener removed')
   }
-})
-
-// Initial state logging
-console.log('[ThemeCustomizer] INITIAL STATE:', {
-  themeIsOpen: theme.isOpen,
-  isOpenValue: isOpenValue.value,
-  isOpenState: isOpenState.value
 })
 </script>

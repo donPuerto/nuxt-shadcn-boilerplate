@@ -2,10 +2,13 @@ import {
   type ThemePreset, 
   type Direction, 
   type FontScale,
+  type ShadowConfig,
   themeConfig, 
   primaryColorVars, 
   neutralColorVars, 
   getColorHex,
+  generateShadowCSS,
+  defaultShadowConfig,
   STORAGE_KEYS 
 } from '../../shared/ui/theme'
 
@@ -42,14 +45,10 @@ const setStoredValue = (key: string, value: any) => {
 // Initialize global state only once
 const initializeGlobalState = () => {
   if (globalThemeState) {
-    console.log('[theme] Returning existing global state, isOpen:', globalThemeState.isOpen.value)
     return globalThemeState
   }
-
-  console.log('[theme] Initializing NEW global state')
   
   globalThemeState = {
-    // CRITICAL: Start with false - this is the actual ref
     isOpen: ref(false),
     currentPreset: ref<ThemePreset>(
       getStoredValue(STORAGE_KEYS.PRESET, 'default', (v) => 
@@ -80,54 +79,31 @@ const initializeGlobalState = () => {
       getStoredValue(STORAGE_KEYS.FONT, 'base', (v) => 
         ['sm', 'base', 'md', 'lg'].includes(v)
       )
+    ),
+    // NEW: Spacing state
+    spacing: ref<number>(
+      getStoredValue(STORAGE_KEYS.SPACING, 1, (v) => 
+        typeof v === 'number' && v >= 0.5 && v <= 3
+      )
+    ),
+    // NEW: Shadow configuration state
+    shadowConfig: ref<ShadowConfig>(
+      getStoredValue(STORAGE_KEYS.SHADOW_CONFIG, defaultShadowConfig, (v) => 
+        v && typeof v === 'object' && 
+        typeof v.opacity === 'number' &&
+        typeof v.blurRadius === 'number' &&
+        typeof v.spread === 'number' &&
+        typeof v.offsetX === 'number' &&
+        typeof v.offsetY === 'number'
+      )
     )
   }
 
-  console.log('[theme] Global state initialized with isOpen VALUE:', globalThemeState.isOpen.value)
   return globalThemeState
 }
 
 export const useTheme = () => {
-  console.log('[theme] useTheme() called')
   const colorMode = useColorMode()
-<<<<<<< HEAD
-=======
-
-  // ---------- Theme Metadata (derived from themeConfig presets) ----------
-  const presetMetadata = computed(() => {
-    const metadata: Record<string, { name: string, description: string, supportsCustomColors: boolean }> = {}
-    
-    // Build metadata from themeConfig.presets
-    themeConfig.presets?.forEach(preset => {
-      metadata[preset.value] = {
-        name: preset.label,
-        description: preset.value === 'default' 
-          ? 'Customizable theme with individual color controls'
-          : `Predefined theme: ${preset.label}`,
-        supportsCustomColors: preset.value === 'default'
-      }
-    })
-    
-    return metadata
-  })
-
-  // ---------- Initializers ----------
-  const getInitialPreset = (): ThemePreset => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_PRESET) as ThemePreset | null
-      if (saved && themeConfig.presets?.some(p => p.value === saved)) return saved
-    }
-    return 'default'
-  }
-
-  const getInitialPrimaryColor = () => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_PRIMARY)
-      if (saved && themeConfig.primaryColors?.map(c => c.value).includes(saved)) return saved
-    }
-    return 'violet'
-  }
->>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
   
   // Get or create global state
   const state = initializeGlobalState()
@@ -140,10 +116,10 @@ export const useTheme = () => {
     currentNeutralColor,
     currentRadius,
     direction,
-    fontScale
+    fontScale,
+    spacing,
+    shadowConfig
   } = state
-
-  console.log('[theme] useTheme state destructured, isOpen VALUE:', isOpen.value)
 
   // Computed values
   const currentPresetMeta = computed(() => {
@@ -152,6 +128,11 @@ export const useTheme = () => {
 
   const isCustomTheme = computed(() => {
     return currentPresetMeta.value.supportsCustomColors === true
+  })
+
+  // NEW: Computed shadow CSS
+  const computedShadowCSS = computed(() => {
+    return generateShadowCSS(shadowConfig.value)
   })
 
   // Theme application functions
@@ -182,12 +163,9 @@ export const useTheme = () => {
         }
       }
 
-      console.log('[theme] Dynamic vars applied:', {
-        isDark,
-        primary: currentPrimaryColor.value,
-        neutral: currentNeutralColor.value,
-        isCustom: isCustomTheme.value
-      })
+      // NEW: Apply shadow CSS variable
+      root.style.setProperty('--custom-shadow', computedShadowCSS.value)
+      
     } catch (error) {
       console.error('[theme] Error applying dynamic vars:', error)
     }
@@ -207,20 +185,16 @@ export const useTheme = () => {
       root.setAttribute('data-font', fontScale.value)
       root.setAttribute('dir', direction.value)
       
+      // NEW: Apply spacing and shadow attributes
+      root.setAttribute('data-spacing', String(spacing.value))
+      
       // Set CSS custom properties
       root.style.setProperty('--radius', `${currentRadius.value}rem`)
+      root.style.setProperty('--spacing-multiplier', String(spacing.value))
 
-      // Apply dynamic color variables
+      // Apply dynamic color variables and shadow
       applyDynamicVars()
-
-      console.log('[theme] Theme applied:', {
-        preset: currentPreset.value,
-        primary: currentPrimaryColor.value,
-        neutral: currentNeutralColor.value,
-        radius: currentRadius.value,
-        direction: direction.value,
-        fontScale: fontScale.value
-      })
+      
     } catch (error) {
       console.error('[theme] Error applying theme:', error)
     }
@@ -228,37 +202,24 @@ export const useTheme = () => {
 
   // State management actions
   const setPreset = (preset: ThemePreset) => {
-<<<<<<< HEAD
-    console.log('[theme] setPreset:', preset)
-=======
-    console.log('Setting preset:', preset)
-    if (!themeConfig.presets?.some(p => p.value === preset)) {
-      console.warn('Invalid preset:', preset)
-      return
-    }
-    
->>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
     currentPreset.value = preset
     setStoredValue(STORAGE_KEYS.PRESET, preset)
     applyTheme()
   }
 
   const setPrimaryColor = (color: string) => {
-    console.log('[theme] setPrimaryColor:', color)
     currentPrimaryColor.value = color
     setStoredValue(STORAGE_KEYS.PRIMARY, color)
     applyDynamicVars()
   }
 
   const setNeutralColor = (color: string) => {
-    console.log('[theme] setNeutralColor:', color)
     currentNeutralColor.value = color
     setStoredValue(STORAGE_KEYS.NEUTRAL, color)
     applyDynamicVars()
   }
 
   const setRadius = (radius: number) => {
-    console.log('[theme] setRadius:', radius)
     const clamped = Math.min(2, Math.max(0, radius))
     currentRadius.value = clamped
     setStoredValue(STORAGE_KEYS.RADIUS, clamped)
@@ -266,28 +227,85 @@ export const useTheme = () => {
   }
 
   const setDirection = (dir: Direction) => {
-    console.log('[theme] setDirection:', dir)
     direction.value = dir
     setStoredValue(STORAGE_KEYS.DIRECTION, dir)
     applyTheme()
   }
 
   const setFontScale = (scale: FontScale) => {
-    console.log('[theme] setFontScale:', scale)
     fontScale.value = scale
     setStoredValue(STORAGE_KEYS.FONT, scale)
     applyTheme()
   }
 
+  // NEW: Spacing setter
+  const setSpacing = (spacingValue: number) => {
+    const clamped = Math.min(3, Math.max(0.5, spacingValue))
+    spacing.value = clamped
+    setStoredValue(STORAGE_KEYS.SPACING, clamped)
+    applyTheme()
+  }
+
+  // NEW: Shadow configuration setters
+  const setShadowColorType = (colorType: 'custom' | 'tailwind') => {
+    shadowConfig.value = { ...shadowConfig.value, colorType }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowCustomColor = (color: string) => {
+    shadowConfig.value = { ...shadowConfig.value, customColor: color }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowTailwindColor = (color: string) => {
+    shadowConfig.value = { ...shadowConfig.value, tailwindColor: color }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowOpacity = (opacity: number) => {
+    const clamped = Math.min(100, Math.max(0, opacity))
+    shadowConfig.value = { ...shadowConfig.value, opacity: clamped }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowBlurRadius = (blurRadius: number) => {
+    const clamped = Math.min(50, Math.max(0, blurRadius))
+    shadowConfig.value = { ...shadowConfig.value, blurRadius: clamped }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowSpread = (spread: number) => {
+    const clamped = Math.min(25, Math.max(-25, spread))
+    shadowConfig.value = { ...shadowConfig.value, spread: clamped }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowOffsetX = (offsetX: number) => {
+    const clamped = Math.min(25, Math.max(-25, offsetX))
+    shadowConfig.value = { ...shadowConfig.value, offsetX: clamped }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
+  const setShadowOffsetY = (offsetY: number) => {
+    const clamped = Math.min(25, Math.max(-25, offsetY))
+    shadowConfig.value = { ...shadowConfig.value, offsetY: clamped }
+    setStoredValue(STORAGE_KEYS.SHADOW_CONFIG, shadowConfig.value)
+    applyDynamicVars()
+  }
+
   const setColorMode = (mode: string) => {
-    console.log('[theme] setColorMode:', mode)
     colorMode.preference = mode
     setStoredValue(STORAGE_KEYS.MODE, mode)
   }
 
   const resetToDefaults = () => {
-    console.log('[theme] resetToDefaults called')
-    
     // Reset all values to defaults
     currentPreset.value = 'default'
     currentPrimaryColor.value = 'violet'
@@ -295,6 +313,8 @@ export const useTheme = () => {
     currentRadius.value = 0.5
     direction.value = 'ltr'
     fontScale.value = 'base'
+    spacing.value = 1
+    shadowConfig.value = { ...defaultShadowConfig }
     colorMode.preference = 'system'
     
     // Clear localStorage
@@ -311,60 +331,55 @@ export const useTheme = () => {
     applyTheme()
   }
 
-  // Customizer visibility actions - CRITICAL FIX
+  // Customizer visibility actions
   const toggleCustomizer = () => {
-    console.log('[theme] toggleCustomizer - before VALUE:', isOpen.value)
     isOpen.value = !isOpen.value
-    console.log('[theme] toggleCustomizer - after VALUE:', isOpen.value)
   }
   
   const openCustomizer = () => {
-    console.log('[theme] openCustomizer - before VALUE:', isOpen.value)
     isOpen.value = true
-    console.log('[theme] openCustomizer - after VALUE:', isOpen.value)
   }
   
   const closeCustomizer = () => {
-    console.log('[theme] closeCustomizer - before VALUE:', isOpen.value)
     isOpen.value = false
-    console.log('[theme] closeCustomizer - after VALUE:', isOpen.value)
   }
 
   const toggleDirection = () => {
     setDirection(direction.value === 'ltr' ? 'rtl' : 'ltr')
   }
 
-<<<<<<< HEAD
   const getColorValue = (colorKey: string): string => {
     return getColorHex(colorKey)
   }
 
   // Client-side watchers and lifecycle
   if (import.meta.client) {
-    // Watch for radius, direction, and font changes
-    watch([currentRadius, direction, fontScale], () => {
+    // Watch for changes that need DOM updates
+    watch([currentRadius, direction, fontScale, spacing], () => {
       try {
         const root = document.documentElement
         root.setAttribute('data-radius', String(currentRadius.value))
         root.setAttribute('data-font', fontScale.value)
         root.setAttribute('dir', direction.value)
+        root.setAttribute('data-spacing', String(spacing.value))
         root.style.setProperty('--radius', `${currentRadius.value}rem`)
+        root.style.setProperty('--spacing-multiplier', String(spacing.value))
       } catch (error) {
         console.error('[theme] Error in watcher:', error)
       }
     })
+
+    // Watch for shadow config changes
+    watch(shadowConfig, () => {
+      applyDynamicVars()
+    }, { deep: true })
 
     // Watch for color mode changes
     watch(colorMode, applyDynamicVars, { immediate: false })
 
     // Initialize on mount
     onMounted(() => {
-      // FORCE CLOSE on mount - this is critical
-      console.log('[theme] onMounted - FORCING isOpen to false, was VALUE:', isOpen.value)
       isOpen.value = false
-      console.log('[theme] onMounted - forced isOpen to VALUE:', isOpen.value)
-      
-      // Apply current theme
       applyTheme()
       
       // Set up mutation observer for dark/light mode changes
@@ -391,63 +406,9 @@ export const useTheme = () => {
     })
   }
 
-  // CRITICAL: Return the ACTUAL reactive refs, not readonly wrappers
-=======
-  // ---------- Watchers and Lifecycle ----------
-  if (import.meta.client) {
-    // Watch for color mode changes
-    watch(colorMode, () => {
-      console.log('Color mode changed:', colorMode.value)
-      applyTheme()
-    })
-
-    watch(
-      [currentPreset, currentPrimaryColor, currentNeutralColor, currentRadius, direction, fontScale],
-      () => {
-        console.log('Theme watcher triggered')
-        applyTheme()
-      },
-      { immediate: true }
-    )
-  }
-
-  // ---------- Setup resize handler ----------
-  let resizeHandler: (() => void) | null = null
-
-  // ---------- Mount handling ----------
-  onMounted(() => {
-    if (!import.meta.client) return
-    
-    console.log('useTheme onMounted')
-    applyTheme()
-    checkScreen()
-    
-    // Setup resize listener
-    resizeHandler = checkScreen
-    window?.addEventListener?.('resize', resizeHandler)
-    
-    // Color mode restore
-    const savedMode = localStorage.getItem(LS_MODE)
-    if (savedMode && themeConfig.modeOptions?.some(m => m.value === savedMode)) {
-      colorMode.preference = savedMode
-    } else {
-      colorMode.preference = 'system'
-    }
-  })
-
-  // ---------- Cleanup ----------
-  onUnmounted(() => {
-    if (resizeHandler && import.meta.client) {
-      window?.removeEventListener?.('resize', resizeHandler)
-      resizeHandler = null
-    }
-  })
-
-  // ---------- Public API ----------
->>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
   return {
     // State - return the refs directly for full reactivity
-    isOpen,  // This is the actual ref from global state
+    isOpen,
     currentPreset: readonly(currentPreset),
     currentPrimaryColor: readonly(currentPrimaryColor),
     currentNeutralColor: readonly(currentNeutralColor),
@@ -455,21 +416,22 @@ export const useTheme = () => {
     direction: readonly(direction),
     fontScale: readonly(fontScale),
     
+    // NEW: Shadow and spacing state
+    spacing: readonly(spacing),
+    shadowConfig: readonly(shadowConfig),
+    
     // Computed
     currentPresetMeta,
     isCustomTheme,
+    computedShadowCSS,
 
-<<<<<<< HEAD
     // Static config from theme.ts
     presets: computed(() => themeConfig.presets),
     primaryColors: computed(() => themeConfig.primaryColors),
     neutralColors: computed(() => themeConfig.neutralColors),
+    shadowColors: computed(() => themeConfig.shadowColors),
     modeOptions: computed(() => themeConfig.modeOptions),
     fontOptions: computed(() => themeConfig.fontOptions),
-=======
-    // metadata
-    presetMetadata: readonly(presetMetadata),
->>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
 
     // Actions
     setPreset,
@@ -479,6 +441,19 @@ export const useTheme = () => {
     setDirection,
     setFontScale,
     setColorMode,
+    
+    // NEW: Shadow and spacing actions
+    setSpacing,
+    setShadowColorType,
+    setShadowCustomColor,
+    setShadowTailwindColor,
+    setShadowOpacity,
+    setShadowBlurRadius,
+    setShadowSpread,
+    setShadowOffsetX,
+    setShadowOffsetY,
+    
+    // Utility actions
     resetToDefaults,
     toggleCustomizer,
     openCustomizer,

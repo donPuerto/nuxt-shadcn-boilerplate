@@ -1,6 +1,8 @@
 export type ThemePreset = 'default' | 'vercel' | 'cosmicNight' | 'twitter' | 'claude'
 export type Direction = 'ltr' | 'rtl'
 export type FontScale = 'sm' | 'base' | 'md' | 'lg'
+export type SpacingScale = number // in rem
+export type ShadowColorType = 'custom' | 'tailwind'
 
 export interface PresetMeta {
   value: string
@@ -19,6 +21,30 @@ export interface ModeOption {
   label: string
   value: string
   icon: string
+}
+
+// NEW: Shadow configuration interface
+export interface ShadowConfig {
+  colorType: ShadowColorType
+  customColor: string
+  tailwindColor: string
+  opacity: number // 0-100
+  blurRadius: number // in px
+  spread: number // in px
+  offsetX: number // in px
+  offsetY: number // in px
+}
+
+// NEW: Default shadow configuration
+export const defaultShadowConfig: ShadowConfig = {
+  colorType: 'tailwind',
+  customColor: '#000000',
+  tailwindColor: 'gray',
+  opacity: 10,
+  blurRadius: 6,
+  spread: 0,
+  offsetX: 0,
+  offsetY: 4
 }
 
 // Static theme configuration
@@ -46,6 +72,17 @@ export const themeConfig = {
     { label: 'Zinc', value: 'zinc', hex: '#71717a' },
     { label: 'Neutral', value: 'neutral', hex: '#737373' },
     { label: 'Stone', value: 'stone', hex: '#78716c' }
+  ] as ColorOption[],
+
+  // NEW: Shadow colors (Tailwind colors)
+  shadowColors: [
+    { label: 'Black', value: 'black', hex: '#000000' },
+    { label: 'Gray', value: 'gray', hex: '#6b7280' },
+    { label: 'Slate', value: 'slate', hex: '#64748b' },
+    { label: 'Zinc', value: 'zinc', hex: '#71717a' },
+    { label: 'Blue', value: 'blue', hex: '#3b82f6' },
+    { label: 'Purple', value: 'purple', hex: '#8b5cf6' },
+    { label: 'Red', value: 'red', hex: '#ef4444' }
   ] as ColorOption[],
 
   modeOptions: [
@@ -90,7 +127,6 @@ export const primaryColorVars: Record<string, { light: Record<string, string>; d
   }
 }
 
-<<<<<<< HEAD
 // Neutral color CSS variables
 export const neutralColorVars: Record<string, { light: Record<string, string>; dark: Record<string, string> }> = {
   slate: {
@@ -125,11 +161,34 @@ export const getColorHex = (colorKey: string): string => {
   const neutralColor = themeConfig.neutralColors.find(c => c.value === colorKey)
   if (neutralColor) return neutralColor.hex
   
+  // Check shadow colors
+  const shadowColor = themeConfig.shadowColors.find(c => c.value === colorKey)
+  if (shadowColor) return shadowColor.hex
+  
   // Fallback
   return '#000000'
 }
 
-// LocalStorage keys
+// Helper function to generate shadow CSS
+export const generateShadowCSS = (config: ShadowConfig): string => {
+  const color = config.colorType === 'custom' 
+    ? config.customColor 
+    : getColorHex(config.tailwindColor)
+  
+  const rgba = hexToRgba(color, config.opacity / 100)
+  
+  return `${config.offsetX}px ${config.offsetY}px ${config.blurRadius}px ${config.spread}px ${rgba}`
+}
+
+// Helper function to convert hex to rgba
+export const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+// LocalStorage keys - Ready for database synchronization
 export const STORAGE_KEYS = {
   PRESET: 'theme-preset',
   PRIMARY: 'theme-primary-color',
@@ -137,10 +196,24 @@ export const STORAGE_KEYS = {
   RADIUS: 'theme-radius',
   MODE: 'theme-mode',
   DIRECTION: 'theme-direction',
-  FONT: 'theme-font-scale'
+  FONT: 'theme-font-scale',
+  // NEW: Additional storage keys
+  SPACING: 'theme-spacing',
+  SHADOW_CONFIG: 'theme-shadow-config'
 } as const
-=======
-export type FontScale = 'sm' | 'base' | 'md' | 'lg'
-export type Direction = 'ltr' | 'rtl'
-export type ThemePreset = 'default' | 'vercel' | 'cosmicNight' | 'twitter' | 'claude'
->>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
+
+// NEW: Storage interface for future database integration
+export interface ThemeStorage {
+  preset: ThemePreset
+  primaryColor: string
+  neutralColor: string
+  radius: number
+  mode: string
+  direction: Direction
+  fontScale: FontScale
+  spacing: number
+  shadowConfig: ShadowConfig
+  userId?: string
+  createdAt?: string
+  updatedAt?: string
+}
