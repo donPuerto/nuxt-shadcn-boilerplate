@@ -23,7 +23,7 @@ export interface ModeOption {
   icon: string
 }
 
-// NEW: Shadow configuration interface
+// Shadow configuration interface
 export interface ShadowConfig {
   colorType: ShadowColorType
   customColor: string
@@ -35,13 +35,13 @@ export interface ShadowConfig {
   offsetY: number // in px
 }
 
-// NEW: Default shadow configuration
+// Default shadow configuration - UPDATED with better defaults
 export const defaultShadowConfig: ShadowConfig = {
   colorType: 'tailwind',
   customColor: '#000000',
   tailwindColor: 'gray',
-  opacity: 10,
-  blurRadius: 6,
+  opacity: 15, // Increased for better visibility
+  blurRadius: 10, // Increased for better visibility
   spread: 0,
   offsetX: 0,
   offsetY: 4
@@ -74,7 +74,7 @@ export const themeConfig = {
     { label: 'Stone', value: 'stone', hex: '#78716c' }
   ] as ColorOption[],
 
-  // NEW: Shadow colors (Tailwind colors)
+  // Shadow colors (Tailwind colors)
   shadowColors: [
     { label: 'Black', value: 'black', hex: '#000000' },
     { label: 'Gray', value: 'gray', hex: '#6b7280' },
@@ -169,26 +169,55 @@ export const getColorHex = (colorKey: string): string => {
   return '#000000'
 }
 
-// Helper function to generate shadow CSS
-export const generateShadowCSS = (config: ShadowConfig): string => {
-  const color = config.colorType === 'custom' 
-    ? config.customColor 
-    : getColorHex(config.tailwindColor)
-  
-  const rgba = hexToRgba(color, config.opacity / 100)
-  
-  return `${config.offsetX}px ${config.offsetY}px ${config.blurRadius}px ${config.spread}px ${rgba}`
-}
-
-// Helper function to convert hex to rgba
+// IMPROVED: Helper function to convert hex to rgba with validation
 export const hexToRgba = (hex: string, alpha: number): string => {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
+  // Remove # if present
+  hex = hex.replace('#', '')
+  
+  // Handle 3-digit hex
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('')
+  }
+  
+  // Validate hex format
+  if (hex.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(hex)) {
+    console.warn(`Invalid hex color: ${hex}, using fallback`)
+    return `rgba(0, 0, 0, ${alpha})`
+  }
+  
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-// LocalStorage keys - Ready for database synchronization
+// IMPROVED: Helper function to generate shadow CSS with validation
+export const generateShadowCSS = (config: ShadowConfig): string => {
+  try {
+    const color = config.colorType === 'custom' 
+      ? config.customColor 
+      : getColorHex(config.tailwindColor)
+    
+    const alpha = Math.min(1, Math.max(0, config.opacity / 100))
+    const rgba = hexToRgba(color, alpha)
+    
+    const offsetX = Math.round(config.offsetX)
+    const offsetY = Math.round(config.offsetY)
+    const blurRadius = Math.max(0, Math.round(config.blurRadius))
+    const spread = Math.round(config.spread)
+    
+    const shadowCSS = `${offsetX}px ${offsetY}px ${blurRadius}px ${spread}px ${rgba}`
+    
+    console.log(`[theme] Generated shadow: ${shadowCSS}`)
+    return shadowCSS
+  } catch (error) {
+    console.error('[theme] Error generating shadow CSS:', error)
+    return '0px 4px 6px 0px rgba(0, 0, 0, 0.1)'
+  }
+}
+
+// LocalStorage keys
 export const STORAGE_KEYS = {
   PRESET: 'theme-preset',
   PRIMARY: 'theme-primary-color',
@@ -197,12 +226,11 @@ export const STORAGE_KEYS = {
   MODE: 'theme-mode',
   DIRECTION: 'theme-direction',
   FONT: 'theme-font-scale',
-  // NEW: Additional storage keys
   SPACING: 'theme-spacing',
   SHADOW_CONFIG: 'theme-shadow-config'
 } as const
 
-// NEW: Storage interface for future database integration
+// Storage interface for future database integration
 export interface ThemeStorage {
   preset: ThemePreset
   primaryColor: string

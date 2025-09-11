@@ -4,7 +4,7 @@
       <!-- Overlay -->
       <div
         v-if="isOpenState"
-        class="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm"
+        class="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         @click="handleOverlayClick"
       />
 
@@ -49,7 +49,7 @@
 
           <!-- Accordion Content -->
           <div class="flex-1 overflow-y-auto">
-            <Accordion type="multiple" :default-value="['current']" class="px-4">
+            <Accordion type="multiple" :default-value="['current', 'shadow']" class="px-4">
               <!-- Current Theme Info -->
               <AccordionItem value="current">
                 <AccordionTrigger class="py-4">
@@ -96,11 +96,11 @@
                         </div>
                         <div class="flex items-center justify-between">
                           <span class="text-muted-foreground">Spacing:</span>
-                          <span class="font-medium">{{ spacingDisplay }}rem</span>
+                          <span class="font-medium">{{ spacingDisplay }}×</span>
                         </div>
                         <div class="flex items-center justify-between">
                           <span class="text-muted-foreground">Shadow:</span>
-                          <span class="font-medium">{{ shadowDisplay }}</span>
+                          <span class="font-medium text-xs">{{ shadowDisplay }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                           <span class="text-muted-foreground">Font:</span>
@@ -324,7 +324,7 @@
                             class="w-16 px-2 py-1 text-xs border rounded bg-background"
                             @input="handleSpacingInput"
                           >
-                          <span class="text-xs text-muted-foreground">rem</span>
+                          <span class="text-xs text-muted-foreground">×</span>
                         </div>
                       </div>
                     </div>
@@ -332,20 +332,32 @@
                     <div class="p-4 bg-muted/30 rounded">
                       <div class="text-xs text-muted-foreground mb-2">Spacing Preview:</div>
                       <div 
-                        class="flex items-center gap-2"
+                        class="flex items-center"
                         :style="{ gap: `${currentSpacingValue * 0.5}rem` }"
                       >
                         <div 
-                          class="bg-primary w-4 h-4 rounded"
-                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                          class="bg-primary rounded"
+                          :style="{ 
+                            width: `${currentSpacingValue * 1}rem`, 
+                            height: `${currentSpacingValue * 1}rem`,
+                            padding: `${currentSpacingValue * 0.25}rem`
+                          }"
                         />
                         <div 
-                          class="bg-secondary w-4 h-4 rounded"
-                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                          class="bg-secondary rounded"
+                          :style="{ 
+                            width: `${currentSpacingValue * 1}rem`, 
+                            height: `${currentSpacingValue * 1}rem`,
+                            padding: `${currentSpacingValue * 0.25}rem`
+                          }"
                         />
                         <div 
-                          class="bg-muted-foreground w-4 h-4 rounded"
-                          :style="{ padding: `${currentSpacingValue * 0.25}rem` }"
+                          class="bg-muted-foreground rounded"
+                          :style="{ 
+                            width: `${currentSpacingValue * 1}rem`, 
+                            height: `${currentSpacingValue * 1}rem`,
+                            padding: `${currentSpacingValue * 0.25}rem`
+                          }"
                         />
                       </div>
                     </div>
@@ -353,198 +365,324 @@
                 </AccordionContent>
               </AccordionItem>
 
-              <!-- Shadow Style -->
+              <!-- IMPROVED: Shadow Style Section -->
               <AccordionItem value="shadow">
                 <AccordionTrigger class="py-4">
                   <div class="flex items-center gap-2">
                     <Icon name="lucide:shadow" class="h-4 w-4" />
                     Shadow Style
+                    <div 
+                      class="ml-auto w-6 h-6 bg-card border rounded shadow-sm"
+                      :style="{ boxShadow: computedShadowCSS }"
+                    />
                   </div>
                 </AccordionTrigger>
                 <AccordionContent class="pb-4">
-                  <div class="space-y-4">
+                  <div class="space-y-6">
                     <!-- Shadow Color Type -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Shadow Color</label>
-                      <div class="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          class="flex-1 h-auto p-2"
-                          :class="{ 'border-primary bg-primary/10': currentShadowConfig.colorType === 'custom' }"
-                          @click="handleShadowColorTypeClick('custom')"
-                        >
-                          <input
-                            :value="currentShadowConfig.customColor"
-                            type="color"
-                            class="w-4 h-4 rounded border-none mr-2"
-                            @input="handleShadowCustomColorInput"
+                    <div class="space-y-3">
+                      <label class="text-sm font-medium text-foreground">Shadow Color</label>
+                      <div class="grid grid-cols-2 gap-2">
+                        <!-- Custom Color Button -->
+                        <div class="relative">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            class="w-full h-auto p-3 flex items-center gap-2"
+                            :class="{ 
+                              'border-primary bg-primary/10 shadow-sm': currentShadowConfig.colorType === 'custom',
+                              'hover:border-primary/50': currentShadowConfig.colorType !== 'custom'
+                            }"
+                            @click="handleShadowColorTypeClick('custom')"
                           >
-                          <span class="text-xs">Pick Color</span>
-                        </Button>
-                        <select
-                          :value="currentShadowConfig.tailwindColor"
-                          class="flex-1 px-2 py-2 text-xs border rounded bg-background"
-                          @change="handleShadowTailwindColorChange"
-                          @focus="handleShadowColorTypeClick('tailwind')"
-                        >
-                          <option 
-                            v-for="color in shadowColorsList"
-                            :key="color.value"
-                            :value="color.value"
+                            <div class="relative">
+                              <input
+                                :value="currentShadowConfig.customColor"
+                                type="color"
+                                class="w-5 h-5 rounded border-none cursor-pointer bg-transparent"
+                                @input="handleShadowCustomColorInput"
+                                @click.stop
+                              >
+                            </div>
+                            <span class="text-xs font-medium">Custom</span>
+                            <Icon
+                              v-if="currentShadowConfig.colorType === 'custom'"
+                              name="lucide:check"
+                              class="h-3 w-3 ml-auto text-primary"
+                            />
+                          </Button>
+                        </div>
+
+                        <!-- Tailwind Colors -->
+                        <div class="relative">
+                          <select
+                            :value="currentShadowConfig.tailwindColor"
+                            class="w-full px-3 py-3 text-xs border rounded bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent appearance-none cursor-pointer"
+                            :class="{ 
+                              'border-primary bg-primary/5': currentShadowConfig.colorType === 'tailwind',
+                              'hover:border-primary/50': currentShadowConfig.colorType !== 'tailwind'
+                            }"
+                            @change="handleShadowTailwindColorChange"
+                            @focus="handleShadowColorTypeClick('tailwind')"
                           >
-                            {{ color.label }}
-                          </option>
-                        </select>
+                            <option 
+                              v-for="color in shadowColorsList"
+                              :key="color.value"
+                              :value="color.value"
+                            >
+                              {{ color.label }}
+                            </option>
+                          </select>
+                          <Icon
+                            v-if="currentShadowConfig.colorType === 'tailwind'"
+                            name="lucide:check"
+                            class="absolute right-8 top-1/2 transform -translate-y-1/2 h-3 w-3 text-primary pointer-events-none"
+                          />
+                          <Icon
+                            name="lucide:chevron-down"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <!-- Shadow Opacity -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Shadow Opacity</label>
-                      <div class="flex items-center gap-2">
-                        <Slider
-                          :model-value="[currentShadowConfig.opacity]"
-                          :max="100"
-                          :min="0"
-                          :step="1"
-                          class="flex-1"
-                          @update:model-value="handleShadowOpacityChange"
-                        />
-                        <div class="flex items-center gap-1">
+                    <!-- Shadow Controls Grid -->
+                    <div class="grid grid-cols-1 gap-6">
+                      <!-- Shadow Opacity -->
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                          <label class="text-sm font-medium text-foreground">Opacity</label>
+                          <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{{ currentShadowConfig.opacity }}%</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                          <Slider
+                            :model-value="[currentShadowConfig.opacity]"
+                            :max="100"
+                            :min="0"
+                            :step="1"
+                            class="flex-1"
+                            @update:model-value="handleShadowOpacityChange"
+                          />
                           <input
                             :value="currentShadowConfig.opacity"
                             type="number"
                             min="0"
                             max="100"
-                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            class="w-16 px-2 py-1 text-xs border rounded bg-background text-center focus:ring-1 focus:ring-primary"
                             @input="handleShadowOpacityInput"
                           >
-                          <span class="text-xs text-muted-foreground">%</span>
                         </div>
                       </div>
-                    </div>
 
-                    <!-- Blur Radius -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Blur Radius</label>
-                      <div class="flex items-center gap-2">
-                        <Slider
-                          :model-value="[currentShadowConfig.blurRadius]"
-                          :max="50"
-                          :min="0"
-                          :step="1"
-                          class="flex-1"
-                          @update:model-value="handleShadowBlurRadiusChange"
-                        />
-                        <div class="flex items-center gap-1">
+                      <!-- Blur Radius -->
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                          <label class="text-sm font-medium text-foreground">Blur Radius</label>
+                          <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{{ currentShadowConfig.blurRadius }}px</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                          <Slider
+                            :model-value="[currentShadowConfig.blurRadius]"
+                            :max="50"
+                            :min="0"
+                            :step="1"
+                            class="flex-1"
+                            @update:model-value="handleShadowBlurRadiusChange"
+                          />
                           <input
                             :value="currentShadowConfig.blurRadius"
                             type="number"
                             min="0"
                             max="50"
-                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            class="w-16 px-2 py-1 text-xs border rounded bg-background text-center focus:ring-1 focus:ring-primary"
                             @input="handleShadowBlurRadiusInput"
                           >
-                          <span class="text-xs text-muted-foreground">px</span>
                         </div>
                       </div>
-                    </div>
 
-                    <!-- Spread -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Spread</label>
-                      <div class="flex items-center gap-2">
-                        <Slider
-                          :model-value="[currentShadowConfig.spread]"
-                          :max="25"
-                          :min="-25"
-                          :step="1"
-                          class="flex-1"
-                          @update:model-value="handleShadowSpreadChange"
-                        />
-                        <div class="flex items-center gap-1">
+                      <!-- Spread -->
+                      <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                          <label class="text-sm font-medium text-foreground">Spread</label>
+                          <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{{ currentShadowConfig.spread }}px</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                          <Slider
+                            :model-value="[currentShadowConfig.spread]"
+                            :max="25"
+                            :min="-25"
+                            :step="1"
+                            class="flex-1"
+                            @update:model-value="handleShadowSpreadChange"
+                          />
                           <input
                             :value="currentShadowConfig.spread"
                             type="number"
                             min="-25"
                             max="25"
-                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
+                            class="w-16 px-2 py-1 text-xs border rounded bg-background text-center focus:ring-1 focus:ring-primary"
                             @input="handleShadowSpreadInput"
                           >
-                          <span class="text-xs text-muted-foreground">px</span>
+                        </div>
+                      </div>
+
+                      <!-- Offset X & Y in same row -->
+                      <div class="grid grid-cols-2 gap-4">
+                        <!-- Offset X -->
+                        <div class="space-y-3">
+                          <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-foreground">Offset X</label>
+                            <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{{ currentShadowConfig.offsetX }}px</span>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <Slider
+                              :model-value="[currentShadowConfig.offsetX]"
+                              :max="25"
+                              :min="-25"
+                              :step="1"
+                              class="flex-1"
+                              @update:model-value="handleShadowOffsetXChange"
+                            />
+                            <input
+                              :value="currentShadowConfig.offsetX"
+                              type="number"
+                              min="-25"
+                              max="25"
+                              class="w-14 px-1 py-1 text-xs border rounded bg-background text-center focus:ring-1 focus:ring-primary"
+                              @input="handleShadowOffsetXInput"
+                            >
+                          </div>
+                        </div>
+
+                        <!-- Offset Y -->
+                        <div class="space-y-3">
+                          <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-foreground">Offset Y</label>
+                            <span class="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{{ currentShadowConfig.offsetY }}px</span>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <Slider
+                              :model-value="[currentShadowConfig.offsetY]"
+                              :max="25"
+                              :min="-25"
+                              :step="1"
+                              class="flex-1"
+                              @update:model-value="handleShadowOffsetYChange"
+                            />
+                            <input
+                              :value="currentShadowConfig.offsetY"
+                              type="number"
+                              min="-25"
+                              max="25"
+                              class="w-14 px-1 py-1 text-xs border rounded bg-background text-center focus:ring-1 focus:ring-primary"
+                              @input="handleShadowOffsetYInput"
+                            >
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Offset X -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Offset X</label>
-                      <div class="flex items-center gap-2">
-                        <Slider
-                          :model-value="[currentShadowConfig.offsetX]"
-                          :max="25"
-                          :min="-25"
-                          :step="1"
-                          class="flex-1"
-                          @update:model-value="handleShadowOffsetXChange"
-                        />
-                        <div class="flex items-center gap-1">
-                          <input
-                            :value="currentShadowConfig.offsetX"
-                            type="number"
-                            min="-25"
-                            max="25"
-                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
-                            @input="handleShadowOffsetXInput"
+                    <!-- IMPROVED: Enhanced Shadow Preview Section -->
+                    <div class="space-y-4 p-4 bg-muted/20 rounded-lg border">
+                      <div class="flex items-center justify-between">
+                        <div class="text-sm font-medium text-foreground">Shadow Preview</div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          class="h-7 px-2 text-xs"
+                          @click="theme.forceShadowUpdate()"
+                        >
+                          <Icon name="lucide:refresh-cw" class="h-3 w-3 mr-1" />
+                          Force Update
+                        </Button>
+                      </div>
+
+                      <!-- Live Preview Elements -->
+                      <div class="flex gap-4 justify-center items-center p-6 bg-background/50 rounded border-dashed border-2">
+                        <div
+                          key="preview-1"
+                          class="w-16 h-16 bg-card border rounded transition-all duration-300 flex items-center justify-center"
+                          :style="{ 
+                            boxShadow: computedShadowCSS,
+                            borderRadius: `${currentRadiusValue * 0.5}rem`
+                          }"
+                        >
+                          <Icon name="lucide:square" class="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        
+                        <div
+                          key="preview-2"
+                          class="w-12 h-12 bg-primary/20 border rounded-full transition-all duration-300 flex items-center justify-center"
+                          :style="{ boxShadow: computedShadowCSS }"
+                        >
+                          <Icon name="lucide:circle" class="h-4 w-4 text-primary" />
+                        </div>
+                        
+                        <div
+                          key="preview-3"
+                          class="w-20 h-10 bg-secondary/30 border rounded transition-all duration-300 flex items-center justify-center"
+                          :style="{ 
+                            boxShadow: computedShadowCSS,
+                            borderRadius: `${currentRadiusValue}rem`
+                          }"
+                        >
+                          <span class="text-xs font-medium text-secondary-foreground">Button</span>
+                        </div>
+                      </div>
+
+                      <!-- CSS Output Display -->
+                      <div class="space-y-2">
+                        <div class="text-xs font-medium text-muted-foreground">Generated CSS:</div>
+                        <div class="p-3 bg-muted/50 rounded border text-xs font-mono text-muted-foreground break-all select-all">
+                          box-shadow: {{ computedShadowCSS }};
+                        </div>
+                      </div>
+
+                      <!-- Test Element using CSS Variable -->
+                      <div class="text-center">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-card rounded border shadow-custom text-sm font-medium">
+                          <Icon name="lucide:sparkles" class="h-4 w-4" />
+                          Using .shadow-custom class
+                        </div>
+                      </div>
+
+                      <!-- Quick Presets -->
+                      <div class="space-y-2">
+                        <div class="text-xs font-medium text-muted-foreground">Quick Presets:</div>
+                        <div class="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            class="h-8 text-xs"
+                            @click="handleShadowPreset('none')"
                           >
-                          <span class="text-xs text-muted-foreground">px</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Offset Y -->
-                    <div class="space-y-2">
-                      <label class="text-xs font-medium text-muted-foreground">Offset Y</label>
-                      <div class="flex items-center gap-2">
-                        <Slider
-                          :model-value="[currentShadowConfig.offsetY]"
-                          :max="25"
-                          :min="-25"
-                          :step="1"
-                          class="flex-1"
-                          @update:model-value="handleShadowOffsetYChange"
-                        />
-                        <div class="flex items-center gap-1">
-                          <input
-                            :value="currentShadowConfig.offsetY"
-                            type="number"
-                            min="-25"
-                            max="25"
-                            class="w-12 px-1 py-1 text-xs border rounded bg-background"
-                            @input="handleShadowOffsetYInput"
+                            None
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            class="h-8 text-xs"
+                            @click="handleShadowPreset('subtle')"
                           >
-                          <span class="text-xs text-muted-foreground">px</span>
+                            Subtle
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            class="h-8 text-xs"
+                            @click="handleShadowPreset('medium')"
+                          >
+                            Medium
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            class="h-8 text-xs"
+                            @click="handleShadowPreset('strong')"
+                          >
+                            Strong
+                          </Button>
                         </div>
-                      </div>
-                    </div>
-
-                    <!-- Shadow Preview -->
-                    <div class="p-6 bg-muted/30 rounded">
-                      <div class="text-xs text-muted-foreground mb-4">Shadow Preview:</div>
-                      <div class="flex gap-4 justify-center">
-                        <div
-                          class="w-12 h-12 bg-background border rounded"
-                          :style="{ boxShadow: theme.computedShadowCSS }"
-                        />
-                        <div
-                          class="w-12 h-12 bg-primary/10 border rounded"
-                          :style="{ boxShadow: theme.computedShadowCSS }"
-                        />
-                        <div
-                          class="w-12 h-12 bg-secondary/20 border rounded"
-                          :style="{ boxShadow: theme.computedShadowCSS }"
-                        />
                       </div>
                     </div>
                   </div>
@@ -698,6 +836,13 @@ const currentSpacingValue = computed(() => {
 const currentShadowConfig = computed(() => unref(theme.shadowConfig))
 const isCustomThemeComputed = computed(() => unref(theme.isCustomTheme))
 
+// IMPROVED: Properly computed shadow CSS with reactivity and debugging
+const computedShadowCSS = computed(() => {
+  const shadowCSS = unref(theme.computedShadowCSS)
+  console.log('[customizer] Shadow CSS updated:', shadowCSS)
+  return shadowCSS || '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+})
+
 // Convert computed arrays to reactive arrays with safety checks
 const presetsList = computed(() => {
   const presets = theme.presets.value
@@ -734,7 +879,19 @@ const radiusDisplay = computed(() => currentRadiusValue.value.toFixed(1))
 const spacingDisplay = computed(() => currentSpacingValue.value.toFixed(1))
 const shadowDisplay = computed(() => {
   const config = currentShadowConfig.value
-  return `${config.offsetX}px ${config.offsetY}px ${config.blurRadius}px ${config.opacity}%`
+  if (!config) return 'None'
+  
+  const offsetX = config.offsetX
+  const offsetY = config.offsetY
+  const blur = config.blurRadius
+  const spread = config.spread
+  const opacity = config.opacity
+  
+  if (offsetX === 0 && offsetY === 0 && blur === 0 && spread === 0) {
+    return 'None'
+  }
+  
+  return `${offsetX}/${offsetY}/${blur}/${spread} (${opacity}%)`
 })
 
 const currentPresetLabel = computed(() => {
@@ -764,6 +921,15 @@ watch(() => theme.isOpen, (newValue) => {
     isOpenState.value = !!newValue
   }
 }, { immediate: true })
+
+// IMPROVED: Watch shadow changes for debugging
+watch(currentShadowConfig, (newConfig) => {
+  console.log('[customizer] Shadow config changed:', newConfig)
+}, { deep: true })
+
+watch(computedShadowCSS, (newCSS) => {
+  console.log('[customizer] Computed shadow CSS changed:', newCSS)
+})
 
 // Event handlers
 const handleClose = () => {
@@ -856,22 +1022,26 @@ const handleSpacingInput = (event: Event) => {
   }
 }
 
-// Shadow handlers
+// IMPROVED: Shadow handlers with comprehensive debugging
 const handleShadowColorTypeClick = (colorType: 'custom' | 'tailwind') => {
+  console.log('[customizer] Setting shadow color type:', colorType)
   theme.setShadowColorType(colorType)
 }
 
 const handleShadowCustomColorInput = (event: Event) => {
   const target = event.target as HTMLInputElement
+  console.log('[customizer] Setting custom color:', target.value)
   theme.setShadowCustomColor(target.value)
 }
 
 const handleShadowTailwindColorChange = (event: Event) => {
   const target = event.target as HTMLSelectElement
+  console.log('[customizer] Setting tailwind color:', target.value)
   theme.setShadowTailwindColor(target.value)
 }
 
 const handleShadowOpacityChange = (value: number[]) => {
+  console.log('[customizer] Setting opacity:', value[0])
   theme.setShadowOpacity(value[0])
 }
 
@@ -879,11 +1049,13 @@ const handleShadowOpacityInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   const value = parseInt(target.value)
   if (!isNaN(value)) {
+    console.log('[customizer] Setting opacity via input:', value)
     theme.setShadowOpacity(value)
   }
 }
 
 const handleShadowBlurRadiusChange = (value: number[]) => {
+  console.log('[customizer] Setting blur radius:', value[0])
   theme.setShadowBlurRadius(value[0])
 }
 
@@ -929,6 +1101,47 @@ const handleShadowOffsetYInput = (event: Event) => {
   if (!isNaN(value)) {
     theme.setShadowOffsetY(value)
   }
+}
+
+// IMPROVED: Shadow preset handlers for quick setup
+const handleShadowPreset = (preset: string) => {
+  console.log('[customizer] Applying shadow preset:', preset)
+  
+  switch (preset) {
+    case 'none':
+      theme.setShadowOpacity(0)
+      theme.setShadowBlurRadius(0)
+      theme.setShadowSpread(0)
+      theme.setShadowOffsetX(0)
+      theme.setShadowOffsetY(0)
+      break
+    case 'subtle':
+      theme.setShadowOpacity(10)
+      theme.setShadowBlurRadius(6)
+      theme.setShadowSpread(0)
+      theme.setShadowOffsetX(0)
+      theme.setShadowOffsetY(1)
+      break
+    case 'medium':
+      theme.setShadowOpacity(25)
+      theme.setShadowBlurRadius(15)
+      theme.setShadowSpread(0)
+      theme.setShadowOffsetX(0)
+      theme.setShadowOffsetY(4)
+      break
+    case 'strong':
+      theme.setShadowOpacity(40)
+      theme.setShadowBlurRadius(25)
+      theme.setShadowSpread(0)
+      theme.setShadowOffsetX(0)
+      theme.setShadowOffsetY(8)
+      break
+  }
+  
+  toast.success(`Applied ${preset} shadow preset`, {
+    position: 'top-center',
+    duration: 2000
+  })
 }
 
 // Keyboard handler for ESC key

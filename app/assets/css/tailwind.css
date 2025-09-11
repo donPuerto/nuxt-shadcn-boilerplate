@@ -27,6 +27,9 @@
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
+
+  /* Add custom shadow variable */
+  --custom-shadow: 0px 4px 6px 0px rgba(107, 114, 128, 0.1);
 }
 
 .dark {
@@ -49,6 +52,8 @@
   --border: oklch(0.274 0.006 286.033);
   --input: oklch(0.274 0.006 286.033);
   --ring: oklch(0.442 0.017 285.786);
+
+
 }
 
 /* RTL support */
@@ -71,7 +76,8 @@ html.theme-animate * {
     color 150ms ease,
     border-color 150ms ease,
     fill 150ms ease,
-    stroke 150ms ease;
+    stroke 150ms ease,
+    box-shadow 150ms ease !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -106,6 +112,9 @@ html.theme-animate * {
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* Add custom shadow to Tailwind theme */
+  --shadow-custom: var(--custom-shadow);
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   @keyframes accordion-down {
@@ -135,6 +144,33 @@ html.theme-animate * {
   }
 }
 
+/* Custom shadow utility classes */
+@layer utilities {
+  .shadow-custom {
+     box-shadow: var(--custom-shadow) !important;
+  }
+  
+  .shadow-custom-sm {
+    box-shadow: var(--custom-shadow) !important;
+    filter: brightness(1.05);
+  }
+  
+  .shadow-custom-lg {
+    box-shadow: var(--custom-shadow), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* FIXED: Add shadow classes that force the update */
+  .theme-shadow-update {
+    box-shadow: var(--custom-shadow) !important;
+    transition: box-shadow 150ms ease !important;
+  }
+  
+  .theme-shadow-update-force {
+    box-shadow: var(--custom-shadow) !important;
+    transition: all 150ms ease !important;
+  }
+}
+
 html {
   color-scheme: light dark;
 }
@@ -143,4 +179,13 @@ html.dark {
 }
 html.light {
   color-scheme: light;
+}
+
+/* FIXED: Force shadow updates on root level */
+:root {
+  --shadow-force-update: 0;
+}
+
+html[data-shadow-update] * {
+  --shadow-trigger: var(--shadow-force-update);
 }
