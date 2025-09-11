@@ -2,9 +2,11 @@
   <NuxtRouteAnnouncer />
   <NuxtLayout>
     <NuxtPage />
+    <Toaster />
   </NuxtLayout>
 </template>
 <script setup lang="ts">
+import 'vue-sonner/style.css' 
 
 
 const meta = [

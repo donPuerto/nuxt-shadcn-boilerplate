@@ -1,372 +1,384 @@
-import { themeConfig } from '~~/shared'
-import type { ThemePreset } from '~~/shared'
+import { 
+  type ThemePreset, 
+  type Direction, 
+  type FontScale,
+  themeConfig, 
+  primaryColorVars, 
+  neutralColorVars, 
+  getColorHex,
+  STORAGE_KEYS 
+} from '../../shared/ui/theme'
 
-type Direction = 'ltr' | 'rtl'
-type FontScale = 'sm' | 'base' | 'md' | 'lg'
+// Global singleton state to ensure single instance across all components
+let globalThemeState: any = null
 
-const LS_PRESET      = 'theme-preset'
-const LS_PRIMARY     = 'theme-primary-color'
-const LS_NEUTRAL     = 'theme-neutral-color'
-const LS_RADIUS      = 'theme-radius'
-const LS_MODE        = 'theme-mode'
-const LS_DIRECTION   = 'theme-direction'
-const LS_FONT        = 'theme-font-scale'
+// SSR-safe localStorage helpers
+const getStoredValue = (key: string, defaultValue: any, validator?: (value: any) => boolean) => {
+  if (!import.meta.client) return defaultValue
+  
+  try {
+    const stored = localStorage.getItem(key)
+    if (stored === null) return defaultValue
+    
+    const parsed = JSON.parse(stored)
+    if (validator && !validator(parsed)) return defaultValue
+    
+    return parsed
+  } catch {
+    return defaultValue
+  }
+}
+
+const setStoredValue = (key: string, value: any) => {
+  if (!import.meta.client) return
+  
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch (error) {
+    console.warn(`Failed to store ${key}:`, error)
+  }
+}
+
+// Initialize global state only once
+const initializeGlobalState = () => {
+  if (globalThemeState) {
+    console.log('[theme] Returning existing global state, isOpen:', globalThemeState.isOpen.value)
+    return globalThemeState
+  }
+
+  console.log('[theme] Initializing NEW global state')
+  
+  globalThemeState = {
+    // CRITICAL: Start with false - this is the actual ref
+    isOpen: ref(false),
+    currentPreset: ref<ThemePreset>(
+      getStoredValue(STORAGE_KEYS.PRESET, 'default', (v) => 
+        ['default', 'vercel', 'cosmicNight', 'twitter', 'claude'].includes(v)
+      )
+    ),
+    currentPrimaryColor: ref<string>(
+      getStoredValue(STORAGE_KEYS.PRIMARY, 'violet', (v) => 
+        ['violet', 'blue', 'green', 'amber', 'red', 'rose'].includes(v)
+      )
+    ),
+    currentNeutralColor: ref<string>(
+      getStoredValue(STORAGE_KEYS.NEUTRAL, 'slate', (v) => 
+        ['slate', 'gray', 'zinc', 'neutral', 'stone'].includes(v)
+      )
+    ),
+    currentRadius: ref<number>(
+      getStoredValue(STORAGE_KEYS.RADIUS, 0.5, (v) => 
+        typeof v === 'number' && v >= 0 && v <= 2
+      )
+    ),
+    direction: ref<Direction>(
+      getStoredValue(STORAGE_KEYS.DIRECTION, 'ltr', (v) => 
+        ['ltr', 'rtl'].includes(v)
+      )
+    ),
+    fontScale: ref<FontScale>(
+      getStoredValue(STORAGE_KEYS.FONT, 'base', (v) => 
+        ['sm', 'base', 'md', 'lg'].includes(v)
+      )
+    )
+  }
+
+  console.log('[theme] Global state initialized with isOpen VALUE:', globalThemeState.isOpen.value)
+  return globalThemeState
+}
 
 export const useTheme = () => {
+  console.log('[theme] useTheme() called')
   const colorMode = useColorMode()
-
-  // ---------- Theme Metadata (only names/descriptions, no color values) ----------
-  const presetMetadata = {
-    default: {
-      name: 'Default',
-      description: 'Customizable theme with individual color controls',
-      supportsCustomColors: true
-    },
-    vercel: {
-      name: 'Vercel',
-      description: 'Clean black and white design inspired by Vercel',
-      supportsCustomColors: false
-    },
-    cosmicNight: {
-      name: 'Cosmic Night',
-      description: 'Dark space-themed design with cosmic purple hues',
-      supportsCustomColors: false
-    },
-    twitter: {
-      name: 'Twitter',
-      description: 'Social media inspired blue theme',
-      supportsCustomColors: false
-    },
-    claude: {
-      name: 'Claude',
-      description: 'Warm and friendly AI-inspired theme',
-      supportsCustomColors: false
-    }
-  }
-
-  // ---------- Initializers ----------
-  const getInitialPreset = (): ThemePreset => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_PRESET) as ThemePreset | null
-      if (saved && Object.keys(presetMetadata).includes(saved)) return saved
-    }
-    return 'default'
-  }
-
-  const getInitialPrimaryColor = () => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_PRIMARY)
-      if (saved && themeConfig.primaryColors?.map(c => c.value).includes(saved)) return saved
-    }
-    return 'violet'
-  }
   
-  const getInitialNeutralColor = () => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_NEUTRAL)
-      if (saved && themeConfig.neutralColors?.map(c => c.value).includes(saved)) return saved
-    }
-    return 'slate'
-  }
+  // Get or create global state
+  const state = initializeGlobalState()
   
-  const getInitialRadius = () => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_RADIUS)
-      if (saved) {
-        const v = parseFloat(saved)
-        if (!Number.isNaN(v) && v >= 0 && v <= 2) return v
-      }
-    }
-    return 0.5
-  }
-  
-  const getInitialDirection = (): Direction => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_DIRECTION) as Direction | null
-      if (saved === 'ltr' || saved === 'rtl') return saved
-    }
-    return 'ltr'
-  }
-  
-  const getInitialFontScale = (): FontScale => {
-    if (import.meta.client) {
-      const saved = localStorage.getItem(LS_FONT) as FontScale | null
-      if (saved && ['sm','base','md','lg'].includes(saved)) return saved
-    }
-    return 'base'
-  }
+  // Destructure state for easier access - these are the actual refs
+  const {
+    isOpen,
+    currentPreset,
+    currentPrimaryColor,
+    currentNeutralColor,
+    currentRadius,
+    direction,
+    fontScale
+  } = state
 
-  // ---------- State (SSR safe) ----------
-  const isOpen               = useState<boolean>('theme-customizer-open', () => false)
-  const currentPreset        = useState<ThemePreset>('theme-current-preset', getInitialPreset)
-  const currentPrimaryColor  = useState<string>('theme-current-primary-color', getInitialPrimaryColor)
-  const currentNeutralColor  = useState<string>('theme-current-neutral-color', getInitialNeutralColor)
-  const currentRadius        = useState<number>('theme-current-radius', getInitialRadius)
-  const direction            = useState<Direction>('theme-direction', getInitialDirection)
-  const fontScale            = useState<FontScale>('theme-font-scale', getInitialFontScale)
+  console.log('[theme] useTheme state destructured, isOpen VALUE:', isOpen.value)
 
-  // ---------- Computed values ----------
-  const isCustomTheme = computed(() => currentPreset.value === 'default')
+  // Computed values
+  const currentPresetMeta = computed(() => {
+    return themeConfig.presets.find(p => p.value === currentPreset.value) || themeConfig.presets[0]
+  })
 
-  // ---------- Screen helpers ----------
-  const isMobile    = ref(false)
-  const screenWidth = ref(0)
-  const checkScreen = () => {
+  const isCustomTheme = computed(() => {
+    return currentPresetMeta.value.supportsCustomColors === true
+  })
+
+  // Theme application functions
+  const applyDynamicVars = () => {
     if (!import.meta.client) return
-    screenWidth.value = window.innerWidth
-    isMobile.value = window.innerWidth < 640
-    if (isMobile.value && isOpen.value) isOpen.value = false
+    
+    try {
+      const root = document.documentElement
+      const isDark = root.classList.contains('dark')
+
+      if (isCustomTheme.value) {
+        // Apply primary color variables
+        const primaryVars = primaryColorVars[currentPrimaryColor.value]
+        if (primaryVars) {
+          const primarySet = isDark ? primaryVars.dark : primaryVars.light
+          Object.entries(primarySet).forEach(([key, value]) => {
+            root.style.setProperty(key, value)
+          })
+        }
+
+        // Apply neutral color variables
+        const neutralVars = neutralColorVars[currentNeutralColor.value]
+        if (neutralVars) {
+          const neutralSet = isDark ? neutralVars.dark : neutralVars.light
+          Object.entries(neutralSet).forEach(([key, value]) => {
+            root.style.setProperty(key, value)
+          })
+        }
+      }
+
+      console.log('[theme] Dynamic vars applied:', {
+        isDark,
+        primary: currentPrimaryColor.value,
+        neutral: currentNeutralColor.value,
+        isCustom: isCustomTheme.value
+      })
+    } catch (error) {
+      console.error('[theme] Error applying dynamic vars:', error)
+    }
   }
 
-  // ---------- Theme Application (CSS handles everything) ----------
   const applyTheme = () => {
     if (!import.meta.client) return
-    console.log('Applying theme:', currentPreset.value)
     
-    const root = document.documentElement
-
-    // Set data attributes - CSS will handle all theme switching
-    root.setAttribute('data-preset', currentPreset.value)
-    root.setAttribute('data-radius', currentRadius.value.toString())
-    root.setAttribute('data-font', fontScale.value)
-    root.setAttribute('dir', direction.value)
-
-    // Only set individual colors for default/custom theme
-    if (currentPreset.value === 'default') {
-      console.log('Setting custom theme attributes')
+    try {
+      const root = document.documentElement
+      
+      // Set data attributes
+      root.setAttribute('data-preset', currentPreset.value)
       root.setAttribute('data-primary', currentPrimaryColor.value)
       root.setAttribute('data-neutral', currentNeutralColor.value)
-      root.setAttribute('data-theme', currentNeutralColor.value)
-    } else {
-      console.log('Using preset theme - removing custom attributes')
-      // Remove custom color attributes - preset CSS handles everything
-      root.removeAttribute('data-primary')
-      root.removeAttribute('data-neutral')
-      root.removeAttribute('data-theme')
+      root.setAttribute('data-radius', String(currentRadius.value))
+      root.setAttribute('data-font', fontScale.value)
+      root.setAttribute('dir', direction.value)
+      
+      // Set CSS custom properties
+      root.style.setProperty('--radius', `${currentRadius.value}rem`)
+
+      // Apply dynamic color variables
+      applyDynamicVars()
+
+      console.log('[theme] Theme applied:', {
+        preset: currentPreset.value,
+        primary: currentPrimaryColor.value,
+        neutral: currentNeutralColor.value,
+        radius: currentRadius.value,
+        direction: direction.value,
+        fontScale: fontScale.value
+      })
+    } catch (error) {
+      console.error('[theme] Error applying theme:', error)
     }
-
-    // Always allow radius customization (even for presets)
-    const radiusRem = currentRadius.value * 0.625
-    root.style.setProperty('--radius', `${radiusRem}rem`)
-
-    console.log('Theme applied successfully')
   }
 
-  // ---------- Actions ----------
+  // State management actions
   const setPreset = (preset: ThemePreset) => {
-    console.log('Setting preset:', preset)
-    if (!Object.keys(presetMetadata).includes(preset)) {
-      console.warn('Invalid preset:', preset)
-      return
-    }
-    
+    console.log('[theme] setPreset:', preset)
     currentPreset.value = preset
-    if (import.meta.client) localStorage.setItem(LS_PRESET, preset)
+    setStoredValue(STORAGE_KEYS.PRESET, preset)
     applyTheme()
   }
 
-  const setPrimaryColor = (c: string) => {
-    console.log('setPrimaryColor called with:', c)
-    // Only allow primary color changes in default/custom mode
-    if (currentPreset.value !== 'default') {
-      console.log('Primary color change ignored - not in default preset')
-      return
-    }
-    const validColors = themeConfig.primaryColors?.map(color => color.value) || []
-    if (!validColors.includes(c)) {
-      console.warn('Invalid primary color:', c)
-      return
-    }
-    currentPrimaryColor.value = c
-    if (import.meta.client) localStorage.setItem(LS_PRIMARY, c)
-    applyTheme()
+  const setPrimaryColor = (color: string) => {
+    console.log('[theme] setPrimaryColor:', color)
+    currentPrimaryColor.value = color
+    setStoredValue(STORAGE_KEYS.PRIMARY, color)
+    applyDynamicVars()
   }
-  
-  const setNeutralColor = (c: string) => {
-    console.log('setNeutralColor called with:', c)
-    // Only allow neutral color changes in default/custom mode
-    if (currentPreset.value !== 'default') {
-      console.log('Neutral color change ignored - not in default preset')
-      return
-    }
-    const validColors = themeConfig.neutralColors?.map(color => color.value) || []
-    if (!validColors.includes(c)) {
-      console.warn('Invalid neutral color:', c)
-      return
-    }
-    currentNeutralColor.value = c
-    if (import.meta.client) localStorage.setItem(LS_NEUTRAL, c)
-    applyTheme()
+
+  const setNeutralColor = (color: string) => {
+    console.log('[theme] setNeutralColor:', color)
+    currentNeutralColor.value = color
+    setStoredValue(STORAGE_KEYS.NEUTRAL, color)
+    applyDynamicVars()
   }
-  
-  const setRadius = (r: number) => {
-    console.log('setRadius called with:', r)
-    const clamped = Math.min(2, Math.max(0, r))
+
+  const setRadius = (radius: number) => {
+    console.log('[theme] setRadius:', radius)
+    const clamped = Math.min(2, Math.max(0, radius))
     currentRadius.value = clamped
-    if (import.meta.client) localStorage.setItem(LS_RADIUS, String(clamped))
+    setStoredValue(STORAGE_KEYS.RADIUS, clamped)
     applyTheme()
   }
-  
-  const setColorMode = (mode: string) => {
-    console.log('setColorMode called with:', mode)
-    colorMode.preference = mode
-    if (import.meta.client) localStorage.setItem(LS_MODE, mode)
-  }
-  
+
   const setDirection = (dir: Direction) => {
-    console.log('setDirection called with:', dir)
+    console.log('[theme] setDirection:', dir)
     direction.value = dir
-    if (import.meta.client) localStorage.setItem(LS_DIRECTION, dir)
+    setStoredValue(STORAGE_KEYS.DIRECTION, dir)
     applyTheme()
   }
-  
-  const toggleDirection = () => setDirection(direction.value === 'ltr' ? 'rtl' : 'ltr')
-  
-  const setFontScale = (s: FontScale) => {
-    console.log('setFontScale called with:', s)
-    fontScale.value = s
-    if (import.meta.client) localStorage.setItem(LS_FONT, s)
+
+  const setFontScale = (scale: FontScale) => {
+    console.log('[theme] setFontScale:', scale)
+    fontScale.value = scale
+    setStoredValue(STORAGE_KEYS.FONT, scale)
     applyTheme()
+  }
+
+  const setColorMode = (mode: string) => {
+    console.log('[theme] setColorMode:', mode)
+    colorMode.preference = mode
+    setStoredValue(STORAGE_KEYS.MODE, mode)
   }
 
   const resetToDefaults = () => {
-    console.log('resetToDefaults called')
-    setPreset('default')
-    setPrimaryColor('violet')
-    setNeutralColor('slate')
-    setRadius(0.5)
-    setColorMode('system')
-    setDirection('ltr')
-    setFontScale('base')
+    console.log('[theme] resetToDefaults called')
+    
+    // Reset all values to defaults
+    currentPreset.value = 'default'
+    currentPrimaryColor.value = 'violet'
+    currentNeutralColor.value = 'slate'
+    currentRadius.value = 0.5
+    direction.value = 'ltr'
+    fontScale.value = 'base'
+    colorMode.preference = 'system'
+    
+    // Clear localStorage
     if (import.meta.client) {
-      [LS_PRESET, LS_PRIMARY, LS_NEUTRAL, LS_RADIUS, LS_MODE, LS_DIRECTION, LS_FONT].forEach(k => localStorage.removeItem(k))
+      Object.values(STORAGE_KEYS).forEach(key => {
+        try {
+          localStorage.removeItem(key)
+        } catch (error) {
+          console.warn(`Failed to remove ${key}:`, error)
+        }
+      })
     }
+    
     applyTheme()
   }
 
+  // Customizer visibility actions - CRITICAL FIX
   const toggleCustomizer = () => {
-    console.log('toggleCustomizer called, current isOpen:', isOpen.value)
-    if (isMobile.value && !isOpen.value) {
-      console.log('Prevented opening on mobile')
-      return
-    }
+    console.log('[theme] toggleCustomizer - before VALUE:', isOpen.value)
     isOpen.value = !isOpen.value
-    console.log('toggleCustomizer after toggle:', isOpen.value)
-    if (import.meta.client) document.documentElement.classList.add('theme-animate')
+    console.log('[theme] toggleCustomizer - after VALUE:', isOpen.value)
   }
   
   const openCustomizer = () => {
-    console.log('openCustomizer called')
-    if (isMobile.value) {
-      console.log('Prevented opening on mobile')
-      return
-    }
+    console.log('[theme] openCustomizer - before VALUE:', isOpen.value)
     isOpen.value = true
+    console.log('[theme] openCustomizer - after VALUE:', isOpen.value)
   }
   
   const closeCustomizer = () => {
-    console.log('closeCustomizer called')
+    console.log('[theme] closeCustomizer - before VALUE:', isOpen.value)
     isOpen.value = false
+    console.log('[theme] closeCustomizer - after VALUE:', isOpen.value)
   }
 
-  // ---------- Helpers ----------
-  const getColorValue = (name: string) => {
-    const colorMap: Record<string, string> = {
-      violet: '#8b5cf6',
-      blue: '#3b82f6',
-      green: '#22c55e',
-      amber: '#f59e0b',
-      red: '#ef4444',
-      rose: '#f43f5e',
-      slate: '#64748b',
-      gray: '#6b7280',
-      zinc: '#71717a',
-      neutral: '#737373',
-      stone: '#78716c'
-    }
-    return colorMap[name] || '#000'
-  }
-  
-  const getColorCategory = (name: string) => {
-    return 'custom'
+  const toggleDirection = () => {
+    setDirection(direction.value === 'ltr' ? 'rtl' : 'ltr')
   }
 
-  // ---------- Watchers ----------
+  const getColorValue = (colorKey: string): string => {
+    return getColorHex(colorKey)
+  }
+
+  // Client-side watchers and lifecycle
   if (import.meta.client) {
-    // Watch for color mode changes
-    watch(colorMode, () => {
-      console.log('Color mode changed:', colorMode.value)
-      // CSS will handle light/dark switching via :root and .dark selectors
-      applyTheme()
+    // Watch for radius, direction, and font changes
+    watch([currentRadius, direction, fontScale], () => {
+      try {
+        const root = document.documentElement
+        root.setAttribute('data-radius', String(currentRadius.value))
+        root.setAttribute('data-font', fontScale.value)
+        root.setAttribute('dir', direction.value)
+        root.style.setProperty('--radius', `${currentRadius.value}rem`)
+      } catch (error) {
+        console.error('[theme] Error in watcher:', error)
+      }
     })
 
-    watch(
-      [currentPreset, currentPrimaryColor, currentNeutralColor, currentRadius, direction, fontScale],
-      () => {
-        console.log('Theme watcher triggered')
-        applyTheme()
-      },
-      { immediate: true }
-    )
-    
+    // Watch for color mode changes
+    watch(colorMode, applyDynamicVars, { immediate: false })
+
+    // Initialize on mount
     onMounted(() => {
-      console.log('useTheme onMounted')
+      // FORCE CLOSE on mount - this is critical
+      console.log('[theme] onMounted - FORCING isOpen to false, was VALUE:', isOpen.value)
+      isOpen.value = false
+      console.log('[theme] onMounted - forced isOpen to VALUE:', isOpen.value)
+      
+      // Apply current theme
       applyTheme()
-      checkScreen()
-      window.addEventListener('resize', checkScreen)
-      onUnmounted(() => window.removeEventListener('resize', checkScreen))
+      
+      // Set up mutation observer for dark/light mode changes
+      try {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              applyDynamicVars()
+            }
+          })
+        })
+        
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['class']
+        })
+        
+        onUnmounted(() => {
+          observer.disconnect()
+        })
+      } catch (error) {
+        console.error('[theme] Error setting up observer:', error)
+      }
     })
   }
 
-  // ---------- Color mode restore ----------
-  onMounted(() => {
-    if (!import.meta.client) return
-    const savedMode = localStorage.getItem(LS_MODE)
-    if (savedMode && themeConfig.modeOptions?.some(m => m.value === savedMode)) {
-      colorMode.preference = savedMode
-    } else {
-      colorMode.preference = 'system'
-    }
-  })
-
-  // ---------- Public API ----------
+  // CRITICAL: Return the ACTUAL reactive refs, not readonly wrappers
   return {
-    // state (readonly)
-    isOpen: readonly(isOpen),
+    // State - return the refs directly for full reactivity
+    isOpen,  // This is the actual ref from global state
     currentPreset: readonly(currentPreset),
     currentPrimaryColor: readonly(currentPrimaryColor),
     currentNeutralColor: readonly(currentNeutralColor),
     currentRadius: readonly(currentRadius),
     direction: readonly(direction),
     fontScale: readonly(fontScale),
-    isMobile: readonly(isMobile),
-    screenWidth: readonly(screenWidth),
-    isCustomTheme: readonly(isCustomTheme),
+    
+    // Computed
+    currentPresetMeta,
+    isCustomTheme,
 
-    // metadata
-    presetMetadata: readonly(ref(presetMetadata)),
+    // Static config from theme.ts
+    presets: computed(() => themeConfig.presets),
+    primaryColors: computed(() => themeConfig.primaryColors),
+    neutralColors: computed(() => themeConfig.neutralColors),
+    modeOptions: computed(() => themeConfig.modeOptions),
+    fontOptions: computed(() => themeConfig.fontOptions),
 
-    // config (pass-through)
-    presets: themeConfig.presets || [],
-    primaryColors: themeConfig.primaryColors?.map(c => c.value) || [],
-    neutralColors: themeConfig.neutralColors?.map(c => c.value) || [],
-    modeOptions: themeConfig.modeOptions || [],
-
-    // actions
-    toggleCustomizer,
-    openCustomizer,
-    closeCustomizer,
+    // Actions
     setPreset,
     setPrimaryColor,
     setNeutralColor,
     setRadius,
-    setColorMode,
     setDirection,
-    toggleDirection,
     setFontScale,
+    setColorMode,
     resetToDefaults,
+    toggleCustomizer,
+    openCustomizer,
+    closeCustomizer,
+    toggleDirection,
     getColorValue,
-    getColorCategory,
     applyTheme
   }
 }
