@@ -165,6 +165,15 @@ export const useTheme = () => {
       const shadowCSS = computedShadowCSS.value
       root.style.setProperty('--custom-shadow', shadowCSS)
       root.style.setProperty('--shadow-custom', shadowCSS)
+
+      // Update all shadcn components with the shadow class
+      // Use [data-shadcn-shadow] for every shadcn component (Button, Card, Input, etc.)
+      const shadcnElements = document.querySelectorAll('[data-shadcn-shadow]')
+      shadcnElements.forEach((el: HTMLElement) => {
+        el.style.boxShadow = shadowCSS
+      })
+
+      // Also update legacy shadow classes if present
       const shadowElements = document.querySelectorAll('.shadow-custom, .theme-shadow-update, .theme-shadow-update-force')
       shadowElements.forEach((el: any) => {
         if (el.style) {
@@ -175,6 +184,7 @@ export const useTheme = () => {
       console.error('[theme] Error applying shadow vars:', error)
     }
   }
+
 
   const applyTheme = () => {
     if (!import.meta.client) return
