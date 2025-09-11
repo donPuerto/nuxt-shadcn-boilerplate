@@ -90,6 +90,7 @@ export const primaryColorVars: Record<string, { light: Record<string, string>; d
   }
 }
 
+<<<<<<< HEAD
 // Neutral color CSS variables
 export const neutralColorVars: Record<string, { light: Record<string, string>; dark: Record<string, string> }> = {
   slate: {
@@ -138,3 +139,8 @@ export const STORAGE_KEYS = {
   DIRECTION: 'theme-direction',
   FONT: 'theme-font-scale'
 } as const
+=======
+export type FontScale = 'sm' | 'base' | 'md' | 'lg'
+export type Direction = 'ltr' | 'rtl'
+export type ThemePreset = 'default' | 'vercel' | 'cosmicNight' | 'twitter' | 'claude'
+>>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695

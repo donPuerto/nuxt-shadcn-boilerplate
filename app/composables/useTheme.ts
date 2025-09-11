@@ -90,6 +90,44 @@ const initializeGlobalState = () => {
 export const useTheme = () => {
   console.log('[theme] useTheme() called')
   const colorMode = useColorMode()
+<<<<<<< HEAD
+=======
+
+  // ---------- Theme Metadata (derived from themeConfig presets) ----------
+  const presetMetadata = computed(() => {
+    const metadata: Record<string, { name: string, description: string, supportsCustomColors: boolean }> = {}
+    
+    // Build metadata from themeConfig.presets
+    themeConfig.presets?.forEach(preset => {
+      metadata[preset.value] = {
+        name: preset.label,
+        description: preset.value === 'default' 
+          ? 'Customizable theme with individual color controls'
+          : `Predefined theme: ${preset.label}`,
+        supportsCustomColors: preset.value === 'default'
+      }
+    })
+    
+    return metadata
+  })
+
+  // ---------- Initializers ----------
+  const getInitialPreset = (): ThemePreset => {
+    if (import.meta.client) {
+      const saved = localStorage.getItem(LS_PRESET) as ThemePreset | null
+      if (saved && themeConfig.presets?.some(p => p.value === saved)) return saved
+    }
+    return 'default'
+  }
+
+  const getInitialPrimaryColor = () => {
+    if (import.meta.client) {
+      const saved = localStorage.getItem(LS_PRIMARY)
+      if (saved && themeConfig.primaryColors?.map(c => c.value).includes(saved)) return saved
+    }
+    return 'violet'
+  }
+>>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
   
   // Get or create global state
   const state = initializeGlobalState()
@@ -190,7 +228,16 @@ export const useTheme = () => {
 
   // State management actions
   const setPreset = (preset: ThemePreset) => {
+<<<<<<< HEAD
     console.log('[theme] setPreset:', preset)
+=======
+    console.log('Setting preset:', preset)
+    if (!themeConfig.presets?.some(p => p.value === preset)) {
+      console.warn('Invalid preset:', preset)
+      return
+    }
+    
+>>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
     currentPreset.value = preset
     setStoredValue(STORAGE_KEYS.PRESET, preset)
     applyTheme()
@@ -287,6 +334,7 @@ export const useTheme = () => {
     setDirection(direction.value === 'ltr' ? 'rtl' : 'ltr')
   }
 
+<<<<<<< HEAD
   const getColorValue = (colorKey: string): string => {
     return getColorHex(colorKey)
   }
@@ -344,6 +392,59 @@ export const useTheme = () => {
   }
 
   // CRITICAL: Return the ACTUAL reactive refs, not readonly wrappers
+=======
+  // ---------- Watchers and Lifecycle ----------
+  if (import.meta.client) {
+    // Watch for color mode changes
+    watch(colorMode, () => {
+      console.log('Color mode changed:', colorMode.value)
+      applyTheme()
+    })
+
+    watch(
+      [currentPreset, currentPrimaryColor, currentNeutralColor, currentRadius, direction, fontScale],
+      () => {
+        console.log('Theme watcher triggered')
+        applyTheme()
+      },
+      { immediate: true }
+    )
+  }
+
+  // ---------- Setup resize handler ----------
+  let resizeHandler: (() => void) | null = null
+
+  // ---------- Mount handling ----------
+  onMounted(() => {
+    if (!import.meta.client) return
+    
+    console.log('useTheme onMounted')
+    applyTheme()
+    checkScreen()
+    
+    // Setup resize listener
+    resizeHandler = checkScreen
+    window?.addEventListener?.('resize', resizeHandler)
+    
+    // Color mode restore
+    const savedMode = localStorage.getItem(LS_MODE)
+    if (savedMode && themeConfig.modeOptions?.some(m => m.value === savedMode)) {
+      colorMode.preference = savedMode
+    } else {
+      colorMode.preference = 'system'
+    }
+  })
+
+  // ---------- Cleanup ----------
+  onUnmounted(() => {
+    if (resizeHandler && import.meta.client) {
+      window?.removeEventListener?.('resize', resizeHandler)
+      resizeHandler = null
+    }
+  })
+
+  // ---------- Public API ----------
+>>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
   return {
     // State - return the refs directly for full reactivity
     isOpen,  // This is the actual ref from global state
@@ -358,12 +459,17 @@ export const useTheme = () => {
     currentPresetMeta,
     isCustomTheme,
 
+<<<<<<< HEAD
     // Static config from theme.ts
     presets: computed(() => themeConfig.presets),
     primaryColors: computed(() => themeConfig.primaryColors),
     neutralColors: computed(() => themeConfig.neutralColors),
     modeOptions: computed(() => themeConfig.modeOptions),
     fontOptions: computed(() => themeConfig.fontOptions),
+=======
+    // metadata
+    presetMetadata: readonly(presetMetadata),
+>>>>>>> defc675f949766f1cf0d1acb9fb477dbb2f27695
 
     // Actions
     setPreset,
