@@ -17,10 +17,13 @@
       <FluidCursor />
     </ClientOnly>
     <CommonThemeCustomizer class="fixed bottom-4 right-4 z-50" />
+    <!-- NEW BackToTop -->
+    <BackToTop />
   </div>
 </template>
 
 <script setup lang="ts">
+import BackToTop from "@/components/common/BackToTop.vue"
 // import { useTheme } from '@/composables/useTheme'
 
 // const { currentPrimaryColor, currentNeutralColor, currentRadius, fontScale, direction } = useTheme()

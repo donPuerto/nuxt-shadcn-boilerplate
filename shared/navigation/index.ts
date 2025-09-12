@@ -6,16 +6,17 @@ export const navigationConfig = {
     logoWidth: 28,
     logoHeight: 28,
   },
-  
+
+  // Official routes
   items: [
-    { title: 'Home', href: '/' },
-    { title: 'About', href: '/about' },
-    { title: 'Contact', href: '/contact' }
+    { title: 'Home', href: '/', icon: 'lucide:home', shortcut: '⌘+H' },
+    { title: 'Dashboard', href: '/dashboard', icon: 'lucide:layout-dashboard', shortcut: '⌘+D' },
+    { title: 'Releases', href: '/releases', icon: 'lucide:package', shortcut: '⌘+R' },
   ],
-  
+
   social: [
     { name: 'GitHub', href: 'https://github.com', icon: 'radix-icons:github-logo' },
-    { name: 'Discord', href: 'https://discord.com', icon: 'radix-icons:discord-logo' }
+    { name: 'LinkedIn', href: 'https://linkedin.com', icon: 'radix-icons:linkedin-logo' }
   ]
 } as const
 

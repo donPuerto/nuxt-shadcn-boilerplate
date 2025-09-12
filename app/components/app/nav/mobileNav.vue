@@ -30,21 +30,8 @@ const isDragging = ref(false)
 const initialY = ref(0)
 const initialHeight = ref(50) // CHANGED: Updated initial height
 
-// Mobile menu routes as refs (only Dashboard and Releases)
-const mobileRoutes = ref([
-  { 
-    title: 'Dashboard', 
-    href: '/dashboard', 
-    icon: 'lucide:layout-dashboard',
-    shortcut: '⌘+D' // CHANGED: Added plus sign
-  },
-  { 
-    title: 'Releases', 
-    href: '/releases', 
-    icon: 'lucide:package',
-    shortcut: '⌘+R' // CHANGED: Added plus sign
-  },
-])
+const appConfig = useAppConfig()
+const mobileRoutes = computed(() => appConfig.navigation.items)
 
 const closeMobileMenu = () => {
   emit('update:open', false)
@@ -155,7 +142,7 @@ onUnmounted(() => {
           <!-- Pages Section -->
           <div class="space-y-4">
             <div class="px-2">
-              <h4 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pages</h4>
+              <h4 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Routes</h4>
             </div>
             <div class="space-y-2">
               <NuxtLink
@@ -166,10 +153,14 @@ onUnmounted(() => {
                 @click="closeMobileMenu"
               >
                 <div class="flex items-center gap-2">
-                  <Icon :name="route.icon" class="h-5 w-5 text-muted-foreground group-hover:text-accent-foreground flex-shrink-0" />
+                  <!-- FIX: removed stray '}' -->
+                  <Icon :name="route.icon || 'lucide:circle'" class="h-5 w-5 text-muted-foreground group-hover:text-accent-foreground flex-shrink-0" />
                   <span class="font-semibold text-sm">{{ route.title }}</span>
                 </div>
-                <kbd class="pointer-events-none inline-flex h-6 select-none items-center justify-center rounded-md bg-muted/80 backdrop-blur-sm px-2 font-mono text-xs font-medium text-muted-foreground min-w-[2rem]">
+                <kbd
+                  v-if="route.shortcut"
+                  class="pointer-events-none inline-flex h-6 select-none items-center justify-center rounded-md bg-muted/80 backdrop-blur-sm px-2 font-mono text-xs font-medium text-muted-foreground min-w-[2rem]"
+                >
                   {{ route.shortcut }}
                 </kbd>
               </NuxtLink>
