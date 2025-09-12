@@ -12,6 +12,14 @@
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.formatOnSave": true,    
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint", 
+    "editor.formatOnSave": true
+  },
   "[vue]": {
     "editor.defaultFormatter": "Vue.volar"
   },
@@ -27,12 +35,17 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  // Stylelint validation
+  "stylelint.validate": ["css", "scss", "postcss"],
+  "css.validate": false,
+  "scss.validate": false,
   // Default formatter for unlisted file types
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   // Auto-fix on save settings
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "never"
+    "source.organizeImports": "never",
+    "source.fixAll.stylelint": "explicit"
   },
   // ESLint configuration
   "eslint.format.enable": true,

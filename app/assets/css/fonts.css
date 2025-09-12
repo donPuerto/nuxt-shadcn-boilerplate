@@ -1,0 +1,83 @@
+/* Font scaling system */
+:root {
+  --font-scale-sm: 13px;
+  --font-scale-base: 14px;
+  --font-scale-md: 15px;
+  --font-scale-lg: 16px;
+}
+
+/* Apply font scaling based on data attribute */
+[data-font='sm'] { 
+  font-size: var(--font-scale-sm);
+}
+[data-font='base'] { 
+  font-size: var(--font-scale-base);
+}
+[data-font='md'] { 
+  font-size: var(--font-scale-md);
+}
+[data-font='lg'] { 
+  font-size: var(--font-scale-lg);
+}
+
+/* Font scaling for different elements */
+[data-font='sm'] body,
+[data-font='sm'] .text-base { 
+  font-size: 13px;
+}
+[data-font='sm'] .text-sm { 
+  font-size: 11px;
+}
+[data-font='sm'] .text-lg { 
+  font-size: 15px;
+}
+[data-font='sm'] .text-xl { 
+  font-size: 17px;
+}
+
+[data-font='base'] body,
+[data-font='base'] .text-base { 
+  font-size: 14px;
+}
+[data-font='base'] .text-sm { 
+  font-size: 12px;
+}
+[data-font='base'] .text-lg { 
+  font-size: 16px;
+}
+[data-font='base'] .text-xl { 
+  font-size: 18px;
+}
+
+[data-font='md'] body,
+[data-font='md'] .text-base { 
+  font-size: 15px;
+}
+[data-font='md'] .text-sm { 
+  font-size: 13px;
+}
+[data-font='md'] .text-lg { 
+  font-size: 17px;
+}
+[data-font='md'] .text-xl { 
+  font-size: 19px;
+}
+
+[data-font='lg'] body,
+[data-font='lg'] .text-base { 
+  font-size: 16px;
+}
+[data-font='lg'] .text-sm { 
+  font-size: 14px;
+}
+[data-font='lg'] .text-lg { 
+  font-size: 18px;
+}
+[data-font='lg'] .text-xl { 
+  font-size: 20px;
+}
+
+@theme {
+  --font-sans: "Geist", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
