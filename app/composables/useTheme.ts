@@ -10,11 +10,7 @@ import {
   generateShadowCSS,
   defaultShadowConfig,
   STORAGE_KEYS
-<<<<<<< HEAD
 } from '../../shared/ui/theme'
-=======
-} from '@/shared/ui/theme'
->>>>>>> dev
 
 // Global singleton state to ensure single instance across all components
 let globalThemeState: any = null

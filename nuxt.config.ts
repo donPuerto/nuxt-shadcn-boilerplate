@@ -26,17 +26,12 @@ export default defineNuxtConfig({
    
   },
   vite: {
-<<<<<<< HEAD
     // assetsInclude: ['**/*.css'],
-=======
-
->>>>>>> dev
     plugins: [
       tsconfigPaths(),
       tailwindcss(),
     ],
   },
-<<<<<<< HEAD
   // nitro: {
   //   publicAssets: [
   //     {
@@ -45,9 +40,6 @@ export default defineNuxtConfig({
   //     }
   //   ]
   // },
-=======
-
->>>>>>> dev
   shadcn: {
     prefix: '',
     componentDir: './app/components/ui'
